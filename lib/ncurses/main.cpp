@@ -4,8 +4,11 @@
 
 #include <iostream>
 
+#include "src/Window.h"
+
 int main(void)
 {
-    std::cout << "Bonjour" << std::endl;
+    arcade::Window w;
+
     return (0);
 }

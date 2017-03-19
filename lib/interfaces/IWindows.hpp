@@ -27,10 +27,11 @@ namespace arcade
     virtual int event() = 0;
     virtual int refresh() = 0;
 
-    virtual void addObject(std::shared_ptr<Arcade::IObject>, Vector3d const &) = 0;
-    virtual void addObject(std::shared_ptr<Arcade::IObject>) = 0;
-    virtual void moveObject(std::shared_ptr<Arcade::IObject>, Vector3d const &) = 0;
-    virtual void destroyObject(std::shared_ptr<Arcade::IObject>) = 0;
+    virtual void addObject(std::shared_ptr<arcade::IObject>, Vector3d const &) = 0;
+    virtual void addObject(std::shared_ptr<arcade::IObject>) = 0;
+    virtual void moveObject(std::shared_ptr<arcade::IObject>, Vector3d const &) = 0;
+    virtual void destroyObject(std::shared_ptr<arcade::IObject>) = 0;
+
   };
 };
 

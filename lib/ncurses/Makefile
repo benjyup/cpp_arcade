@@ -5,25 +5,34 @@
 ## Login   <vincent.mesquita@epitech.net>
 ## 
 ## Started on  Sun Mar 19 14:10:03 2017 Vincent Mesquita
-## Last update Sun Mar 19 14:10:09 2017 Vincent Mesquita
+## Last update Sun Mar 19 14:36:43 2017 Vincent Mesquita
 ##
 
 NAME		=	test
 
+SRC			=	src
+
+INTERFACES	=	../interfaces
+
+NCURSES		=	./ncurses
+
 CPP 		= 	g++
 
-RM 			= 	rm -rf
+RM 		= 	rm -rf
 
-CPPFLAGS	+=	-W -Wall -Werror -Wextra
+CPPFLAGS	+=	-W -Wall -Werror -Wextra -I$(INTERFACES)/ -I$(NCURSES)/include/ncurses/
 
-SRCS		=	main.cpp
+LDFLAGS		=	-lncurses -L$(NCURSES)/lib64/
+
+SRCS		=	main.cpp \
+				$(SRC)/Window.cpp\
 
 OBJS		=	$(SRCS:.cpp=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CPP) -o $(NAME) $(OBJS)
+	$(CPP) -o $(NAME) $(OBJS) $(LDFLAGS)
 
 clean:
 	$(RM) $(OBJS)
