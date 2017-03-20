@@ -6,10 +6,10 @@
 
 arcade::Window::Window() : _size(0,0), _isopen(false), _wmain(NULL)
 {
-    // _initTerm(1);
     std::cout << "init" << std::endl;
     if (!(_wmain = initscr()))
         return ;
+    _initTerm(1);
     std::cout << "init" << std::endl;
 
     curs_set(0);
@@ -30,7 +30,7 @@ arcade::Window::~Window()
     delwin(_wmain);
     clear();
     endwin();
-    // _initTerm(0);
+    _initTerm(0);
     curs_set(1);
     std::cout << "Window supprimée" << std::endl;
 }
@@ -48,16 +48,17 @@ const arcade::Vector3d & arcade::Window::getSize() const
 
 int arcade::Window::event()
 {
-    char c;
+  static int i = 0;
+
+    char c = 'A';
   // c = getch();
     read(0, &c, 1);
    // char c = 'c';
     move(0,0);
-    std::string str = "La touche est : " + c;
+    std::string str = "La touche est : " + std::to_string(i++) + " c =|" + std::to_string(c) + "|";
     erase();
     move(5,5);
-    printw("Bonjour");
-    addch(c);
+    printw(str.c_str());
     //   printw(str.c_str());
     return 0;
 }
