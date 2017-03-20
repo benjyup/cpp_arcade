@@ -7,9 +7,14 @@
 
 #include <memory>
 #include <iostream>
+#include <unistd.h>
+#include <ncurses/curses.h>
+#include <sys/ioctl.h>
+#include <ncurses/curses.h>
+#include <termios.h>
 #include "Vector3d.hpp"
 #include "IWindows.hpp"
-#include "curses.h"
+
 
 namespace arcade
 {
@@ -43,6 +48,7 @@ namespace arcade
         int32_t         _height;
 
         virtual void	notify(IEvenement const &);
+        void            initTerm();
 
     };
 

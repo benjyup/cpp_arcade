@@ -20,9 +20,9 @@ CPP 		= 	g++
 
 RM 		= 	rm -rf
 
-CPPFLAGS	+=	-W -Wall -Werror -Wextra -I$(INTERFACES)/ -I$(NCURSES)/include/ncurses/
+CPPFLAGS	+=	-W -Wall -Werror -Wextra -I$(INTERFACES)/
 
-LDFLAGS		=	-lncurses -L$(NCURSES)/lib64/
+LDFLAGS		=	-lncurses
 
 SRCS		=	main.cpp \
 				$(SRC)/Window.cpp\

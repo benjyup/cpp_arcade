@@ -10,7 +10,7 @@ arcade::Window::Window() : _size(0,0), _isopen(false), _wmain(NULL)
         return ;
 
     _isopen = true;
-    curs_set(0);
+    //nocbreak();
     refresh();
     printw(std::to_string(_width).c_str());
     move(1, 0);
@@ -19,8 +19,7 @@ arcade::Window::Window() : _size(0,0), _isopen(false), _wmain(NULL)
 
 /*  printw("Bonjour à tous");
     addch('p');*/
-    getch();
-
+//    getch();
 }
 
 arcade::Window::~Window()
@@ -28,11 +27,12 @@ arcade::Window::~Window()
     delwin(_wmain);
     clear();
     curs_set(1);
+    cbreak();
     endwin();
     std::cout << "Window supprimée" << std::endl;
 }
 
-bool arcade::Window::isOpen() const { return false;}
+bool arcade::Window::isOpen() const { return (_isopen);}
 
 int32_t arcade::Window::getHeight() const { return (_height);}
 
@@ -43,7 +43,19 @@ const arcade::Vector3d & arcade::Window::getSize() const
     return (_size);
 }
 
-int arcade::Window::event() { return 0;}
+int arcade::Window::event()
+{
+    char c;
+    //char c = getch();
+    read(0, &c, 1);
+//    char c = 'c';
+    move(0,0);
+    std::string str = "La touche est : " + c;
+    erase();
+    addch(c);
+    //   printw(str.c_str());
+    return 0;
+}
 
 int arcade::Window::refresh()
 {
@@ -52,7 +64,6 @@ int arcade::Window::refresh()
     _size.setX(getLenght());
     _size.setY(getHeight());
     _size.setZ(_size.getX() * _size.getY());
-    clear();
     return 0;
 }
 
@@ -69,3 +80,8 @@ void arcade::Window::notify(const IEvenement &) {}
 arcade::IEvenement * arcade::Window::getEvent() { return NULL;}
 void arcade::Window::removeObserver(IObserver *) {}
 void arcade::Window::registerObserver(IObserver *) {}
+
+void        arcade::Window::initTerm()
+{
+
+}

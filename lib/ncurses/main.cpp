@@ -10,5 +10,10 @@ int main(void)
 {
     arcade::Window w;
 
+    while (42)
+    {
+        w.refresh();
+        w.event();
+    }
     return (0);
 }
