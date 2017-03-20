@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "src/Window.h"
+#include <ncurses/curses.h>
 
 int main(void)
 {
@@ -12,8 +13,11 @@ int main(void)
 
     while (42)
     {
-        w.refresh();
-        w.event();
+      // printw("bonjour");
+      move(0, 0);
+      // w.refresh();
+      w.event();
+      refresh();
     }
     return (0);
 }

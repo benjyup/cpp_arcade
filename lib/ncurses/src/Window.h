@@ -46,9 +46,12 @@ namespace arcade
         WINDOW         *_wmain;
         int32_t         _width;
         int32_t         _height;
+        struct termios	_old_ioctl;
+        struct termios	_new_ioctl;
+
 
         virtual void	notify(IEvenement const &);
-        void            initTerm();
+        int            _initTerm(const int i);
 
     };
 
