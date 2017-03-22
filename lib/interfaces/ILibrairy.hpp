@@ -9,10 +9,19 @@
 
 namespace arcade
 {
+
+  //
+  //		Game/Graphical Librairy Interfaces
+  //
+
   class ILibrairy
   {
    public:
-    virtual ~ILibrairy() {};
+    virtual ~ILibrairy(void) {};
+
+    //
+    //		Enum for the lib type
+    //
 
     enum class LibType
     {
@@ -21,14 +30,22 @@ namespace arcade
       Unknow = -1
     };
 
-    virtual void *		getHandle() const = 0;
-    virtual std::string const &	getName() const = 0;
-    virtual LibType		getType() const = 0;
+    //
+    //		Getters
+    //
+
+    virtual void *		getHandle(void) const = 0;
+    virtual std::string const &	getName(void) const = 0;
+    virtual LibType		getType(void) const = 0;
   };
+
+  //
+  //		Librairy entry point
+  //
 
   extern "C"
   {
-  Arcade::ILibrairy *getNewLib(void *);
+  arcade::ILibrairy *getNewLib(void *);
   }
 };
 

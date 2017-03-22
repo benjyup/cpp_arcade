@@ -9,8 +9,9 @@
 #include <string>
 #include <memory>
 
-#include "IObserve.hpp"
 #include "Vector3d.hpp"
+
+#include "IObserve.hpp"
 #include "IObject.hpp"
 #include "IWindows.hpp"
 #include "ILibrairy.hpp"
@@ -18,20 +19,39 @@
 namespace arcade
 {
   //
-  // GraphicalLib Interface
+  //		Graphical librairy Interface
+  //			Is a librairy and can be observed by a object IObserver
   //
 
-  class IGraphicalLib : public Arcade::ILibrairy, public IObserved
+  class IGraphicalLib : public arcade::ILibrairy, public IObserved
   {
    public:
-    virtual ~IGraphicalLib() {};
+    virtual ~IGraphicalLib(void) {};
 
-    virtual Arcade::ILibrairy::LibType	getType() const {return (Arcade::ILibrairy::LibType ::Graphical);};
+    //
+    //		Implementation of getType
+    //
 
-    virtual IWindows *			initWindows(uint64_t height = 0,
+    virtual arcade::ILibrairy::LibType	getType(void) const {return (arcade::ILibrairy::LibType ::Graphical);};
+
+    //
+    //		Initialise a windows of the current librairy
+    //
+
+    virtual arcade::IWindows *		initWindows(uint64_t height = 0,
 							  uint64_t lenght = 0) = 0;
+
+    //
+    //		Initialise a object of the current librairy
+    //
+
     virtual std::shared_ptr<IObject>	initObject(std::string const &) = 0;
-    virtual Arcade::IWindows &		getWindows() const = 0;
+
+    //
+    //		Get the windows of this librairy
+    //
+
+    virtual arcade::IWindows &		getWindows(void) const = 0;
   };
 }
 

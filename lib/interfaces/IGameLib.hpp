@@ -12,26 +12,57 @@
 #include "ILibrairy.hpp"
 #include "IGraphicalLib.hpp"
 
-//
-// GameLib Interface
-//
-
-void 		Play();
+void 		Play(void);
 
 namespace arcade
 {
-  class IGameLib : public Arcade::ILibrairy, public IObserver
+  //
+  //		Graphical librairy interface
+  //			Is a librairy and can observe a object IObserved
+  //
+
+  class IGameLib : public arcade::ILibrairy, public IObserver
   {
+   protected:
+
+    //
+    //		Protected function for initialisation
+    //
+
+    virtual void				initGraphicalLib(IGraphicalLib*) = 0;
+
+    //
+    //		Protected function for initialisation of the game map
+    //
+
+    virtual void 				createMap(void) = 0;
    public:
-    virtual ~IGameLib() {};
+    virtual ~IGameLib(void) {};
 
-    virtual void 			initGame(IGraphicalLib *,
-						 std::vector<std::shared_ptr<Arcade::IObject> >*) = 0;
-    virtual void			initGraphicalLib(IGraphicalLib*) = 0;
+    //
+    //		Game initialisation function
+    //
 
-    virtual void 			createObject(std::string const &, std::string const &, Vector3d const &) = 0;
+    virtual void 				initGame(IGraphicalLib *,
+							 std::vector<std::shared_ptr<arcade::IObject> >*) = 0;
 
-    virtual Arcade::ILibrairy::LibType	getType() const { return (Arcade::ILibrairy::LibType::Game); };
+    //
+    //		Create a object and add it to the game (used most likely internely)
+    //
+
+    virtual std::shared_ptr<arcade::IObject>	createObject(std::string const &, std::string const &, Vector3d const &) = 0;
+
+    //
+    //		Implementation of getType
+    //
+
+    virtual arcade::ILibrairy::LibType		getType(void) const { return (arcade::ILibrairy::LibType::Game); };
+
+    //
+    //		Function to update the game and m
+    //
+
+    virtual void				gameTurn(void) = 0;
   };
 };
 
