@@ -52,7 +52,7 @@ bool arcade::Window::event(void)
     erase();
     move(5,5);
     printw(str.c_str());
-    return 0;
+    return (false);
 }
 
 arcade::FrameType arcade::Window::refresh()
