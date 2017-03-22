@@ -5,15 +5,15 @@
 #ifndef CPP_ARCADE_WINDOW_H
 #define CPP_ARCADE_WINDOW_H
 
-#include <memory>
 #include <iostream>
 #include <unistd.h>
 #include <ncurses/curses.h>
 #include <sys/ioctl.h>
 #include <ncurses/curses.h>
 #include <termios.h>
-#include "Vector3d.hpp"
+#include <strings.h>
 #include "IWindows.hpp"
+#include "NcursesTools.h"
 
 
 namespace arcade
@@ -28,12 +28,12 @@ namespace arcade
         virtual int32_t getLenght() const;
         virtual Vector3d const &getSize() const;
 
-        virtual int event();
-        virtual int refresh();
-
+        virtual bool event(void);
+        virtual arcade::FrameType refresh(void);
         virtual void addObject(std::shared_ptr<arcade::IObject>, Vector3d const &);
         virtual void addObject(std::shared_ptr<arcade::IObject>);
         virtual void moveObject(std::shared_ptr<arcade::IObject>, Vector3d const &);
+        virtual void moveObject(std::string, Vector3d const &);
         virtual void destroyObject(std::shared_ptr<arcade::IObject>);
 
         virtual arcade::IEvenement *		getEvent();
@@ -48,10 +48,12 @@ namespace arcade
         int32_t         _height;
         struct termios	_old_ioctl;
         struct termios	_new_ioctl;
+        char            _pressed_key[10];
+        NcursesTools    _ncursesTools;
 
 
         virtual void	notify(IEvenement const &);
-        int            _initTerm(const int i);
+        int             _initTerm(const int i);
 
     };
 

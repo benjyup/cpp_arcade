@@ -11,13 +11,14 @@ int main(void)
 {
     arcade::Window w;
 
+    // return (0);
+
     while (42)
     {
-      // printw("bonjour");
-      move(0, 0);
-      // w.refresh();
-      w.event();
-      refresh();
+//    refresh();
+        // printw("bonjour");
+        w.refresh();
+        w.event();
     }
     return (0);
 }

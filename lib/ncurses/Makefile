@@ -26,6 +26,7 @@ LDFLAGS		=	-lncurses
 
 SRCS		=	main.cpp \
 				$(SRC)/Window.cpp\
+				$(SRC)/NcursesTools.cpp\
 
 OBJS		=	$(SRCS:.cpp=.o)
 

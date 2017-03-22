@@ -4,14 +4,12 @@
 
 #include "Window.h"
 
-arcade::Window::Window() : _size(0,0), _isopen(false), _wmain(NULL),
-                           _width(0), _height(0), _ncursesTools()
+arcade::Window::Window() : _size(0,0), _isopen(false), _wmain(NULL)
 {
-    std::cout << "init" << std::endl;
     if (!(_wmain = initscr()) || _initTerm(1) == -1)
-        return ;
-    std::cout << "init" << std::endl;
-
+        exit(123);
+    // std::cout << "coucou" << std::endl;
+    // return ;
     curs_set(0);
     _isopen = true;
     refresh();
@@ -25,7 +23,7 @@ arcade::Window::~Window()
     delwin(_wmain);
     clear();
     endwin();
-    _initTerm(0);
+   _initTerm(0);
     curs_set(1);
     std::cout << "Window supprimée" << std::endl;
 }
@@ -41,29 +39,32 @@ const arcade::Vector3d & arcade::Window::getSize() const
     return (_size);
 }
 
-bool arcade::Window::event(void)
+int arcade::Window::event()
 {
-  static int i = 0;
-
-    bzero(_pressed_key, 10);
-    read(0, &_pressed_key, 1);
+    static int i = 0;
+    char c[15];
+    (void)c;
+  // c = getch();
+    read(0, &c, 10);
+   // char c = 'c';
     move(0,0);
-    std::string str = "La touche est : " + std::to_string(i++) + " c =|" + _pressed_key + "|";
+    std::string str = "La touche est : " + std::to_string(i++);
     erase();
     move(5,5);
     printw(str.c_str());
+    // addch(c);
+    //   printw(str.c_str());
     return 0;
 }
 
-arcade::FrameType arcade::Window::refresh()
+int arcade::Window::refresh()
 {
     _width = getmaxx(_wmain);
     _height = getmaxy(_wmain);
     _size.setX(getLenght());
     _size.setY(getHeight());
     _size.setZ(_size.getX() * _size.getY());
-    _ncursesTools.Refresh();
-  return (FrameType::GameFrame);
+    return 0;
 }
 
 void arcade::Window::addObject(std::shared_ptr <arcade::IObject>) {}
@@ -71,8 +72,6 @@ void arcade::Window::addObject(std::shared_ptr <arcade::IObject>) {}
 void arcade::Window::addObject(std::shared_ptr <arcade::IObject>, const Vector3d &) {}
 
 void arcade::Window::moveObject(std::shared_ptr <arcade::IObject>, const Vector3d &) {}
-
-void arcade::Window::moveObject(std::string, const Vector3d &) {}
 
 void arcade::Window::destroyObject(std::shared_ptr <arcade::IObject>) {}
 
@@ -86,13 +85,14 @@ int        arcade::Window::_initTerm(const int i)
 {
   if (i == 1)
     {
+      std::cout << "ICI" << std::endl;
       if ((ioctl(0, TCGETS, &_old_ioctl)) == -1 ||
 	  (ioctl(0, TCGETS, &_new_ioctl)) == -1)
 	return (-1);
-      _new_ioctl.c_lflag &= ~ECHO;
       _new_ioctl.c_lflag &= ~ICANON;
       _new_ioctl.c_cc[VMIN] = 0;
       _new_ioctl.c_cc[VTIME] = 1;
+      tcgetattr(TCSANOW, &_new_ioctl);
       if ((ioctl(0, TCSETS, &_new_ioctl)) == -1)
 	return (-1);
     }
