@@ -5,29 +5,29 @@
 #include "Window.h"
 
 arcade::Window::Window() : _size(0,0), _isopen(false), _wmain(NULL),
-                           _width(0), _height(0), _ncursesTools()
+			   _width(0), _height(0), _ncursesTools()
 {
-    std::cout << "init" << std::endl;
-    if (!(_wmain = initscr()) || _initTerm(1) == -1)
-        return ;
-    std::cout << "init" << std::endl;
+  std::cout << "init" << std::endl;
+  if (!(_wmain = initscr()) || _initTerm(1) == -1)
+    return ;
+  std::cout << "init" << std::endl;
 
-    curs_set(0);
-    _isopen = true;
-    refresh();
-    printw(std::to_string(_width).c_str());
-    move(1, 0);
-    printw(std::to_string(_height).c_str());
+  curs_set(0);
+  _isopen = true;
+  refresh();
+  printw(std::to_string(_width).c_str());
+  move(1, 0);
+  printw(std::to_string(_height).c_str());
 }
 
 arcade::Window::~Window()
 {
-    delwin(_wmain);
-    clear();
-    endwin();
-    _initTerm(0);
-    curs_set(1);
-    std::cout << "Window supprimée" << std::endl;
+  delwin(_wmain);
+  clear();
+  endwin();
+  _initTerm(0);
+  curs_set(1);
+  std::cout << "Window supprimée" << std::endl;
 }
 
 bool arcade::Window::isOpen() const { return (_isopen);}
@@ -38,31 +38,35 @@ int32_t arcade::Window::getLenght() const { return (_width);}
 
 const arcade::Vector3d & arcade::Window::getSize() const
 {
-    return (_size);
+  return (_size);
 }
 
 bool arcade::Window::event(void)
 {
   static int i = 0;
 
-    bzero(_pressed_key, 10);
-    read(0, &_pressed_key, 1);
-    move(0,0);
-    std::string str = "La touche est : " + std::to_string(i++) + " c =|" + _pressed_key + "|";
-    erase();
-    move(5,5);
-    printw(str.c_str());
-    return 0;
+  bzero(_pressed_key, 10);
+  read(0, &_pressed_key, 10);
+  move(0,0);
+  std::string str;
+  if (_ncursesTools.getKey(_pressed_key) == arcade::IEvenement::KeyCode::Key_UP)
+    str = "La touche est : " + std::to_string(i++) + " c =|" + "KEY_A" + "|";
+  else
+    str = "La touche est : " + std::to_string(i++) + " c =|" + _pressed_key + "|";
+  erase();
+  move(5,5);
+  printw(str.c_str());
+  return (false);
 }
 
 arcade::FrameType arcade::Window::refresh()
 {
-    _width = getmaxx(_wmain);
-    _height = getmaxy(_wmain);
-    _size.setX(getLenght());
-    _size.setY(getHeight());
-    _size.setZ(_size.getX() * _size.getY());
-    _ncursesTools.Refresh();
+  _width = getmaxx(_wmain);
+  _height = getmaxy(_wmain);
+  _size.setX(getLenght());
+  _size.setY(getHeight());
+  _size.setZ(_size.getX() * _size.getY());
+  _ncursesTools.Refresh();
   return (FrameType::GameFrame);
 }
 

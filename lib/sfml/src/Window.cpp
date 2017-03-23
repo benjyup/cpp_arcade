@@ -18,7 +18,7 @@ arcade::Window::Window() : _size(0,0)
 {
   std::cout << "init" << std::endl;
 }
-daddr_t
+
 arcade::Window::~Window()
 {
   std::cout << "Window supprimée" << std::endl;
