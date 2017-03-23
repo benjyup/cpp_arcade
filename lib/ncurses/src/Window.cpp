@@ -7,11 +7,10 @@
 arcade::Window::Window() : _size(0,0), _isopen(false), _wmain(NULL),
 			   _width(0), _height(0), _ncursesTools()
 {
-  std::cout << "init" << std::endl;
   if (!(_wmain = initscr()) || _initTerm(1) == -1)
     return ;
-  std::cout << "init" << std::endl;
-
+  bzero(_pressed_key, 10);
+  keypad(_wmain, true);
   curs_set(0);
   _isopen = true;
   refresh();
@@ -49,7 +48,7 @@ bool arcade::Window::event(void)
   read(0, &_pressed_key, 10);
   move(0,0);
   std::string str;
-  if (_ncursesTools.getKey(_pressed_key) == arcade::IEvenement::KeyCode::Key_UP)
+  if (_ncursesTools.getKey(_pressed_key) != arcade::IEvenement::KeyCode::Key_Undefined)
     str = "La touche est : " + std::to_string(i++) + " c =|" + "KEY_A" + "|";
   else
     str = "La touche est : " + std::to_string(i++) + " c =|" + _pressed_key + "|";

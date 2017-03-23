@@ -5,6 +5,7 @@
 #ifndef CPP_ARCADE_NCURSESTOOLS_H
 #define CPP_ARCADE_NCURSESTOOLS_H
 
+#include <exception>
 #include <ncurses/curses.h>
 #include <ncurses/term.h>
 #include <utility>
@@ -30,14 +31,13 @@ namespace arcade
 
    private:
     std::string                 _term_name;
-    std::map<std::string, arcade::IEvenement::KeyCode> _specialKeys;
-    std::vector<std::pair<const char *, arcade::IEvenement::KeyCode>> _specialKeysTMP;
-    std::map<const char, arcade::IEvenement::KeyCode> _keys;
+    std::vector<std::pair<const char *, arcade::IEvenement::KeyCode>> _specialKeys;
+    std::vector<std::pair<const char *, arcade::IEvenement::KeyCode>> _keys;
+
+    //std::map<const char, arcade::IEvenement::KeyCode> _keys;
 
     arcade::IEvenement::KeyCode _getSpecialKey(const char *key) const;
     bool                        _initTermKeys(void);
-    void                        _initSpecialKeys(void);
-    void                        _initSpecialKeysTMP(void);
     void                        _initKeys(void);
   };
 
