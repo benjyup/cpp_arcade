@@ -5,6 +5,8 @@
 #include <iostream>
 #include "NcursesTools.h"
 
+extern "C"
+{
 arcade::NcursesTools::NcursesTools()
 {
   _initTermKeys();
@@ -62,4 +64,6 @@ void 				arcade::NcursesTools::_initKeys(void)
     if (it.first == (char *)0 || it.first == (char *)-1)
       throw std::string("MDR");
   std::cout << "pas de nul" << std::endl;
+}
+
 }

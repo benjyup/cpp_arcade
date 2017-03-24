@@ -20,7 +20,7 @@ CPP 		= 	g++
 
 RM 		= 	rm -rf
 
-CPPFLAGS	+=	-W -Wall -Werror -Wextra -I$(INTERFACES)/ -fPIC
+CPPFLAGS	+=	-W -Wall -Werror -Wextra -I$(INTERFACES)/ -shared -fPIC
 
 LDFLAGS		=	-lncurses -shared
 

@@ -7,18 +7,25 @@
 #include "src/Window.h"
 #include <ncurses/curses.h>
 #include <dlfcn.h>
+#include <iostream>
+#include "IGraphicalLib.hpp"
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <dlfcn.h>
 
 int main(void)
 {
   void	*ptr;
+  //arcade::IGraphicalLib	*lib;
 
-  if (!(ptr = dlopen("libtest.so", RTLD_LOCAL | RTLD_LAZY)))
-  {
-    std::cerr << "dlopen failed" << std::endl;
-    return (1);
-  }
-  arcade::Window w;
+  if (!(ptr = dlopen("./libtest.so", RTLD_NOW|RTLD_LAZY)))
+    {
+      fputs (dlerror(), stderr);
+      exit(1);
+      return (1);
+    }
+/*  arcade::Window w;
 
   // return (0);
   while (42)
@@ -27,6 +34,6 @@ int main(void)
       // printw("bonjour");
       w.refresh();
       w.event();
-    }
+    }*/
   return (0);
 }

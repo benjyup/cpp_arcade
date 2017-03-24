@@ -2,10 +2,14 @@
 // Created by vincent.mesquita on 3/19/17.
 //
 
+#include <string>
 #include "Window.h"
 
-arcade::Window::Window() : _size(0,0), _isopen(false), _wmain(NULL),
-			   _width(0), _height(0), _ncursesTools(), _objects()
+extern "C"
+{
+
+arcade::Window::Window(uint64_t height, uint64_t width) : _size(0,0), _isopen(false), _wmain(NULL),
+					_width(width), _height(height), _ncursesTools(), _objects()
 {
   if (!(_wmain = initscr()) || _initTerm(1) == -1)
     return ;
@@ -21,6 +25,7 @@ arcade::Window::Window() : _size(0,0), _isopen(false), _wmain(NULL),
 
 arcade::Window::~Window()
 {
+
   delwin(_wmain);
   clear();
   endwin();
@@ -105,8 +110,9 @@ std::shared_ptr<arcade::IEvenement> arcade::Window::getEvent()
   return (std::shared_ptr<arcade::IEvenement>(NULL));
 }
 
-void arcade::Window::removeObserver(IObserver *) {}
-void arcade::Window::registerObserver(IObserver *) {}
+void arcade::Window::removeObserver(std::shared_ptr<arcade::IObserver>&) {}
+
+void registerObserver(std::shared_ptr<arcade::IObserver>&);
 
 int        arcade::Window::_initTerm(const int i)
 {
@@ -126,4 +132,5 @@ int        arcade::Window::_initTerm(const int i)
     if ((ioctl(0, TCSETS, &_new_ioctl)) == -1)
       return (-1);
   return (0);
+}
 }
