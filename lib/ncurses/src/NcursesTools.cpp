@@ -33,16 +33,6 @@ arcade::IEvenement::KeyCode arcade::NcursesTools::getKey(const char *keyCode) co
   return (key);
 }
 
-/*arcade::IEvenement::KeyCode arcade::NcursesTools::getKey(const char keyCode) const
-{
-  arcade::IEvenement::KeyCode key = arcade::IEvenement::KeyCode::Key_Undefined;
-
-  if (_keys.find(keyCode) != _keys.end())
-    key = _keys.at(keyCode);
-  return (key);
-}*/
-
-
 bool				arcade::NcursesTools::_initTermKeys(void)
 {
   char                  	*str;

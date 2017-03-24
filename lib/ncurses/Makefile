@@ -5,10 +5,10 @@
 ## Login   <vincent.mesquita@epitech.net>
 ## 
 ## Started on  Sun Mar 19 14:10:03 2017 Vincent Mesquita
-## Last update Sun Mar 19 14:36:43 2017 Vincent Mesquita
+## Last update Fri Mar 24 14:25:05 2017 vincent.mesquita@epitech.eu
 ##
 
-NAME		=	test
+NAME		=	libtest.so
 
 SRC			=	src
 
@@ -20,13 +20,13 @@ CPP 		= 	g++
 
 RM 		= 	rm -rf
 
-CPPFLAGS	+=	-W -Wall -Werror -Wextra -I$(INTERFACES)/
+CPPFLAGS	+=	-W -Wall -Werror -Wextra -I$(INTERFACES)/ -fPIC
 
-LDFLAGS		=	-lncurses
+LDFLAGS		=	-lncurses -shared
 
-SRCS		=	main.cpp \
-				$(SRC)/Window.cpp\
-				$(SRC)/NcursesTools.cpp\
+SRCS		=	$(SRC)/Window.cpp\
+			$(SRC)/NcursesLib.cpp\
+			$(SRC)/NcursesTools.cpp\
 
 OBJS		=	$(SRCS:.cpp=.o)
 

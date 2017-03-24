@@ -5,7 +5,7 @@
 #include "Window.h"
 
 arcade::Window::Window() : _size(0,0), _isopen(false), _wmain(NULL),
-			   _width(0), _height(0), _ncursesTools()
+			   _width(0), _height(0), _ncursesTools(), _objects()
 {
   if (!(_wmain = initscr()) || _initTerm(1) == -1)
     return ;
@@ -69,19 +69,42 @@ arcade::FrameType arcade::Window::refresh()
   return (FrameType::GameFrame);
 }
 
-void arcade::Window::addObject(std::shared_ptr <arcade::IObject>) {}
+void arcade::Window::addObject(std::shared_ptr <arcade::IObject> obj)
+{
+  _objects.push_back(obj);
+}
 
 void arcade::Window::addObject(std::shared_ptr <arcade::IObject>, const Vector3d &) {}
 
 void arcade::Window::moveObject(std::shared_ptr <arcade::IObject>, const Vector3d &) {}
 
-void arcade::Window::moveObject(std::string, const Vector3d &) {}
+void arcade::Window::moveObject(std::string, const Vector3d &)
+{
 
-void arcade::Window::destroyObject(std::shared_ptr <arcade::IObject>) {}
+}
+
+void arcade::Window::destroyObject(std::shared_ptr <arcade::IObject> obj)
+{
+  auto it = _objects.begin();
+
+  while (it != _objects.end())
+    {
+      if (*it == obj)
+	{
+	  _objects.erase(it);
+	  return ;
+	}
+      ++it;
+    }
+}
 
 void arcade::Window::notify(const IEvenement &) {}
 
-arcade::IEvenement * arcade::Window::getEvent() { return NULL;}
+std::shared_ptr<arcade::IEvenement> arcade::Window::getEvent()
+{
+  return (std::shared_ptr<arcade::IEvenement>(NULL));
+}
+
 void arcade::Window::removeObserver(IObserver *) {}
 void arcade::Window::registerObserver(IObserver *) {}
 

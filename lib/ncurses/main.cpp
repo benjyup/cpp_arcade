@@ -6,19 +6,27 @@
 
 #include "src/Window.h"
 #include <ncurses/curses.h>
+#include <dlfcn.h>
+
 
 int main(void)
 {
-    arcade::Window w;
+  void	*ptr;
 
-    // return (0);
+  if (!(ptr = dlopen("libtest.so", RTLD_LOCAL | RTLD_LAZY)))
+  {
+    std::cerr << "dlopen failed" << std::endl;
+    return (1);
+  }
+  arcade::Window w;
 
-    while (42)
+  // return (0);
+  while (42)
     {
 //    refresh();
-        // printw("bonjour");
-        w.refresh();
-        w.event();
+      // printw("bonjour");
+      w.refresh();
+      w.event();
     }
-    return (0);
+  return (0);
 }

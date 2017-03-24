@@ -27,7 +27,6 @@ namespace arcade
 
     int Refresh(void) const;
     arcade::IEvenement::KeyCode getKey(const char *key) const;
-    arcade::IEvenement::KeyCode getKey(const char key) const;
 
    private:
     std::string                 _term_name;

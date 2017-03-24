@@ -36,21 +36,21 @@ namespace arcade
         virtual void moveObject(std::string, Vector3d const &);
         virtual void destroyObject(std::shared_ptr<arcade::IObject>);
 
-        virtual arcade::IEvenement *		getEvent();
+	virtual std::shared_ptr<IEvenement> getEvent(void);
         virtual void 			removeObserver(IObserver *);
         virtual void 			registerObserver(IObserver *);
 
     protected:
         Vector3d        _size;
         bool            _isopen;
-        WINDOW         *_wmain;
+        WINDOW         *_wmain; //utiliser smartptr
         int32_t         _width;
         int32_t         _height;
         struct termios	_old_ioctl;
         struct termios	_new_ioctl;
         char            _pressed_key[10];
         NcursesTools    _ncursesTools;
-
+      	std::vector<std::shared_ptr<arcade::IObject>> _objects;
 
         virtual void	notify(IEvenement const &);
         int             _initTerm(const int i);
