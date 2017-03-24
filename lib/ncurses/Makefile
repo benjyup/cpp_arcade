@@ -25,8 +25,6 @@ CPPFLAGS	+=	-W -Wall -Werror -Wextra -I$(INTERFACES)/ -shared -fPIC
 LDFLAGS		=	-lncurses -shared
 
 SRCS		=	$(SRC)/Window.cpp\
-			$(SRC)/NcursesLib.cpp\
-			$(SRC)/NcursesTools.cpp\
 
 OBJS		=	$(SRCS:.cpp=.o)
 

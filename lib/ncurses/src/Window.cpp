@@ -2,17 +2,16 @@
 // Created by vincent.mesquita on 3/19/17.
 //
 
-#include <string>
-#include "Window.h"
+#include "Window.hpp"
 
-extern "C"
+arcade::Window::Window(uint64_t height, uint64_t width) : _size(0, 0), _isopen(false), _wmain(NULL),
+							  _width(width), _height(height), _ncursesTools(), _objects()
 {
+  (void) height;
+  (void) width;
 
-arcade::Window::Window(uint64_t height, uint64_t width) : _size(0,0), _isopen(false), _wmain(NULL),
-					_width(width), _height(height), _ncursesTools(), _objects()
-{
   if (!(_wmain = initscr()) || _initTerm(1) == -1)
-    return ;
+    return;
   bzero(_pressed_key, 10);
   keypad(_wmain, true);
   curs_set(0);
@@ -25,7 +24,6 @@ arcade::Window::Window(uint64_t height, uint64_t width) : _size(0,0), _isopen(fa
 
 arcade::Window::~Window()
 {
-
   delwin(_wmain);
   clear();
   endwin();
@@ -34,13 +32,16 @@ arcade::Window::~Window()
   std::cout << "Window supprimée" << std::endl;
 }
 
-bool arcade::Window::isOpen() const { return (_isopen);}
+bool arcade::Window::isOpen() const
+{ return (_isopen); }
 
-int32_t arcade::Window::getHeight() const { return (_height);}
+int32_t arcade::Window::getHeight() const
+{ return (_height); }
 
-int32_t arcade::Window::getLenght() const { return (_width);}
+int32_t arcade::Window::getLenght() const
+{ return (_width); }
 
-const arcade::Vector3d & arcade::Window::getSize() const
+const arcade::Vector3d &arcade::Window::getSize() const
 {
   return (_size);
 }
@@ -51,14 +52,14 @@ bool arcade::Window::event(void)
 
   bzero(_pressed_key, 10);
   read(0, &_pressed_key, 10);
-  move(0,0);
+  move(0, 0);
   std::string str;
   if (_ncursesTools.getKey(_pressed_key) != arcade::IEvenement::KeyCode::Key_Undefined)
     str = "La touche est : " + std::to_string(i++) + " c =|" + "KEY_A" + "|";
   else
     str = "La touche est : " + std::to_string(i++) + " c =|" + _pressed_key + "|";
   erase();
-  move(5,5);
+  move(5, 5);
   printw(str.c_str());
   return (false);
 }
@@ -79,9 +80,11 @@ void arcade::Window::addObject(std::shared_ptr <arcade::IObject> obj)
   _objects.push_back(obj);
 }
 
-void arcade::Window::addObject(std::shared_ptr <arcade::IObject>, const Vector3d &) {}
+void arcade::Window::addObject(std::shared_ptr <arcade::IObject>, const Vector3d &)
+{}
 
-void arcade::Window::moveObject(std::shared_ptr <arcade::IObject>, const Vector3d &) {}
+void arcade::Window::moveObject(std::shared_ptr <arcade::IObject>, const Vector3d &)
+{}
 
 void arcade::Window::moveObject(std::string, const Vector3d &)
 {
@@ -97,24 +100,24 @@ void arcade::Window::destroyObject(std::shared_ptr <arcade::IObject> obj)
       if (*it == obj)
 	{
 	  _objects.erase(it);
-	  return ;
+	  return;
 	}
       ++it;
     }
 }
 
-void arcade::Window::notify(const IEvenement &) {}
+void arcade::Window::notify(const IEvenement &)
+{}
 
-std::shared_ptr<arcade::IEvenement> arcade::Window::getEvent()
+std::shared_ptr <arcade::IEvenement> arcade::Window::getEvent()
 {
   return (std::shared_ptr<arcade::IEvenement>(NULL));
 }
 
-void arcade::Window::removeObserver(std::shared_ptr<arcade::IObserver>&) {}
+void arcade::Window::removeObserver(std::shared_ptr <arcade::IObserver> &)
+{}
 
-void registerObserver(std::shared_ptr<arcade::IObserver>&);
-
-int        arcade::Window::_initTerm(const int i)
+int arcade::Window::_initTerm(const int i)
 {
   if (i == 1)
     {
@@ -127,10 +130,10 @@ int        arcade::Window::_initTerm(const int i)
       _new_ioctl.c_cc[VTIME] = 1;
       if ((ioctl(0, TCSETS, &_new_ioctl)) == -1)
 	return (-1);
-    }
-  else
+    } else
     if ((ioctl(0, TCSETS, &_new_ioctl)) == -1)
       return (-1);
   return (0);
 }
-}
+
+void arcade::Window::registerObserver(std::shared_ptr<arcade::IObserver>& e) { (void)e;}

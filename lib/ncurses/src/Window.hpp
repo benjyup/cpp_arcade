@@ -12,17 +12,13 @@
 #include <ncurses/curses.h>
 #include <termios.h>
 #include <strings.h>
+
 #include "IWindows.hpp"
 #include "NcursesTools.h"
 
-#include <memory>
-#include "Vector3d.hpp"
-#include "IObject.hpp"
-#include "IObserve.hpp"
-
 namespace arcade
 {
-    class Window{
+    class Window : public IWindows {
     public:
         Window(uint64_t height, uint64_t width);
         virtual ~Window();
@@ -42,18 +38,18 @@ namespace arcade
 
 	virtual std::shared_ptr<IEvenement> getEvent(void);
         virtual void removeObserver(std::shared_ptr<arcade::IObserver>&);
-      	virtual void registerObserver(std::shared_ptr<arcade::IObserver>&);
+	virtual void registerObserver(std::shared_ptr<arcade::IObserver>&);
     protected:
         Vector3d        _size;
         bool            _isopen;
-        WINDOW         *_wmain; //utiliser smartptr
+        WINDOW         *_wmain;
         int32_t         _width;
-        int32_t         _height;
+      int32_t         _height;
         struct termios	_old_ioctl;
         struct termios	_new_ioctl;
         char            _pressed_key[10];
         NcursesTools    _ncursesTools;
-//      	std::vector<std::shared_ptr<arcade::IObject>> _objects;
+      	std::vector<std::shared_ptr<arcade::IObject>> _objects;
 
         virtual void	notify(IEvenement const &);
         int             _initTerm(const int i);

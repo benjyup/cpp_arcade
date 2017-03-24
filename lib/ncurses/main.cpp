@@ -4,11 +4,11 @@
 
 #include <iostream>
 
-#include "src/Window.h"
 #include <ncurses/curses.h>
 #include <dlfcn.h>
 #include <iostream>
 #include "IGraphicalLib.hpp"
+#include "IWindows.hpp"
 
 #include <stdlib.h>
 #include <stdio.h>
