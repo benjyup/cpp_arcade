@@ -32,26 +32,32 @@ namespace arcade
     //		Implementation of getType
     //
 
-    virtual arcade::ILibrairy::LibType	getType(void) const {return (arcade::ILibrairy::LibType ::Graphical);};
+    virtual arcade::ILibrairy::LibType		getType(void) const {return (arcade::ILibrairy::LibType ::Graphical);};
 
     //
     //		Initialise a windows of the current librairy
     //
 
-    virtual arcade::IWindows *		initWindows(uint64_t height = 0,
+    virtual std::shared_ptr<arcade::IWindows> &	initWindows(uint64_t height = 0,
 							  uint64_t lenght = 0) = 0;
 
     //
     //		Initialise a object of the current librairy
     //
 
-    virtual std::shared_ptr<IObject>	initObject(std::string const &) = 0;
+    virtual std::shared_ptr<IObject>		initObject(std::string const &, std::string const &) = 0;
+
+    //
+    //		Initialise a label to print text
+    //
+
+    virtual std::shared_ptr<arcade::IObject>	initLabel(std::string const &, std::string const &) = 0;
 
     //
     //		Get the windows of this librairy
     //
 
-    virtual arcade::IWindows &		getWindows(void) const = 0;
+    virtual std::shared_ptr<arcade::IWindows> &	getWindows(void) = 0;
   };
 }
 

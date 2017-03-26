@@ -59,16 +59,16 @@ namespace arcade
 
     // Create object and/not move
 
-    virtual void		addObject(std::shared_ptr<arcade::IObject>, Vector3d const &) = 0;
-    virtual void		addObject(std::shared_ptr<arcade::IObject>) = 0;
+    virtual void		addObject(std::shared_ptr<arcade::IObject>&, Vector3d const &) = 0;
+    virtual void		addObject(std::shared_ptr<arcade::IObject>&) = 0;
 
     // Move object to pos
 
-    virtual void		moveObject(std::shared_ptr<arcade::IObject>, Vector3d const &) = 0;
+    virtual void		moveObject(std::shared_ptr<arcade::IObject>&, Vector3d const &) = 0;
     virtual void		moveObject(std::string, Vector3d const &) = 0;
 
     // Destroy object
-    virtual void		destroyObject(std::shared_ptr<arcade::IObject>) = 0;
+    virtual void		destroyObject(std::shared_ptr<arcade::IObject>&) = 0;
   };
 };
 

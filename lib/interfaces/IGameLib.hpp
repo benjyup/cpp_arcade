@@ -6,6 +6,7 @@
 #define ARCADE_IGAMELIB_HPP
 
 #include <memory>
+#include <vector>
 
 #include "IObserve.hpp"
 #include "IObject.hpp"
@@ -21,7 +22,7 @@ namespace arcade
   //			Is a librairy and can observe a object IObserved
   //
 
-  class IGameLib : public arcade::ILibrairy, public IObserver
+  class IGameLib : public arcade::ILibrairy, public IObserver, public IObserved
   {
    protected:
 
@@ -29,7 +30,7 @@ namespace arcade
     //		Protected function for initialisation
     //
 
-    virtual void				initGraphicalLib(IGraphicalLib*) = 0;
+    virtual void				initGraphicalLib(arcade::IGraphicalLib*) = 0;
 
     //
     //		Protected function for initialisation of the game map
@@ -43,14 +44,8 @@ namespace arcade
     //		Game initialisation function
     //
 
-    virtual void 				initGame(IGraphicalLib *,
-							 std::vector<std::shared_ptr<arcade::IObject> >*) = 0;
-
-    //
-    //		Create a object and add it to the game (used most likely internely)
-    //
-
-    virtual std::shared_ptr<arcade::IObject>	createObject(std::string const &, std::string const &, Vector3d const &) = 0;
+    virtual void 				initGame(arcade::IGraphicalLib *,
+							 std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > >&) = 0;
 
     //
     //		Implementation of getType
