@@ -10,13 +10,12 @@ arcade::Window::Window(uint64_t height, uint64_t width) : _size(0, 0), _isopen(f
   (void) height;
   (void) width;
 
-  if (!(_wmain = initscr()) || _initTerm(1) == -1)
+  if (!(_wmain = _ncursesTools.routine()))
     return;
+  _isopen = true;
   bzero(_pressed_key, 10);
   keypad(_wmain, true);
-  curs_set(0);
-  _isopen = true;
-  refresh();
+  _ncursesTools.Wresize(_wmain, height, width);
   printw(std::to_string(_width).c_str());
   move(1, 0);
   printw(std::to_string(_height).c_str());
@@ -24,11 +23,7 @@ arcade::Window::Window(uint64_t height, uint64_t width) : _size(0, 0), _isopen(f
 
 arcade::Window::~Window()
 {
-  delwin(_wmain);
-  clear();
-  endwin();
-  _initTerm(0);
-  curs_set(1);
+  _ncursesTools.resetTerm(_wmain);
   std::cout << "Window supprimée" << std::endl;
 }
 
@@ -75,23 +70,25 @@ arcade::FrameType arcade::Window::refresh()
   return (FrameType::GameFrame);
 }
 
-void arcade::Window::addObject(std::shared_ptr <arcade::IObject> obj)
+void arcade::Window::addObject(std::shared_ptr <arcade::IObject> &obj)
 {
   _objects.push_back(obj);
 }
 
-void arcade::Window::addObject(std::shared_ptr <arcade::IObject>, const Vector3d &)
+void arcade::Window::addObject(std::shared_ptr <arcade::IObject> &, const Vector3d &)
 {}
 
-void arcade::Window::moveObject(std::shared_ptr <arcade::IObject>, const Vector3d &)
-{}
+void arcade::Window::moveObject(std::shared_ptr <arcade::IObject> &, const Vector3d &)
+{
+
+}
 
 void arcade::Window::moveObject(std::string, const Vector3d &)
 {
 
 }
 
-void arcade::Window::destroyObject(std::shared_ptr <arcade::IObject> obj)
+void arcade::Window::destroyObject(std::shared_ptr <arcade::IObject> &obj)
 {
   auto it = _objects.begin();
 
@@ -114,26 +111,7 @@ std::shared_ptr <arcade::IEvenement> arcade::Window::getEvent()
   return (std::shared_ptr<arcade::IEvenement>(NULL));
 }
 
-void arcade::Window::removeObserver(std::shared_ptr <arcade::IObserver> &)
+void arcade::Window::removeObserver(arcade::IObserver *)
 {}
 
-int arcade::Window::_initTerm(const int i)
-{
-  if (i == 1)
-    {
-      if ((ioctl(0, TCGETS, &_old_ioctl)) == -1 ||
-	  (ioctl(0, TCGETS, &_new_ioctl)) == -1)
-	return (-1);
-      _new_ioctl.c_lflag &= ~ECHO;
-      _new_ioctl.c_lflag &= ~ICANON;
-      _new_ioctl.c_cc[VMIN] = 0;
-      _new_ioctl.c_cc[VTIME] = 1;
-      if ((ioctl(0, TCSETS, &_new_ioctl)) == -1)
-	return (-1);
-    } else
-    if ((ioctl(0, TCSETS, &_new_ioctl)) == -1)
-      return (-1);
-  return (0);
-}
-
-void arcade::Window::registerObserver(std::shared_ptr<arcade::IObserver>& e) { (void)e;}
+void arcade::Window::registerObserver(arcade::IObserver* e) { (void)e;}

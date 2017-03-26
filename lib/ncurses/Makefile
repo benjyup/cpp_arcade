@@ -20,11 +20,14 @@ CPP 		= 	g++
 
 RM 		= 	rm -rf
 
-CPPFLAGS	+=	-W -Wall -Werror -Wextra -I$(INTERFACES)/ -shared -fPIC
+CPPFLAGS	+=	-W -Wall -Werror -Wextra -I$(INTERFACES)/ -I./src -fPIC
 
 LDFLAGS		=	-lncurses -shared
 
 SRCS		=	$(SRC)/Window.cpp\
+			$(SRC)/NcursesTools.cpp\
+			$(SRC)/NcursesLib.cpp\
+			$(SRC)/Object.cpp\
 
 OBJS		=	$(SRCS:.cpp=.o)
 

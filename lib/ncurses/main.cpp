@@ -9,15 +9,20 @@
 #include <iostream>
 #include "IGraphicalLib.hpp"
 #include "IWindows.hpp"
+#include "Window.hpp"
+#include "src/Window.hpp"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <dlfcn.h>
 
+typedef arcade::IGraphicalLib *(*fptr)(void);
+
 int main(void)
 {
   void	*ptr;
-  //arcade::IGraphicalLib	*lib;
+  fptr	lib_fptr;
+  arcade::IGraphicalLib	*lib;
 
   if (!(ptr = dlopen("./libtest.so", RTLD_NOW|RTLD_LAZY)))
     {
@@ -25,15 +30,20 @@ int main(void)
       exit(1);
       return (1);
     }
-/*  arcade::Window w;
+  lib_fptr = (fptr)dlsym(ptr, "getNewLib");
+  lib = lib_fptr();
+
+  std::shared_ptr<arcade::IWindows> w;
+  w = lib->initWindows(50, 50);
+  //arcade::IWindows *w = new arcade::Window(50, 50);
 
   // return (0);
   while (42)
     {
 //    refresh();
       // printw("bonjour");
-      w.refresh();
-      w.event();
-    }*/
+      w->refresh();
+      w->event();
+    }
   return (0);
 }

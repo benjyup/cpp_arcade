@@ -14,6 +14,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <sys/ioctl.h>
 #include "IObserve.hpp"
 
 namespace arcade
@@ -25,19 +26,27 @@ namespace arcade
     ~NcursesTools(void);
 
 
-    int Refresh(void) const;
+    /* Ncurses functions */
+    int 			Refresh(void) const;
+    void 			Wresize(WINDOW	*, int height, int width);
+    /* !Ncurses functions */
+
+    WINDOW 			*routine(void);
+    void 			resetTerm(WINDOW *);
     arcade::IEvenement::KeyCode getKey(const char *key) const;
 
    private:
     std::string                 _term_name;
     std::vector<std::pair<const char *, arcade::IEvenement::KeyCode>> _specialKeys;
     std::vector<std::pair<const char *, arcade::IEvenement::KeyCode>> _keys;
+    struct termios	_old_ioctl;
+    struct termios	_new_ioctl;
 
     //std::map<const char, arcade::IEvenement::KeyCode> _keys;
 
-    arcade::IEvenement::KeyCode _getSpecialKey(const char *key) const;
     bool                        _initTermKeys(void);
     void                        _initKeys(void);
+    bool 			_initTerm(const int i);
   };
 
 }

@@ -5,12 +5,9 @@
 #include <iostream>
 #include "NcursesTools.h"
 
-extern "C"
-{
 arcade::NcursesTools::NcursesTools()
 {
   _initTermKeys();
-  _initKeys();
 }
 
 arcade::NcursesTools::~NcursesTools() {}
@@ -39,6 +36,7 @@ bool				arcade::NcursesTools::_initTermKeys(void)
 {
   char                  	*str;
   int                     	err;
+  std::string			strr;
 
   if (!(str = std::getenv("TERM")))
     return (false); // throw exception
@@ -66,4 +64,51 @@ void 				arcade::NcursesTools::_initKeys(void)
   std::cout << "pas de nul" << std::endl;
 }
 
+void 				arcade::NcursesTools::Wresize(WINDOW *win, int height, int width)
+{
+	 resizeterm(height, width);
+	if (wresize(win, height, width) == ERR)
+	  throw std::runtime_error("Not able to resize the window.");
+}
+
+WINDOW 				*arcade::NcursesTools::routine()
+{
+  WINDOW			*window;
+
+  if (!(window = initscr()) || _initTerm(1) == false)
+    return (NULL);
+  keypad(window, true);
+  curs_set(0);
+  return (window);
+}
+
+bool arcade::NcursesTools::_initTerm(const int i)
+{
+  if (i == 1)
+    {
+      if ((ioctl(0, TCGETS, &_old_ioctl)) == -1 ||
+	  (ioctl(0, TCGETS, &_new_ioctl)) == -1)
+	return (false);
+      _new_ioctl.c_lflag &= ~ECHO;
+      _new_ioctl.c_lflag &= ~ICANON;
+      _new_ioctl.c_cc[VMIN] = 0;
+      _new_ioctl.c_cc[VTIME] = 1;
+      if ((ioctl(0, TCSETS, &_new_ioctl)) == -1)
+	return (false);
+    } else
+    if ((ioctl(0, TCSETS, &_new_ioctl)) == -1)
+      {
+	std::cerr << "Error: Not able to reset terminal configuration." << std::endl;
+	return (false);
+      }
+  return (true);
+}
+
+void arcade::NcursesTools::resetTerm(WINDOW *window)
+{
+  delwin(window);
+  clear();
+  endwin();
+  _initTerm(0);
+  curs_set(1);
 }

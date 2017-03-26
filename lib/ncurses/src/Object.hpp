@@ -13,7 +13,6 @@ namespace arcade
   {
    public:
     Object(std::string name, Vector3d position, uint32_t speed);
-    Object(void);
     virtual ~Object();
 
     virtual void			setName(std::string const &);
@@ -27,6 +26,9 @@ namespace arcade
     virtual arcade::Vector3d const &	getPosition (void) const;
     virtual arcade::Vector3d const &	getDirection(void) const;
     virtual uint32_t			getSpeed(void) const;
+
+    virtual bool 			isTextureOk(void) const;
+    virtual void			updateVisual(uint32_t);
 
    private:
     std::string		_name;

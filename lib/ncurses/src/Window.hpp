@@ -8,7 +8,6 @@
 #include <iostream>
 #include <unistd.h>
 #include <ncurses/curses.h>
-#include <sys/ioctl.h>
 #include <ncurses/curses.h>
 #include <termios.h>
 #include <strings.h>
@@ -30,29 +29,27 @@ namespace arcade
 
         virtual bool event(void);
         virtual arcade::FrameType refresh(void);
-        virtual void addObject(std::shared_ptr<arcade::IObject>, Vector3d const &);
-        virtual void addObject(std::shared_ptr<arcade::IObject>);
-        virtual void moveObject(std::shared_ptr<arcade::IObject>, Vector3d const &);
+        virtual void addObject(std::shared_ptr<arcade::IObject>&, Vector3d const &);
+        virtual void addObject(std::shared_ptr<arcade::IObject>&);
+        virtual void moveObject(std::shared_ptr<arcade::IObject>&, Vector3d const &);
         virtual void moveObject(std::string, Vector3d const &);
-        virtual void destroyObject(std::shared_ptr<arcade::IObject>);
+        virtual void destroyObject(std::shared_ptr<arcade::IObject>&);
 
 	virtual std::shared_ptr<IEvenement> getEvent(void);
-        virtual void removeObserver(std::shared_ptr<arcade::IObserver>&);
-	virtual void registerObserver(std::shared_ptr<arcade::IObserver>&);
-    protected:
+	virtual void registerObserver(arcade::IObserver*);
+	virtual void removeObserver(arcade::IObserver*);
+
+     protected:
         Vector3d        _size;
         bool            _isopen;
         WINDOW         *_wmain;
         int32_t         _width;
       int32_t         _height;
-        struct termios	_old_ioctl;
-        struct termios	_new_ioctl;
         char            _pressed_key[10];
         NcursesTools    _ncursesTools;
       	std::vector<std::shared_ptr<arcade::IObject>> _objects;
 
         virtual void	notify(IEvenement const &);
-        int             _initTerm(const int i);
 
     };
 
