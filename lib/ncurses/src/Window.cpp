@@ -3,22 +3,26 @@
 //
 
 #include "Window.hpp"
+#include "Object.hpp"
 
-arcade::Window::Window(uint64_t height, uint64_t width) : _size(0, 0), _isopen(false), _wmain(NULL),
-							  _width(width), _height(height), _ncursesTools(), _objects()
+arcade::Window::Window(uint64_t height, uint64_t width) : _size(0, 0), _min_size(height, width),
+							  _isopen(false), _wmain(NULL),
+							  _width(width), _height(height),
+							  evenement(IEvenement::KeyCode::Key_Undefined),
+							  _ncursesTools(), _objects()
 {
-  (void) height;
-  (void) width;
-
   if (!(_wmain = _ncursesTools.routine()))
     return;
-  _isopen = true;
+  _size.setX(getLenght());
+  _size.setY(getHeight());
+  checkWindowSize(true);
   bzero(_pressed_key, 10);
   keypad(_wmain, true);
   _ncursesTools.Wresize(_wmain, height, width);
   printw(std::to_string(_width).c_str());
   move(1, 0);
   printw(std::to_string(_height).c_str());
+  _isopen = true;
 }
 
 arcade::Window::~Window()
@@ -31,10 +35,10 @@ bool arcade::Window::isOpen() const
 { return (_isopen); }
 
 int32_t arcade::Window::getHeight() const
-{ return (_height); }
+{ return (getmaxy(_wmain)); }
 
 int32_t arcade::Window::getLenght() const
-{ return (_width); }
+{ return (getmaxx(_wmain)); }
 
 const arcade::Vector3d &arcade::Window::getSize() const
 {
@@ -45,10 +49,12 @@ bool arcade::Window::event(void)
 {
   static int i = 0;
 
+  evenement.setKeyCode(IEvenement::KeyCode::Key_Undefined);
   bzero(_pressed_key, 10);
   read(0, &_pressed_key, 10);
   move(0, 0);
   std::string str;
+  evenement.setKeyCode(_ncursesTools.getKey(_pressed_key));
   if (_ncursesTools.getKey(_pressed_key) != arcade::IEvenement::KeyCode::Key_Undefined)
     str = "La touche est : " + std::to_string(i++) + " c =|" + "KEY_A" + "|";
   else
@@ -61,31 +67,50 @@ bool arcade::Window::event(void)
 
 arcade::FrameType arcade::Window::refresh()
 {
-  _width = getmaxx(_wmain);
-  _height = getmaxy(_wmain);
   _size.setX(getLenght());
   _size.setY(getHeight());
   _size.setZ(_size.getX() * _size.getY());
+  move(0,0);
+  std::string str = "x = " + std::to_string(_size.getX()) + " y = " + std::to_string(_size.getY());
+  printw(str.c_str());
+  checkWindowSize(false);
+  for (auto obj : _objects)
+    _ncursesTools.drawObject(obj);
   _ncursesTools.Refresh();
   return (FrameType::GameFrame);
 }
 
 void arcade::Window::addObject(std::shared_ptr <arcade::IObject> &obj)
 {
+  (void)obj;
+//  throw std::runtime_error("coucou");
   _objects.push_back(obj);
 }
 
-void arcade::Window::addObject(std::shared_ptr <arcade::IObject> &, const Vector3d &)
-{}
-
-void arcade::Window::moveObject(std::shared_ptr <arcade::IObject> &, const Vector3d &)
+void arcade::Window::addObject(std::shared_ptr <arcade::IObject> &obj, const Vector3d &pos)
 {
-
+  obj->setPosition(pos);
+  addObject(obj);
 }
 
-void arcade::Window::moveObject(std::string, const Vector3d &)
+void arcade::Window::moveObject(std::shared_ptr <arcade::IObject> &obj, const Vector3d &pos)
 {
+  for (auto it : _objects)
+    if (obj == it)
+      {
+	obj->setPosition(pos);
+	return ;
+      }
+}
 
+void arcade::Window::moveObject(std::string name, const Vector3d &pos) // pourquoi pas de std::string & ?
+{
+  for (auto it : _objects)
+    if (name == it->getName())
+      {
+	it->setPosition(pos);
+	return ;
+      }
 }
 
 void arcade::Window::destroyObject(std::shared_ptr <arcade::IObject> &obj)
@@ -103,15 +128,46 @@ void arcade::Window::destroyObject(std::shared_ptr <arcade::IObject> &obj)
     }
 }
 
-void arcade::Window::notify(const IEvenement &)
-{}
+void arcade::Window::notify(const IEvenement &evenement)
+{
+  for (auto it : _observers)
+    it->getNotified(evenement);
+}
 
 std::shared_ptr <arcade::IEvenement> arcade::Window::getEvent()
 {
   return (std::shared_ptr<arcade::IEvenement>(NULL));
 }
 
-void arcade::Window::removeObserver(arcade::IObserver *)
-{}
+void arcade::Window::removeObserver(arcade::IObserver *observer) // pq pas de const
+{
+  auto it = _observers.begin();
 
-void arcade::Window::registerObserver(arcade::IObserver* e) { (void)e;}
+  while (it != _observers.end())
+    {
+      if (*it == observer)
+	{
+	  _observers.erase(it);
+	  return ;
+	}
+      ++it;
+    }
+}
+
+void arcade::Window::registerObserver(arcade::IObserver *observer) //pq pas de const
+{
+  _observers.push_back(observer);
+}
+
+bool arcade::Window::checkWindowSize(const bool flag)
+{
+  if (_size.getY() < _min_size.getY() || _size.getX() < _min_size.getX())
+    {
+      if (flag == true)
+      _ncursesTools.resetTerm(_wmain); // reset term if constructor failed
+      throw std::runtime_error("The window is too small.");
+    }
+//    throw std::runtime_error("The window is too small.");
+  return false;
+}
+

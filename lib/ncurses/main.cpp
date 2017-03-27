@@ -11,10 +11,9 @@
 #include "IWindows.hpp"
 #include "Window.hpp"
 #include "src/Window.hpp"
+#include "src/Object.hpp"
 
 #include <stdlib.h>
-#include <stdio.h>
-#include <dlfcn.h>
 
 typedef arcade::IGraphicalLib *(*fptr)(void);
 
@@ -31,19 +30,37 @@ int main(void)
       return (1);
     }
   lib_fptr = (fptr)dlsym(ptr, "getNewLib");
-  lib = lib_fptr();
-
   std::shared_ptr<arcade::IWindows> w;
-  w = lib->initWindows(50, 50);
-  //arcade::IWindows *w = new arcade::Window(50, 50);
+  try {
+      lib = lib_fptr();
+      w = lib->initWindows(50, 50);
+      std::shared_ptr<arcade::IObject> obj = lib->initObject("Pacman", "resources/pacman.ncurses");
+      try {
+	  w->addObject(obj);
+	} catch (std::exception &e) {
+	  endwin();
+	  std::cout << "AError : " << e.what() << std::endl;
+	  exit (42);
+	}
 
-  // return (0);
-  while (42)
-    {
+  	arcade::Vector3d pos(0,0);
+  uint64_t x = 0;
+  uint64_t y = 0;
+      	while (42)
+	{
 //    refresh();
-      // printw("bonjour");
-      w->refresh();
-      w->event();
+	  // printw("bonjour");
+	  obj->setPosition(pos);
+	  w->refresh();
+	  w->event();
+	    pos.setX(x);
+	    pos.setY(y);
+	    x = (x + 1) % 50;
+	}
+    } catch (std::exception &e) {
+      endwin();
+      std::cout << "Error : " << e.what() << std::endl;
     }
+  delete lib;
   return (0);
 }

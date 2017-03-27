@@ -4,8 +4,13 @@
 
 #include <iostream>
 #include "NcursesTools.h"
+#include "Object.hpp"
 
-arcade::NcursesTools::NcursesTools()
+arcade::NcursesTools::NcursesTools() :
+	_colors({{"black", COLOR_BLACK}, {"red", COLOR_RED},
+		 {"green", COLOR_GREEN}, {"yellow", COLOR_YELLOW},
+		 {"blue", COLOR_BLUE}, {"magenta", COLOR_MAGENTA},
+		 {"cyan", COLOR_CYAN}, {"white", COLOR_WHITE}})
 {
   _initTermKeys();
 }
@@ -60,26 +65,24 @@ void 				arcade::NcursesTools::_initKeys(void)
   _specialKeys.push_back(std::make_pair("z", arcade::IEvenement::KeyCode::Key_Z));
   for (auto it : _specialKeys)
     if (it.first == (char *)0 || it.first == (char *)-1)
-      throw std::string("MDR");
-  std::cout << "pas de nul" << std::endl;
+      throw std::runtime_error("Not able to init the keypad.");
 }
 
 void 				arcade::NcursesTools::Wresize(WINDOW *win, int height, int width)
 {
-	 resizeterm(height, width);
-	if (wresize(win, height, width) == ERR)
-	  throw std::runtime_error("Not able to resize the window.");
+  resizeterm(height, width);
+  if (wresize(win, height, width) == ERR)
+    throw std::runtime_error("Not able to resize the window.");
 }
 
 WINDOW 				*arcade::NcursesTools::routine()
 {
-  WINDOW			*window;
-
-  if (!(window = initscr()) || _initTerm(1) == false)
+  if (!(_window = initscr()) || _initTerm(1) == false)
     return (NULL);
-  keypad(window, true);
+  start_color();
+  keypad(_window, true);
   curs_set(0);
-  return (window);
+  return (_window);
 }
 
 bool arcade::NcursesTools::_initTerm(const int i)
@@ -106,9 +109,25 @@ bool arcade::NcursesTools::_initTerm(const int i)
 
 void arcade::NcursesTools::resetTerm(WINDOW *window)
 {
-  delwin(window);
-  clear();
-  endwin();
   _initTerm(0);
   curs_set(1);
+  clear();
+  delwin(window);
+  endwin();
 }
+
+void arcade::NcursesTools::drawObject(const std::shared_ptr<arcade::IObject> obj) const
+{
+  Object *o = static_cast<arcade::Object*>(obj.get());
+
+  try
+    {
+      init_pair(1, _colors.at(o->getColor()), _colors.at(o->getBackground()));
+      wattron(_window, COLOR_PAIR(1));
+      mvwprintw(_window, obj->getPosition().getY(), obj->getPosition().getX(), o->getCharacter().c_str());
+    } catch(const std::exception &e) {
+      throw std::runtime_error("The configuration file of " + obj->getName() + " is invalid.");
+    }
+  wattroff(_window, COLOR_PAIR(1));
+}
+

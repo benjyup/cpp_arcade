@@ -15,6 +15,7 @@
 #include <vector>
 #include <string>
 #include <sys/ioctl.h>
+#include <IObject.hpp>
 #include "IObserve.hpp"
 
 namespace arcade
@@ -34,19 +35,22 @@ namespace arcade
     WINDOW 			*routine(void);
     void 			resetTerm(WINDOW *);
     arcade::IEvenement::KeyCode getKey(const char *key) const;
+    void 			drawObject(const std::shared_ptr<IObject> obj) const;
 
    private:
     std::string                 _term_name;
     std::vector<std::pair<const char *, arcade::IEvenement::KeyCode>> _specialKeys;
     std::vector<std::pair<const char *, arcade::IEvenement::KeyCode>> _keys;
-    struct termios	_old_ioctl;
-    struct termios	_new_ioctl;
+    struct termios		_old_ioctl;
+    struct termios		_new_ioctl;
+    std::map<std::string, int>	_colors;
 
     //std::map<const char, arcade::IEvenement::KeyCode> _keys;
 
     bool                        _initTermKeys(void);
     void                        _initKeys(void);
     bool 			_initTerm(const int i);
+    WINDOW			*_window;
   };
 
 }
