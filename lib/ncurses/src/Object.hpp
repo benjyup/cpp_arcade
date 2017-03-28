@@ -7,6 +7,7 @@
 
 #include <fstream>
 #include <algorithm>
+#include <ostream>
 #include "IObject.hpp"
 
 namespace arcade
@@ -15,7 +16,15 @@ namespace arcade
   {
    public:
     Object(const std::string &name, const std::string &filename);
+    Object(const Object& other);
+
+    bool operator==(const Object &rhs) const;
+
+    bool operator!=(const Object &rhs) const;
+
     virtual ~Object();
+
+    Object				&operator=(const Object &other);
 
     virtual void			setName(std::string const &);
     virtual void			setString(std::string const &);
@@ -25,6 +34,7 @@ namespace arcade
 
     virtual std::string const &		getName(void) const;
     virtual std::string const &		getString(void) const;
+    virtual std::string const &		getFilename(void) const;
     virtual arcade::Vector3d const &	getPosition (void) const;
     virtual arcade::Vector3d const &	getDirection(void) const;
     virtual uint32_t			getSpeed(void) const;
@@ -50,6 +60,8 @@ namespace arcade
     std::string		_character;
 
   };
+
+  std::ostream &operator<<(std::ostream &os, const Object &object); //demander si on à le droit à friend
 }
 
 #endif //CPP_ARCADE_OBJECT_HPP

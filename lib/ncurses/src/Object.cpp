@@ -8,10 +8,18 @@
 namespace arcade
 {
   Object::Object(const std::string &name, const std::string &filename) :
-	  _name(name), _filename(filename), _string(""), _position(Vector3d(0, 0)), _direction(Vector3d(0, 0)), _speed(0)
+	  _name(name), _filename(filename), _string(""),
+	  _position(Vector3d(0, 0)), _direction(Vector3d(0, 0)), _speed(0)
   {
     getProperties(filename);
   }
+
+  Object::Object(const Object &other) :
+	  _name(other._name), _filename(other._filename), _string(other._string),
+	  _position(other._position), _direction(other._direction), _speed(other._speed),
+	  _color(other._color), _background(other._background), _character(other._character)
+
+  {  }
 
   Object::~Object() {}
 
@@ -26,6 +34,7 @@ namespace arcade
   const arcade::Vector3d & Object::getPosition() const {return (_position);}
   uint32_t Object::getSpeed() const {return (_speed);}
   const std::string & Object::getString() const {return (_string);}
+  const std::string & Object::getFilename() const {return (_filename);}
 
   bool Object::isTextureOk(void) const {return (false);}
   void Object::updateVisual(uint32_t) {}
@@ -50,7 +59,7 @@ namespace arcade
 	  {
 	    getline(fs, str);
 	    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
-	    if (!str.empty() && str 	!= "none")
+	    if (!str.empty() && str != "none")
 	      properties[i] = str;
 	    i += 1;
 	  }
@@ -60,6 +69,51 @@ namespace arcade
     _color = properties[1];
     _background = properties[2];
     return (true);
+  }
+
+  bool Object::operator==(const Object &rhs) const
+  {
+    return this == &rhs &&
+	   _name == rhs._name &&
+	   _filename == rhs._filename &&
+	   _string == rhs._string &&
+	   _position == rhs._position &&
+	   _direction == rhs._direction &&
+	   _speed == rhs._speed &&
+	   _color == rhs._color &&
+	   _background == rhs._background &&
+	   _character == rhs._character;
+  }
+
+  bool Object::operator!=(const Object &rhs) const
+  {
+    return !(rhs == *this);
+  }
+
+  std::ostream &operator<<(std::ostream &os, const Object &object)
+  {
+    os << " _name: " << object.getName() << " _filename: " << object.getFilename()
+       << " _string: " << object.getString() << " _position: " << object.getPosition() << " _direction: " << object.getDirection()
+       << " _speed: " << object.getSpeed() << " _color: " << object.getColor() << " _background: " << object.getBackground()
+       << " _character: " << object.getCharacter();
+    return os;
+  }
+
+  Object &Object::operator=(const Object &other)
+  {
+    if (this != &other)
+      {
+	_name = other._name;
+	_filename = other._filename;
+	_string = other._string;
+	_position = other._position;
+	_direction = other._direction;
+	_speed = other._speed;
+	_color = other._color;
+	_background = other._background;
+	_character = other._character;
+      }
+    return (*this);
   }
 }
 

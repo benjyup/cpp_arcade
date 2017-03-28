@@ -17,27 +17,41 @@ namespace arcade
     NcursesLib(void);
     virtual ~NcursesLib();
 
+    /* virtual functions of IGraphicalLib */
+
     virtual std::shared_ptr<arcade::IWindows> 	&initWindows(uint64_t height = 0,
 								  uint64_t lenght = 0);
     virtual std::shared_ptr<IObject>		initObject(std::string const &, std::string const &);
     virtual std::shared_ptr<arcade::IObject>	initLabel(std::string const &, std::string const &);
     virtual std::shared_ptr<arcade::IWindows> &	getWindows(void);
 
+    /* !(virtual functions of IGraphicalLib) */
+
+
+    /* virtual functions of ILibrairy */
+
     virtual void *		getHandle(void) const;
-    virtual std::string const &	getName(void) const  {return _name;};
-    virtual LibType		getType(void) const {return (arcade::ILibrairy::LibType ::Graphical);};
-    virtual void 		freeSharedData(void) {};
+    virtual std::string const &	getName(void) const;
+    virtual LibType		getType(void) const;
+    virtual void 		freeSharedData(void);
+
+    /* !(virtual functions of ILibrairy) */
+
+    /* virtual functions of IObserved */
 
     virtual std::shared_ptr<IEvenement> getEvent(void);
     virtual void registerObserver(arcade::IObserver*);
     virtual void removeObserver(arcade::IObserver*);
 
+    /* !(virtual functions of IObserved) */
+
 
    private:
     std::shared_ptr<arcade::IWindows> 	_win;
     std::string				_name;
+    std::vector<arcade::IObserver*>	_observers;
 
-    virtual void notify(IEvenement const &);
+    virtual void notify(IEvenement const &); // virtual function of IObserved
   };
 }
 #endif //CPP_ARCADE_NCURSESLIB_HPP
