@@ -13,7 +13,7 @@
 #include <strings.h>
 
 #include "IWindows.hpp"
-#include "NcursesTools.h"
+#include "NcursesTools.hpp"
 #include "Evenement.hpp"
 
 namespace arcade

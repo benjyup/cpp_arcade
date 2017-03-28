@@ -18,7 +18,6 @@ arcade::Window::Window(uint64_t height, uint64_t width) : _size(0, 0), _min_size
   checkWindowSize(true);
   bzero(_pressed_key, 10);
   keypad(_wmain, true);
-  _ncursesTools.Wresize(_wmain, height, width);
   printw(std::to_string(_width).c_str());
   move(1, 0);
   printw(std::to_string(_height).c_str());

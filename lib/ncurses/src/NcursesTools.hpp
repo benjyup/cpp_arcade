@@ -29,7 +29,7 @@ namespace arcade
 
     /* Ncurses functions */
     int 			Refresh(void) const;
-    void 			Wresize(WINDOW	*, int height, int width);
+    //void 			Wresize(WINDOW	*, int height, int width);
     /* !Ncurses functions */
 
     WINDOW 			*routine(void);

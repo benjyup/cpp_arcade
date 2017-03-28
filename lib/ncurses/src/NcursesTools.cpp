@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "NcursesTools.h"
+#include "NcursesTools.hpp"
 #include "Object.hpp"
 
 arcade::NcursesTools::NcursesTools() :
@@ -41,7 +41,6 @@ bool				arcade::NcursesTools::_initTermKeys(void)
 {
   char                  	*str;
   int                     	err;
-  std::string			strr;
 
   if (!(str = std::getenv("TERM")))
     return (false); // throw exception
@@ -68,12 +67,12 @@ void 				arcade::NcursesTools::_initKeys(void)
       throw std::runtime_error("Not able to init the keypad.");
 }
 
-void 				arcade::NcursesTools::Wresize(WINDOW *win, int height, int width)
+/*void 				arcade::NcursesTools::Wresize(WINDOW *win, int height, int width)
 {
   resizeterm(height, width);
   if (wresize(win, height, width) == ERR)
     throw std::runtime_error("Not able to resize the window.");
-}
+}*/
 
 WINDOW 				*arcade::NcursesTools::routine()
 {
