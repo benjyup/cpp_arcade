@@ -27,29 +27,32 @@ namespace arcade
 
   Object::~Object() {}
 
-  void Object::setName(const std::string &name) {_name = name;}
-  void Object::setString(const std::string &string) {_string = string;};
-  void Object::setDirection(const Vector3d &direction) {_direction = direction;}
-  void Object::setPosition(const Vector3d &position) {_position = position;}
-  void Object::setSpeed(uint32_t speed) {_speed = speed;}
+  /* virtual functions of IObject */
 
-  const arcade::Vector3d & Object::getDirection() const { return (_direction);}
-  const std::string & Object::getName() const {return (_name);}
-  const arcade::Vector3d & Object::getPosition() const {return (_position);}
-  uint32_t Object::getSpeed() const {return (_speed);}
-  const std::string & Object::getString() const {return (_string);}
-  const std::string & Object::getFilename() const {return (_filename);}
 
-  bool Object::isTextureOk(void) const {return (false);}
-  void Object::updateVisual(uint32_t) {}
+  void 				Object::setName(const std::string &name) {_name = name;}
+  void 				Object::setString(const std::string &string) {_string = string;};
+  void 				Object::setDirection(const Vector3d &direction) {_direction = direction;}
+  void 				Object::setPosition(const Vector3d &position) {_position = position;}
+  void 				Object::setSpeed(uint32_t speed) {_speed = speed;}
 
-  /* Not virtual */
+  const arcade::Vector3d 	&Object::getDirection() const { return (_direction);}
+  const std::string 		&Object::getName() const {return (_name);}
+  const arcade::Vector3d 	&Object::getPosition() const {return (_position);}
+  uint32_t 			Object::getSpeed() const {return (_speed);}
+  const std::string 		&Object::getString() const {return (_string);}
+  const std::string 		&Object::getFilename() const {return (_filename);}
 
-  std::string Object::getColor() const { return _color; }
-  std::string Object::getBackground() const { return _background;  }
-  std::string Object::getCharacter() const { return _character; }
+  bool 				Object::isTextureOk(void) const {return (true);}
+  void 				Object::updateVisual(uint32_t) {}
 
-  bool Object::setProperties(const std::string &filename)
+  /* !(virtual functions of IObject) */
+
+  std::string 			Object::getColor() const { return _color; }
+  std::string 			Object::getBackground() const { return _background;  }
+  std::string 			Object::getCharacter() const { return _character; }
+
+  bool 				Object::setProperties(const std::string &filename)
   {
     std::ifstream 		fs;
     std::vector<std::string>	properties = {"$", "black", "white"};
@@ -77,7 +80,7 @@ namespace arcade
     return (true);
   }
 
-  bool Object::operator==(const Object &rhs) const
+  bool 				Object::operator==(const Object &rhs) const
   {
     return this == &rhs &&
 	   _name == rhs._name &&
@@ -91,12 +94,12 @@ namespace arcade
 	   _character == rhs._character;
   }
 
-  bool Object::operator!=(const Object &rhs) const
+  bool 				Object::operator!=(const Object &rhs) const
   {
     return !(rhs == *this);
   }
 
-  std::ostream &operator<<(std::ostream &os, const Object &object)
+  std::ostream 			&operator<<(std::ostream &os, const Object &object)
   {
     os << " _name: " << object.getName() << " _filename: " << object.getFilename()
        << " _string: " << object.getString() << " _position: " << object.getPosition() << " _direction: " << object.getDirection()
@@ -105,7 +108,7 @@ namespace arcade
     return os;
   }
 
-  Object &Object::operator=(const Object &other)
+  Object 			&Object::operator=(const Object &other)
   {
     if (this != &other)
       {

@@ -27,6 +27,8 @@ namespace arcade
 
     Object				&operator=(const Object &other);
 
+    /* virtual functions of IObject */
+
     virtual void			setName(std::string const &);
     virtual void			setString(std::string const &);
     virtual void			setPosition(Vector3d const &);
@@ -42,6 +44,8 @@ namespace arcade
 
     virtual bool 			isTextureOk(void) const;
     virtual void			updateVisual(uint32_t);
+
+    /* !(virtual functions of IObject) */
 
     std::string getColor() const;
     std::string getBackground() const;
