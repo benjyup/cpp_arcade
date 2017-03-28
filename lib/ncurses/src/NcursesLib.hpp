@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include "IGraphicalLib.hpp"
 #include "Window.hpp"
+#include "Label.hpp"
 
 namespace arcade
 {

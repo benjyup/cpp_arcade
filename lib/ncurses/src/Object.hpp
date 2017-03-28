@@ -15,6 +15,7 @@ namespace arcade
   class Object : public IObject
   {
    public:
+    Object();
     Object(const std::string &name, const std::string &filename);
     Object(const Object& other);
 
@@ -46,9 +47,9 @@ namespace arcade
     std::string getBackground() const;
     std::string getCharacter() const;
 
-    bool 	getProperties(const std::string &pahtname);
+    bool 	setProperties(const std::string &pahtname);
 
-   private:
+   protected:
     std::string		_name;
     std::string		_filename;
     std::string		_string;

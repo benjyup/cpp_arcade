@@ -28,8 +28,8 @@ namespace arcade
     return(std::shared_ptr<IObject>(new Object(name, filename)));
   }
 
-  std::shared_ptr<arcade::IObject> NcursesLib::initLabel(const std::string &, const std::string &)
-  {return(std::shared_ptr<IObject>());}
+  std::shared_ptr<arcade::IObject> NcursesLib::initLabel(const std::string &name, const std::string &filename)
+  {return(std::shared_ptr<IObject>(new Label(name, filename)));}
 
   std::shared_ptr<arcade::IWindows>& NcursesLib::getWindows() {return (_win);}
 

@@ -28,6 +28,7 @@ SRCS		=	$(SRC)/Window.cpp\
 			$(SRC)/NcursesTools.cpp\
 			$(SRC)/NcursesLib.cpp\
 			$(SRC)/Object.cpp\
+			$(SRC)/Label.cpp\
 			$(SRC)/Evenement.cpp\
 			$(INTERFACES)/Vector3d.cpp\
 
