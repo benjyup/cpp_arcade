@@ -17,6 +17,8 @@ namespace arcade
     setProperties(filename);
   }
 
+  Label::~Label() {}
+
   bool Label::setProperties(const std::string &filename)
   {
     std::ifstream 		fs;

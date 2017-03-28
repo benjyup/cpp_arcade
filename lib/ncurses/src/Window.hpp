@@ -8,9 +8,9 @@
 #include <iostream>
 #include <unistd.h>
 #include <ncurses/curses.h>
-#include <ncurses/curses.h>
 #include <termios.h>
 #include <strings.h>
+#include <csignal>
 
 #include "IWindows.hpp"
 #include "NcursesTools.hpp"
@@ -22,6 +22,8 @@ namespace arcade
    public:
     Window(uint64_t height, uint64_t width);
     virtual ~Window();
+
+    /* virtual functions of IWindows */
 
     virtual bool isOpen() const;
     virtual int32_t getHeight() const;
@@ -36,11 +38,18 @@ namespace arcade
     virtual void moveObject(std::string, Vector3d const &);
     virtual void destroyObject(std::shared_ptr<arcade::IObject>&);
 
+    /* !(virtual functions of IWindows) */
+
+    /* virtual functions of IObserved */
+
     virtual std::shared_ptr<IEvenement> getEvent(void);
     virtual void registerObserver(arcade::IObserver*);
     virtual void removeObserver(arcade::IObserver*);
 
+    /* !(virtual functions of IObserved) */
+
     bool 	checkWindowSize(const bool);
+    static void		_close_window(int signum);
 
    protected:
     Vector3d        	_size;
@@ -60,7 +69,6 @@ namespace arcade
 
 
     virtual void	notify(IEvenement const &);
-
   };
 }
 
