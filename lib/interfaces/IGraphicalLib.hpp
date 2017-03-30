@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <string>
 #include <memory>
+#include <vector>
 
 #include "Vector3d.hpp"
 
@@ -38,8 +39,9 @@ namespace arcade
     //		Initialise a windows of the current librairy
     //
 
-    virtual std::shared_ptr<arcade::IWindows> &	initWindows(uint64_t height = 0,
-							  uint64_t lenght = 0) = 0;
+    virtual std::shared_ptr<arcade::IWindows> &	initWindows(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > >&,
+								   uint64_t height = 0,
+								   uint64_t lenght = 0) = 0;
 
     //
     //		Initialise a object of the current librairy
@@ -52,6 +54,12 @@ namespace arcade
     //
 
     virtual std::shared_ptr<arcade::IObject>	initLabel(std::string const &, std::string const &) = 0;
+
+    //
+    //		Update a object Visual with the Texture Dump / etc ...
+    //
+
+    virtual void				setVisual(std::shared_ptr<arcade::IObject> &, std::string const &) = 0;
 
     //
     //		Get the windows of this librairy

@@ -61,4 +61,5 @@ namespace arcade
     os << "x = " << vector.getX() << " y = " << vector.getY();
     return (os);
   }
+
 }

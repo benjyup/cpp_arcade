@@ -22,7 +22,7 @@ namespace arcade
   //			Is a librairy and can observe a object IObserved
   //
 
-  class IGameLib : public arcade::ILibrairy, public IObserver, public IObserved
+  class IGameLib : public arcade::ILibrairy, public IObserver
   {
    protected:
 
@@ -46,6 +46,12 @@ namespace arcade
 
     virtual void 				initGame(arcade::IGraphicalLib *,
 							 std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > >&) = 0;
+
+    //
+    //		Getter for score on game
+    //
+
+    virtual uint64_t 				getScore(void) const = 0;
 
     //
     //		Implementation of getType

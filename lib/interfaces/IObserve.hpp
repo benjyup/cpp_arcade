@@ -27,8 +27,7 @@ namespace arcade
     {
       Nothing = 0,
       KeyPressDown,
-      KeyRelease,
-      ScoreIncrease
+      KeyRelease
     };
 
     //
@@ -119,6 +118,7 @@ namespace arcade
     //
     //		Add a observer from observer vector
     //
+
     virtual void registerObserver(arcade::IObserver*) = 0;
 
     //
