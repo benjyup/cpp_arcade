@@ -15,6 +15,10 @@ namespace arcade
   class Object : public IObject
   {
    public:
+    static const std::string		directory_name;
+    static const std::string		file_extension;
+
+
     Object();
     Object(const std::string &name, const std::string &filename);
     Object(const Object& other);
@@ -43,6 +47,7 @@ namespace arcade
     virtual arcade::Vector3d const &	getDirection(void) const;
     virtual uint32_t			getSpeed(void) const;
     virtual float			getScale(void) const { return (0.0);};
+    int 				getInitColor(void) const { return (_init_color); }
 
     virtual bool 			isTextureOk(void) const;
     virtual void			updateVisual(uint32_t);
@@ -65,7 +70,9 @@ namespace arcade
     std::string		_color;
     std::string		_background;
     std::string		_character;
+    int 		_init_color;
 
+    static int 	_color_int;
   };
 
   std::ostream &operator<<(std::ostream &os, const Object &object); //demander si on à le droit à friend

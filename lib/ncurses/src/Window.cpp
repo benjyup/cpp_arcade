@@ -66,10 +66,13 @@ bool 			arcade::Window::event(void)
 
   evenement.setKeyCode(IEvenement::KeyCode::Key_Undefined);
   bzero(_pressed_key, 10);
-  read(0, &_pressed_key, 10);
-  move(0, 0);
+  if(read(0, &_pressed_key, 10) == 1 && _pressed_key[0] == 27)
+    return (false);
+  //move(0, 0);
   //std::string str;
   evenement.setKeyCode(_ncursesTools.getKey(_pressed_key));
+  if (evenement.getKeyCode() == IEvenement::KeyCode::Key_Q)
+    return (false);
   notify(evenement);
   /*if (_ncursesTools.getKey(_pressed_key) != arcade::IEvenement::KeyCode::Key_Undefined)
     str = "La touche est : " + std::to_string(i++) + " c =|" + "KEY_A" + "|";
@@ -93,12 +96,12 @@ arcade::FrameType 	arcade::Window::refresh()
   for (auto obj : *_objects)
     _ncursesTools.drawObject(obj);
   _ncursesTools.Refresh();
+  clear();
   return (FrameType::GameFrame);
 }
 
 void 			arcade::Window::addObject(std::shared_ptr <arcade::IObject> &obj)
 {
-  (void)obj;
 //  throw std::runtime_error("coucou");
   _objects->push_back(obj);
 }

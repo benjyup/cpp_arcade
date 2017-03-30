@@ -6,11 +6,13 @@
 #include "NcursesTools.hpp"
 #include "Object.hpp"
 
-arcade::NcursesTools::NcursesTools() :
-	_colors({{"black", COLOR_BLACK}, {"red", COLOR_RED},
-		 {"green", COLOR_GREEN}, {"yellow", COLOR_YELLOW},
-		 {"blue", COLOR_BLUE}, {"magenta", COLOR_MAGENTA},
-		 {"cyan", COLOR_CYAN}, {"white", COLOR_WHITE}})
+const std::map<std::string, std::pair<char, short>> arcade::NcursesTools::_colors({{"black", {COLOR_BLACK, 1}}, {"red", {COLOR_RED, 2}},
+								{"green", {COLOR_GREEN, 3}}, {"yellow", {COLOR_YELLOW,4}},
+								{"blue", {COLOR_BLUE, 5}}, {"magenta", {COLOR_MAGENTA, 6}},
+								{"cyan", {COLOR_CYAN, 7}}, {"white", {COLOR_WHITE, 8}}});
+
+
+	arcade::NcursesTools::NcursesTools()
 {
   _initTermKeys();
 }
@@ -79,6 +81,15 @@ WINDOW 				*arcade::NcursesTools::routine()
   if (!(_window = initscr()) || _initTerm(1) == false)
     return (NULL);
   start_color();
+  use_default_colors();
+  init_pair(_colors.at("black").second, _colors.at("white").first, _colors.at("white").first);
+  init_pair(_colors.at("red").second, _colors.at("red").first, _colors.at("red").first);
+  init_pair(_colors.at("green").second, _colors.at("green").first, _colors.at("green").first);
+  init_pair(_colors.at("yellow").second, _colors.at("yellow").first, _colors.at("yellow").first);
+  init_pair(_colors.at("blue").second, _colors.at("blue").first, _colors.at("blue").first);
+  init_pair(_colors.at("magenta").second, _colors.at("magenta").first, _colors.at("magenta").first);
+  init_pair(_colors.at("cyan").second, _colors.at("cyan").first, _colors.at("cyan").first);
+  init_pair(_colors.at("white").second, _colors.at("black").first, _colors.at("black").first);
   keypad(_window, true);
   curs_set(0);
   return (_window);
@@ -118,15 +129,16 @@ void arcade::NcursesTools::resetTerm(WINDOW *window)
 void arcade::NcursesTools::drawObject(const std::shared_ptr<arcade::IObject> obj) const
 {
   Object *o = static_cast<arcade::Object*>(obj.get());
-
+  (void)o;
+//  throw std::runtime_error("The configuration file of " + std::to_string(_colors.at(o->getColor()).second));
   try
     {
-      init_pair(1, _colors.at(o->getColor()), _colors.at(o->getBackground()));
-      wattron(_window, COLOR_PAIR(1));
+//      wattron(_window, COLOR_PAIR(_colors.at(o->getColor()).second));
+      wattron(_window, COLOR_PAIR(_colors.at(o->getColor()).second));
       mvwprintw(_window, obj->getPosition().getY(), obj->getPosition().getX(), o->getCharacter().c_str());
+      wattroff(_window, COLOR_PAIR(_colors.at(o->getColor()).second));
+//      wattroff(_window, COLOR_PAIR(_colors.at(o->getColor()).second));
     } catch(const std::exception &e) {
       throw std::runtime_error("The configuration file of " + obj->getName() + " is invalid.");
     }
-  wattroff(_window, COLOR_PAIR(1));
 }
-

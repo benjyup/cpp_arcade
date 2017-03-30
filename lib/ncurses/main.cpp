@@ -38,7 +38,10 @@ int main(void)
       lib = lib_fptr(ptr);
       lib->initWindows(m);
       w = lib->getWindows();
-      std::shared_ptr<arcade::IObject> obj = lib->initObject("Pacman", "resources/pacman.ncurses");
+      std::shared_ptr<arcade::IObject> obj2 = lib->initObject("Pacmann", "./resources/xelow");
+      std::shared_ptr<arcade::IObject> obj = lib->initObject("Pacman", "./resources/pacman");
+      std::shared_ptr<arcade::IObject> obj3 = lib->initObject("Pacman", "./resources/pacman");
+      std::shared_ptr<arcade::IObject> obj4 = lib->initObject("Pacman", "./resources/pacmanx");
       try {
 	  w->addObject(obj);
 	} catch (std::exception &e) {
@@ -47,19 +50,18 @@ int main(void)
 	  exit (42);
 	}
 
-  	arcade::Vector3d pos(0,0);
+      arcade::Vector3d pos1(10,10);
+      obj2->setPosition(pos1);
+      obj3->setPosition({20, 10});
+      obj4->setPosition({30, 10});
+      arcade::Vector3d pos(0,0);
   uint64_t x = 0;
   uint64_t y = 0;
-      	while (42)
+      	while (w->event())
 	{
 //    refresh();
 	  // printw("bonjour");
-	  obj->setPosition(pos);
 	  w->refresh();
-	  w->event();
-	    pos.setX(x);
-	    pos.setY(y);
-	    x = (x + 1) % 50;
 	}
     } catch (std::exception &e) {
       endwin();

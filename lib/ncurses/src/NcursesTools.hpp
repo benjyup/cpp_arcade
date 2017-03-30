@@ -23,6 +23,8 @@ namespace arcade
 
   class NcursesTools {
    public:
+    static const std::map<std::string, std::pair<char, short>> _colors;
+
     NcursesTools(void);
     ~NcursesTools(void);
 
@@ -43,7 +45,6 @@ namespace arcade
     std::vector<std::pair<const char *, arcade::IEvenement::KeyCode>> _keys;
     struct termios		_old_ioctl;
     struct termios		_new_ioctl;
-    std::map<std::string, int>	_colors;
 
     //std::map<const char, arcade::IEvenement::KeyCode> _keys;
 

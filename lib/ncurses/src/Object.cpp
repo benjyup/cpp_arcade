@@ -3,10 +3,16 @@
 //
 
 #include <vector>
+#include <ncurses/curses.h>
 #include "Object.hpp"
+#include "NcursesTools.hpp"
 
 namespace arcade
 {
+  const std::string		Object::directory_name = "./resources/";
+  const std::string		Object::file_extension = ".ncurses";
+  int				Object::_color_int = 16;
+
   Object::Object() : _name(""), _filename(""), _string(""),
   _position(Vector3d(0, 0)), _direction(Vector3d(0, 0)), _speed(0)
   {}
@@ -15,7 +21,9 @@ namespace arcade
 	  _name(name), _filename(filename), _string(""),
 	  _position(Vector3d(0, 0)), _direction(Vector3d(0, 0)), _speed(0)
   {
-    setProperties(filename);
+//    _filename = directory_name + _filename + file_extension;
+    _filename = _filename + file_extension;
+    setProperties(_filename);
   }
 
   Object::Object(const Object &other) :
@@ -77,6 +85,9 @@ namespace arcade
     _character = properties[0];
     _color = properties[1];
     _background = properties[2];
+    //_init_color = _color_int;
+    //init_pair(_init_color, NcursesTools::_colors.at(_color), NcursesTools::_colors.at(_background));
+    //_color_int += 1;
     return (true);
   }
 
