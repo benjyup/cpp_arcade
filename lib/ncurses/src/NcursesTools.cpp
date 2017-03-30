@@ -82,14 +82,14 @@ WINDOW 				*arcade::NcursesTools::routine()
     return (NULL);
   start_color();
   use_default_colors();
-  init_pair(_colors.at("black").second, _colors.at("white").first, _colors.at("white").first);
+  init_pair(_colors.at("black").second, _colors.at("black").first, _colors.at("black").first);
   init_pair(_colors.at("red").second, _colors.at("red").first, _colors.at("red").first);
   init_pair(_colors.at("green").second, _colors.at("green").first, _colors.at("green").first);
   init_pair(_colors.at("yellow").second, _colors.at("yellow").first, _colors.at("yellow").first);
   init_pair(_colors.at("blue").second, _colors.at("blue").first, _colors.at("blue").first);
   init_pair(_colors.at("magenta").second, _colors.at("magenta").first, _colors.at("magenta").first);
   init_pair(_colors.at("cyan").second, _colors.at("cyan").first, _colors.at("cyan").first);
-  init_pair(_colors.at("white").second, _colors.at("black").first, _colors.at("black").first);
+  init_pair(_colors.at("white").second, _colors.at("white").first, _colors.at("white").first);
   keypad(_window, true);
   curs_set(0);
   return (_window);
