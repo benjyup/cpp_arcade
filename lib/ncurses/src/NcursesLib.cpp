@@ -7,18 +7,22 @@
 
 namespace arcade
 {
-  NcursesLib::NcursesLib(void *handle) : _win(), _name("NcursesLib"), _observers(),
+  NcursesLib::NcursesLib(void *handle) : _win(NULL), _name("NcursesLib"), _observers(),
 					 _handle(handle) { }
 
   NcursesLib::~NcursesLib() {  }
 
   /* virtual functions of IGraphicalLib */
 
-  std::shared_ptr<arcade::IWindows> &NcursesLib::initWindows(uint64_t height, uint64_t width)
+  std::shared_ptr<arcade::IWindows> &NcursesLib::initWindows(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>> >&objs,
+							     uint64_t height,
+							     uint64_t width)
   {
     try
       {
-	_win = std::shared_ptr<IWindows>(new Window(height, width));
+	// std::cout << std::to_string(height) + " | " + std::to_string(width) << std::endl;
+	_win = std::shared_ptr<IWindows>(new Window(objs, height, width));
+	std::cout << "(init_window) _win = " << _win << std::endl;
       }
     catch (std::exception &e)
       {
@@ -29,13 +33,19 @@ namespace arcade
 
   std::shared_ptr<IObject> NcursesLib::initObject(const std::string &name, const std::string &filename)
   {
-    return(std::shared_ptr<IObject>(new Object(name, filename)));
+    auto tmp = std::shared_ptr<IObject>(new Object(name, filename));
+    std::cout << tmp << std::endl;
+    return (tmp);
   }
 
   std::shared_ptr<arcade::IObject> NcursesLib::initLabel(const std::string &name, const std::string &filename)
   {return(std::shared_ptr<IObject>(new Label(name, filename)));}
 
-  std::shared_ptr<arcade::IWindows>& NcursesLib::getWindows() {return (_win);}
+  std::shared_ptr<arcade::IWindows>& NcursesLib::getWindows()
+  {
+    std::cout << "(getWindo) _win = " << _win << std::endl;
+    return (_win);
+  }
 
   /* !(virtual functions of IGraphicalLib) */
 

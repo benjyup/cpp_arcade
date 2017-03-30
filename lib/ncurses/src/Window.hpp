@@ -20,7 +20,7 @@ namespace arcade
 {
   class Window : public IWindows {
    public:
-    Window(uint64_t height, uint64_t width);
+    Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>>&, uint64_t height = 0, uint64_t width = 0);
     virtual ~Window();
 
     /* virtual functions of IWindows */
@@ -62,7 +62,7 @@ namespace arcade
     Evenement		evenement;
 
     NcursesTools    	_ncursesTools;
-    std::vector<std::shared_ptr<arcade::IObject>> _objects;
+    std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> _objects;
     std::vector<arcade::IObserver*> _observers;
 
     std::shared_ptr<arcade::IObject> _obj; // à supprimer

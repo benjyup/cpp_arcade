@@ -10,8 +10,10 @@
 #include "IGraphicalLib.hpp"
 #include "IWindows.hpp"
 #include "Window.hpp"
+#include "IObject.hpp"
 #include "src/Window.hpp"
 #include "src/Object.hpp"
+#include <vector>
 
 #include <stdlib.h>
 
@@ -22,6 +24,7 @@ int main(void)
   void	*ptr;
   fptr	lib_fptr;
   arcade::IGraphicalLib	*lib;
+  std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> m(new std::vector<std::shared_ptr<arcade::IObject>>());
 
   if (!(ptr = dlopen("./lib_arcade_ncurses.so", RTLD_NOW|RTLD_LAZY)))
     {
@@ -33,7 +36,8 @@ int main(void)
   std::shared_ptr<arcade::IWindows> w;
   try {
       lib = lib_fptr(ptr);
-      w = lib->initWindows(50, 50);
+      lib->initWindows(m);
+      w = lib->getWindows();
       std::shared_ptr<arcade::IObject> obj = lib->initObject("Pacman", "resources/pacman.ncurses");
       try {
 	  w->addObject(obj);
@@ -66,6 +70,7 @@ int main(void)
   std::cout << "Timothée" << std::endl;
   std::cout << w.use_count() << std::endl;
   w.reset();
+  m.reset();
   dlclose(ptr);
   std::cout << "Timothée" << std::endl;
   return (0);
