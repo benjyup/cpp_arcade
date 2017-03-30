@@ -7,6 +7,7 @@
 
 #include <stdexcept>
 #include "IGraphicalLib.hpp"
+#include "IWindows.hpp"
 #include "Window.hpp"
 #include "Label.hpp"
 
@@ -15,7 +16,7 @@ namespace arcade
   class NcursesLib : public IGraphicalLib
   {
    public:
-    NcursesLib(void);
+    NcursesLib(void *handle);
     virtual ~NcursesLib();
 
     /* virtual functions of IGraphicalLib */
@@ -51,6 +52,7 @@ namespace arcade
     std::shared_ptr<arcade::IWindows> 	_win;
     std::string				_name;
     std::vector<arcade::IObserver*>	_observers;
+    void				*_handle;
 
     virtual void notify(IEvenement const &); // virtual function of IObserved
   };

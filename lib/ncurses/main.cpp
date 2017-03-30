@@ -15,7 +15,7 @@
 
 #include <stdlib.h>
 
-typedef arcade::IGraphicalLib *(*fptr)(void);
+typedef arcade::IGraphicalLib *(*fptr)(void*);
 
 int main(void)
 {
@@ -23,7 +23,7 @@ int main(void)
   fptr	lib_fptr;
   arcade::IGraphicalLib	*lib;
 
-  if (!(ptr = dlopen("./libtest.so", RTLD_NOW|RTLD_LAZY)))
+  if (!(ptr = dlopen("./lib_arcade_ncurses.so", RTLD_NOW|RTLD_LAZY)))
     {
       fputs (dlerror(), stderr);
       exit(1);
@@ -32,7 +32,7 @@ int main(void)
   lib_fptr = (fptr)dlsym(ptr, "getNewLib");
   std::shared_ptr<arcade::IWindows> w;
   try {
-      lib = lib_fptr();
+      lib = lib_fptr(ptr);
       w = lib->initWindows(50, 50);
       std::shared_ptr<arcade::IObject> obj = lib->initObject("Pacman", "resources/pacman.ncurses");
       try {
@@ -61,6 +61,12 @@ int main(void)
       endwin();
       std::cout << "Error : " << e.what() << std::endl;
     }
+  std::cout << w.use_count() << std::endl;
   delete lib;
+  std::cout << "Timothée" << std::endl;
+  std::cout << w.use_count() << std::endl;
+  w.reset();
+  dlclose(ptr);
+  std::cout << "Timothée" << std::endl;
   return (0);
 }

@@ -5,10 +5,10 @@
 ## Login   <vincent.mesquita@epitech.net>
 ## 
 ## Started on  Sun Mar 19 14:10:03 2017 Vincent Mesquita
-## Last update Fri Mar 24 14:25:05 2017 vincent.mesquita@epitech.eu
+## Last update Thu Mar 30 12:07:50 2017 vincent.mesquita@epitech.eu
 ##
 
-NAME		=	libtest.so
+NAME		=	lib_arcade_ncurses.so
 
 SRC			=	src
 
@@ -20,7 +20,7 @@ CPP 		= 	g++
 
 RM 		= 	rm -rf
 
-CPPFLAGS	+=	-W -Wall -Werror -Wextra -I$(INTERFACES)/ -I./src -fPIC
+CPPFLAGS	+=	-W -Wall -Werror -Wextra -I$(INTERFACES)/ -I./src -fPIC -g3
 
 LDFLAGS		=	-lncurses -shared
 
