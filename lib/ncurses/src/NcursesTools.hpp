@@ -23,9 +23,19 @@ namespace arcade
 
   class NcursesTools {
    public:
-    static const std::map<std::string, std::pair<char, short>> _colors;
+    static const std::map<std::string, std::pair<char, short>> 	NT_COLORS;
+    static const std::vector<std::string>			NT_DEFAULT_PROPERTIES;
+    static const std::string					NT_BLACK;
+    static const std::string					NT_RED;
+    static const std::string					NT_GREEN;
+    static const std::string					NT_YELLOW;
+    static const std::string					NT_BLUE;
+    static const std::string					NT_MAGENTA;
+    static const std::string					NT_CYAN;
+    static const std::string					NT_WHITE;
 
     NcursesTools(void);
+
     ~NcursesTools(void);
 
 
@@ -41,12 +51,10 @@ namespace arcade
 
    private:
     std::string                 _term_name;
-    std::vector<std::pair<const char *, arcade::IEvenement::KeyCode>> _specialKeys;
-    std::vector<std::pair<const char *, arcade::IEvenement::KeyCode>> _keys;
+    std::vector<std::pair<const char *, arcade::IEvenement::KeyCode>> _Keys;
     struct termios		_old_ioctl;
     struct termios		_new_ioctl;
 
-    //std::map<const char, arcade::IEvenement::KeyCode> _keys;
 
     bool                        _initTermKeys(void);
     void                        _initKeys(void);

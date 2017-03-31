@@ -51,7 +51,6 @@ namespace arcade
 
     /* !(virtual functions of IObserved) */
 
-
    private:
     std::shared_ptr<arcade::IWindows> 					_win;
     std::string								_name;

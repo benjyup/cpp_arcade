@@ -20,10 +20,8 @@ namespace arcade
   {
     try
       {
-	// std::cout << std::to_string(height) + " | " + std::to_string(width) << std::endl;
 	_objects = objs;
 	_win = std::shared_ptr<IWindows>(new Window(objs, height, width));
-	std::cout << "(init_window) _win = " << _win << std::endl;
       }
     catch (std::exception &e)
       {
@@ -47,19 +45,14 @@ namespace arcade
 
   void NcursesLib::setVisual(std::shared_ptr<arcade::IObject> &obj, std::string const & filename)
   {
-	for (auto &it : *_objects)
-	  {
-		if (it == obj)
-		  {
-		    Object *o = static_cast<Object*>(it.get());
-		    if (o->getType() == Object::ObjectType::Label)
-		      {
-			Label *label = static_cast<Label*>(it.get());
-			label->setProperties(filename);
-		      }
-		    o->setProperties(filename);
-		  }
-	  }
+    Object *o = static_cast<Object*>(obj.get());
+    if (o->getType() == Object::ObjectType::Label)
+      {
+	Label *label = static_cast<Label*>(obj.get());
+	label->setProperties(filename);
+      }
+    else
+    	o->setProperties(filename);
   }
 
   /* !(virtual functions of IGraphicalLib) */
@@ -114,4 +107,3 @@ namespace arcade
   }
 
 }
-

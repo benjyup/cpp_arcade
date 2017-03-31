@@ -6,10 +6,21 @@
 #include "NcursesTools.hpp"
 #include "Object.hpp"
 
-const std::map<std::string, std::pair<char, short>> arcade::NcursesTools::_colors({{"black", {COLOR_BLACK, 1}}, {"red", {COLOR_RED, 2}},
-										   {"green", {COLOR_GREEN, 3}}, {"yellow", {COLOR_YELLOW,4}},
-										   {"blue", {COLOR_BLUE, 5}}, {"magenta", {COLOR_MAGENTA, 6}},
-										   {"cyan", {COLOR_CYAN, 7}}, {"white", {COLOR_WHITE, 8}}});
+const std::vector<std::string>	arcade::NcursesTools::NT_DEFAULT_PROPERTIES({"$", "black"});
+
+const std::string					arcade::NcursesTools::NT_BLACK = "black";
+const std::string					arcade::NcursesTools::NT_RED = "red";
+const std::string					arcade::NcursesTools::NT_GREEN = "green";
+const std::string					arcade::NcursesTools::NT_YELLOW = "yellow";
+const std::string					arcade::NcursesTools::NT_BLUE = "blue";
+const std::string					arcade::NcursesTools::NT_MAGENTA = "magenta";
+const std::string					arcade::NcursesTools::NT_CYAN = "cyan";
+const std::string					arcade::NcursesTools::NT_WHITE = "white";
+
+const std::map<std::string, std::pair<char, short>> arcade::NcursesTools::NT_COLORS({{NT_BLACK, {COLOR_BLACK, 1}}, {NT_RED, {COLOR_RED, 2}},
+										     {NT_GREEN, {COLOR_GREEN, 3}}, {NT_YELLOW, {COLOR_YELLOW,4}},
+										     {NT_BLUE, {COLOR_BLUE, 5}}, {NT_MAGENTA, {COLOR_MAGENTA, 6}},
+										     {NT_CYAN, {COLOR_CYAN, 7}}, {NT_WHITE, {COLOR_WHITE, 8}}});
 
 
 arcade::NcursesTools::NcursesTools()
@@ -17,7 +28,7 @@ arcade::NcursesTools::NcursesTools()
   _initTermKeys();
 }
 
-arcade::NcursesTools::~NcursesTools() {}
+arcade::NcursesTools::~NcursesTools() { }
 
 int arcade::NcursesTools::Refresh() const
 {
@@ -30,10 +41,7 @@ arcade::IEvenement::KeyCode arcade::NcursesTools::getKey(const char *keyCode) co
 
   if (!keyCode || !keyCode[0])
     return (key);
-  for (auto it : _specialKeys)
-    if (std::strcmp(keyCode, it.first) == 0)
-      return (it.second);
-  for (auto it : _keys)
+  for (auto it : _Keys)
     if (std::strcmp(keyCode, it.first) == 0)
       return (it.second);
   return (key);
@@ -45,36 +53,29 @@ bool				arcade::NcursesTools::_initTermKeys(void)
   int                     	err;
 
   if (!(str = std::getenv("TERM")))
-    return (false); // throw exception
+    return (false);
   _term_name = str;
   if ((setupterm(_term_name.c_str(), 0, &err)) != OK && err != 1)
-    return (false); // throw execption
+    return (false);
   _initKeys();
   return (true);
 }
 
 void 				arcade::NcursesTools::_initKeys(void)
 {
-  _specialKeys.push_back(std::make_pair(tigetstr("kcuu1"), arcade::IEvenement::KeyCode::Key_UP));
-  _specialKeys.push_back(std::make_pair(tigetstr("kcub1"), arcade::IEvenement::KeyCode::Key_LEFT));
-  _specialKeys.push_back(std::make_pair(tigetstr("kcuf1"), arcade::IEvenement::KeyCode::Key_RIGHT));
-  _specialKeys.push_back(std::make_pair(tigetstr("kcud1"), arcade::IEvenement::KeyCode::Key_DOWN));
-  _specialKeys.push_back(std::make_pair("a", arcade::IEvenement::KeyCode::Key_A));
-  _specialKeys.push_back(std::make_pair("d", arcade::IEvenement::KeyCode::Key_D));
-  _specialKeys.push_back(std::make_pair("q", arcade::IEvenement::KeyCode::Key_Q));
-  _specialKeys.push_back(std::make_pair("s", arcade::IEvenement::KeyCode::Key_S));
-  _specialKeys.push_back(std::make_pair("z", arcade::IEvenement::KeyCode::Key_Z));
-  for (auto it : _specialKeys)
+  _Keys.push_back(std::make_pair(tigetstr("kcuu1"), arcade::IEvenement::KeyCode::Key_UP));
+  _Keys.push_back(std::make_pair(tigetstr("kcub1"), arcade::IEvenement::KeyCode::Key_LEFT));
+  _Keys.push_back(std::make_pair(tigetstr("kcuf1"), arcade::IEvenement::KeyCode::Key_RIGHT));
+  _Keys.push_back(std::make_pair(tigetstr("kcud1"), arcade::IEvenement::KeyCode::Key_DOWN));
+  _Keys.push_back(std::make_pair("a", arcade::IEvenement::KeyCode::Key_A));
+  _Keys.push_back(std::make_pair("d", arcade::IEvenement::KeyCode::Key_D));
+  _Keys.push_back(std::make_pair("q", arcade::IEvenement::KeyCode::Key_Q));
+  _Keys.push_back(std::make_pair("s", arcade::IEvenement::KeyCode::Key_S));
+  _Keys.push_back(std::make_pair("z", arcade::IEvenement::KeyCode::Key_Z));
+  for (auto it : _Keys)
     if (it.first == (char *)0 || it.first == (char *)-1)
       throw std::runtime_error("Not able to init the keypad.");
 }
-
-/*void 				arcade::NcursesTools::Wresize(WINDOW *win, int height, int width)
-{
-  resizeterm(height, width);
-  if (wresize(win, height, width) == ERR)
-    throw std::runtime_error("Not able to resize the window.");
-}*/
 
 WINDOW 				*arcade::NcursesTools::routine()
 {
@@ -82,14 +83,15 @@ WINDOW 				*arcade::NcursesTools::routine()
     return (NULL);
   start_color();
   use_default_colors();
-  init_pair(_colors.at("black").second, _colors.at("black").first, _colors.at("black").first);
-  init_pair(_colors.at("red").second, _colors.at("red").first, _colors.at("red").first);
-  init_pair(_colors.at("green").second, _colors.at("green").first, _colors.at("green").first);
-  init_pair(_colors.at("yellow").second, _colors.at("yellow").first, _colors.at("yellow").first);
-  init_pair(_colors.at("blue").second, _colors.at("blue").first, _colors.at("blue").first);
-  init_pair(_colors.at("magenta").second, _colors.at("magenta").first, _colors.at("magenta").first);
-  init_pair(_colors.at("cyan").second, _colors.at("cyan").first, _colors.at("cyan").first);
-  init_pair(_colors.at("white").second, _colors.at("white").first, _colors.at("white").first);
+  init_pair(NT_COLORS.at(NT_BLACK).second, NT_COLORS.at(NT_BLACK).first, NT_COLORS.at(NT_BLACK).first);
+  init_pair(NT_COLORS.at(NT_RED).second, NT_COLORS.at(NT_RED).first, NT_COLORS.at(NT_RED).first);
+  init_pair(NT_COLORS.at(NT_GREEN).second, NT_COLORS.at(NT_GREEN).first, NT_COLORS.at(NT_GREEN).first);
+  init_pair(NT_COLORS.at(NT_YELLOW).second, NT_COLORS.at(NT_YELLOW).first, NT_COLORS.at(NT_YELLOW).first);
+  init_pair(NT_COLORS.at(NT_BLUE).second, NT_COLORS.at(NT_BLUE).first, NT_COLORS.at(NT_BLUE).first);
+  init_pair(NT_COLORS.at(NT_MAGENTA).second, NT_COLORS.at(NT_MAGENTA).first, NT_COLORS.at(NT_MAGENTA).first);
+  init_pair(NT_COLORS.at(NT_CYAN).second, NT_COLORS.at(NT_CYAN).first, NT_COLORS.at(NT_CYAN).first);
+  init_pair(NT_COLORS.at(NT_WHITE).second, NT_COLORS.at(NT_WHITE).first, NT_COLORS.at(NT_WHITE).first);
+
   keypad(_window, true);
   curs_set(0);
   return (_window);
@@ -139,9 +141,9 @@ void arcade::NcursesTools::drawObject(const std::shared_ptr<arcade::IObject> obj
 	}
       else
 	{
-	  wattron(_window, COLOR_PAIR(_colors.at(o->getColor()).second));
+	  wattron(_window, COLOR_PAIR(NcursesTools::NT_COLORS.at(o->getColor()).second));
 	  mvwprintw(_window, obj->getPosition().getY(), obj->getPosition().getX(), o->getString().c_str());
-	  wattroff(_window, COLOR_PAIR(_colors.at(o->getColor()).second));
+	  wattroff(_window, COLOR_PAIR(NcursesTools::NT_COLORS.at(o->getColor()).second));
 	}
     } catch(const std::exception &e) {
       throw std::runtime_error("The configuration file of " + obj->getName() + " is invalid.");

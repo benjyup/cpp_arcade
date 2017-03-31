@@ -3,6 +3,7 @@
 //
 
 #include "Label.hpp"
+#include "NcursesTools.hpp"
 
 namespace arcade
 {
@@ -24,7 +25,7 @@ namespace arcade
   bool Label::setProperties(const std::string &filename)
   {
     std::ifstream 		fs;
-    std::vector<std::string>	properties = {"$", "black", "white"};
+    std::vector<std::string>	properties = NcursesTools::NT_DEFAULT_PROPERTIES;
     std::string			str;
     unsigned int		i = 0;
 
@@ -44,7 +45,6 @@ namespace arcade
       }
     _string = properties[0];
     _color = properties[1];
-    _background = properties[2];
     return (true);
   }
 
