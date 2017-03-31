@@ -62,6 +62,7 @@ namespace arcade
 
   void NcursesLib::registerObserver(arcade::IObserver *observer)
   {
+    _win->registerObserver(observer);
     _observers.push_back(observer);
   }
 

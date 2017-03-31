@@ -62,25 +62,13 @@ const arcade::Vector3d 	&arcade::Window::getSize() const
 
 bool 			arcade::Window::event(void)
 {
-  //static int 		i = 0;
-
   evenement.setKeyCode(IEvenement::KeyCode::Key_Undefined);
   bzero(_pressed_key, 10);
   if(read(0, &_pressed_key, 10) == 1 && _pressed_key[0] == 27)
     return (false);
-  //move(0, 0);
-  //std::string str;
   evenement.setKeyCode(_ncursesTools.getKey(_pressed_key));
-  if (evenement.getKeyCode() == IEvenement::KeyCode::Key_Q)
-    return (false);
   notify(evenement);
-  /*if (_ncursesTools.getKey(_pressed_key) != arcade::IEvenement::KeyCode::Key_Undefined)
-    str = "La touche est : " + std::to_string(i++) + " c =|" + "KEY_A" + "|";
-  else
-    str = "La touche est : " + std::to_string(i++) + " c =|" + _pressed_key + "|";*/
   erase();
-  /*move(5, 5);
-  printw(str.c_str());*/
   return (true);
 }
 
@@ -90,8 +78,6 @@ arcade::FrameType 	arcade::Window::refresh()
   _size.setY(getHeight());
   _size.setZ(_size.getX() * _size.getY());
   move(0,0);
-  /*std::string str = "x = " + std::to_string(_size.getX()) + " y = " + std::to_string(_size.getY());
-  printw(str.c_str());*/
   checkWindowSize(false);
   for (auto obj : *_objects)
     _ncursesTools.drawObject(obj);
@@ -102,7 +88,6 @@ arcade::FrameType 	arcade::Window::refresh()
 
 void 			arcade::Window::addObject(std::shared_ptr <arcade::IObject> &obj)
 {
-//  throw std::runtime_error("coucou");
   _objects->push_back(obj);
 }
 
@@ -154,7 +139,7 @@ void 			arcade::Window::destroyObject(std::shared_ptr <arcade::IObject> &obj)
 void 			arcade::Window::notify(const IEvenement &evenement)
 {
   for (auto it : _observers)
-    it->getNotified(evenement);
+      it->getNotified(evenement);
 }
 
 std::shared_ptr <arcade::IEvenement> arcade::Window::getEvent()
@@ -192,6 +177,5 @@ bool 			arcade::Window::checkWindowSize(const bool flag)
 	_ncursesTools.resetTerm(_wmain); // reset term if constructor failed
       throw std::runtime_error("The window is too small. " + std::to_string(_min_size.getY()) + " " + std::to_string(_min_size.getX()));
     }
-//    throw std::runtime_error("The window is too small.");
   return false;
 }
