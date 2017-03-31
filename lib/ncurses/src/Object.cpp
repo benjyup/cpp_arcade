@@ -50,6 +50,7 @@ namespace arcade
   uint32_t 			Object::getSpeed() const {return (_speed);}
   const std::string 		&Object::getString() const {return (_string);}
   const std::string 		&Object::getFilename() const {return (_filename);}
+  Object::ObjectType Object::getType() const { return (ObjectType::Object); }
 
   bool 				Object::isTextureOk(void) const {return (true);}
   void 				Object::updateVisual(uint32_t) {}
@@ -58,7 +59,6 @@ namespace arcade
 
   std::string 			Object::getColor() const { return _color; }
   std::string 			Object::getBackground() const { return _background;  }
-  std::string 			Object::getCharacter() const { return _character; }
 
   bool 				Object::setProperties(const std::string &filename)
   {
@@ -82,12 +82,9 @@ namespace arcade
 	  }
 	(void)fs.close();
       }
-    _character = properties[0];
+    _string = properties[0];
     _color = properties[1];
     _background = properties[2];
-    //_init_color = _color_int;
-    //init_pair(_init_color, NcursesTools::_colors.at(_color), NcursesTools::_colors.at(_background));
-    //_color_int += 1;
     return (true);
   }
 
@@ -114,8 +111,7 @@ namespace arcade
   {
     os << " _name: " << object.getName() << " _filename: " << object.getFilename()
        << " _string: " << object.getString() << " _position: " << object.getPosition() << " _direction: " << object.getDirection()
-       << " _speed: " << object.getSpeed() << " _color: " << object.getColor() << " _background: " << object.getBackground()
-       << " _character: " << object.getCharacter();
+       << " _speed: " << object.getSpeed() << " _color: " << object.getColor() << " _background: " << object.getBackground();
     return os;
   }
 
@@ -131,7 +127,6 @@ namespace arcade
 	_speed = other._speed;
 	_color = other._color;
 	_background = other._background;
-	_character = other._character;
       }
     return (*this);
   }

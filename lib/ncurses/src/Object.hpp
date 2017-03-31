@@ -15,8 +15,16 @@ namespace arcade
   class Object : public IObject
   {
    public:
+
+    enum class ObjectType : char
+    {
+      Object = 0,
+      Label = 1
+    };
+
     static const std::string		directory_name;
     static const std::string		file_extension;
+//    static const
 
 
     Object();
@@ -47,7 +55,7 @@ namespace arcade
     virtual arcade::Vector3d const &	getDirection(void) const;
     virtual uint32_t			getSpeed(void) const;
     virtual float			getScale(void) const { return (0.0);};
-    int 				getInitColor(void) const { return (_init_color); }
+    virtual Object::ObjectType 		getType(void) const;
 
     virtual bool 			isTextureOk(void) const;
     virtual void			updateVisual(uint32_t);
@@ -56,9 +64,8 @@ namespace arcade
 
     std::string getColor() const;
     std::string getBackground() const;
-    std::string getCharacter() const;
 
-    bool 	setProperties(const std::string &pahtname);
+    virtual bool 			setProperties(const std::string &pahtname);
 
    protected:
     std::string		_name;
@@ -70,7 +77,6 @@ namespace arcade
     std::string		_color;
     std::string		_background;
     std::string		_character;
-    int 		_init_color;
 
     static int 	_color_int;
   };

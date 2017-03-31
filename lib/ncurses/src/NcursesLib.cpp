@@ -34,9 +34,7 @@ namespace arcade
 
   std::shared_ptr<IObject> NcursesLib::initObject(const std::string &name, const std::string &filename)
   {
-    auto tmp = std::shared_ptr<IObject>(new Object(name, filename));
-    std::cout << tmp << std::endl;
-    return (tmp);
+    return (std::shared_ptr<IObject>(new Object(name, filename)));
   }
 
   std::shared_ptr<arcade::IObject> NcursesLib::initLabel(const std::string &name, const std::string &filename)
@@ -44,7 +42,6 @@ namespace arcade
 
   std::shared_ptr<arcade::IWindows>& NcursesLib::getWindows()
   {
-    std::cout << "(getWindo) _win = " << _win << std::endl;
     return (_win);
   }
 
@@ -55,6 +52,11 @@ namespace arcade
 		if (it == obj)
 		  {
 		    Object *o = static_cast<Object*>(it.get());
+		    if (o->getType() == Object::ObjectType::Label)
+		      {
+			Label *label = static_cast<Label*>(it.get());
+			label->setProperties(filename);
+		      }
 		    o->setProperties(filename);
 		  }
 	  }
@@ -69,7 +71,7 @@ namespace arcade
 
   void NcursesLib::notify(const IEvenement &evenement)
   {
-    for (auto it : _observers)
+    for (auto &it : _observers)
       it->getNotified(evenement);
   }
 

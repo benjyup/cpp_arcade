@@ -9,7 +9,8 @@ namespace arcade
   Label::Label(const std::string &name, const std::string &filename)
   {
     _name = name;
-    _filename = Object::directory_name + _filename + Object::file_extension;
+    //_filename = Object::directory_name + _filename + Object::file_extension;
+    _filename = filename + file_extension;
     setProperties(_filename);
     _string = "";
     _position = Vector3d(0, 0);
@@ -41,10 +42,12 @@ namespace arcade
 	  }
 	(void)fs.close();
       }
-    _character = properties[0];
+    _string = properties[0];
     _color = properties[1];
     _background = properties[2];
     return (true);
   }
+
+  Object::ObjectType Label::getType() const { return (ObjectType::Label); }
 
 }
