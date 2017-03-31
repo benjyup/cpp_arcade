@@ -29,7 +29,7 @@ namespace arcade
     virtual std::shared_ptr<IObject>		initObject(std::string const &, std::string const &);
     virtual std::shared_ptr<arcade::IObject>	initLabel(std::string const &, std::string const &);
     virtual std::shared_ptr<arcade::IWindows> &	getWindows(void);
-    virtual void				setVisual(std::shared_ptr<arcade::IObject> &, std::string const &) {};
+    virtual void				setVisual(std::shared_ptr<arcade::IObject> &, std::string const &);
 
     /* !(virtual functions of IGraphicalLib) */
 
@@ -53,10 +53,12 @@ namespace arcade
 
 
    private:
-    std::shared_ptr<arcade::IWindows> 	_win;
-    std::string				_name;
-    std::vector<arcade::IObserver*>	_observers;
-    void				*_handle;
+    std::shared_ptr<arcade::IWindows> 					_win;
+    std::string								_name;
+    std::vector<arcade::IObserver*>					_observers;
+    void								*_handle;
+    std::map<std::string, std::vector<std::string>>			_visual_save;
+    std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>> > 	_objects;
 
     virtual void notify(IEvenement const &); // virtual function of IObserved
   };
