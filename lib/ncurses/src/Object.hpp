@@ -45,7 +45,7 @@ namespace arcade
     virtual void			setString(std::string const &);
     virtual void			setPosition(Vector3d const &);
     virtual void			setDirection(Vector3d const &);
-    virtual void			setSpeed(uint32_t);
+    virtual void			setSpeed(float);
     virtual void			setScale(float) {};
 
     virtual std::string const &		getName(void) const;
@@ -53,12 +53,13 @@ namespace arcade
     virtual std::string const &		getFilename(void) const;
     virtual arcade::Vector3d const &	getPosition (void) const;
     virtual arcade::Vector3d const &	getDirection(void) const;
-    virtual uint32_t			getSpeed(void) const;
+    virtual float			getSpeed(void) const;
     virtual float			getScale(void) const { return (0.0);};
     virtual Object::ObjectType 		getType(void) const;
 
     virtual bool 			isTextureOk(void) const;
     virtual void			updateVisual(uint32_t);
+    virtual bool 			isMoving(void) const;
 
     /* !(virtual functions of IObject) */
 
@@ -73,10 +74,11 @@ namespace arcade
     std::string		_string;
     Vector3d		_position;
     Vector3d		_direction;
-    uint32_t		_speed;
+    float		_speed;
     std::string		_color;
     std::string		_background;
     std::string		_character;
+    bool 		_isMoving;
 
     static int 	_color_int;
   };

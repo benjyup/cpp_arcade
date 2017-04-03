@@ -18,6 +18,7 @@ namespace arcade
     virtual IEvenement::Action		getAction(void) const;
     virtual IEvenement::KeyCode		getKeyCode(void) const;
     virtual uint64_t			getScore(void) const;
+    virtual int32_t			getData(void) const;
 
     void 				setAction(const IEvenement::Action);
     void 				setKeyCode(const IEvenement::KeyCode);

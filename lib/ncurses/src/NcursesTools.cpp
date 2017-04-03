@@ -16,6 +16,7 @@ const std::string					arcade::NcursesTools::NT_BLUE = "blue";
 const std::string					arcade::NcursesTools::NT_MAGENTA = "magenta";
 const std::string					arcade::NcursesTools::NT_CYAN = "cyan";
 const std::string					arcade::NcursesTools::NT_WHITE = "white";
+const std::string					arcade::NcursesTools::NT_NONE = "none";
 
 const std::map<std::string, std::pair<char, short>> arcade::NcursesTools::NT_COLORS({{NT_BLACK, {COLOR_BLACK, 1}}, {NT_RED, {COLOR_RED, 2}},
 										     {NT_GREEN, {COLOR_GREEN, 3}}, {NT_YELLOW, {COLOR_YELLOW,4}},

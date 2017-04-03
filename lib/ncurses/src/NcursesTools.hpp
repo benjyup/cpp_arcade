@@ -33,6 +33,7 @@ namespace arcade
     static const std::string					NT_MAGENTA;
     static const std::string					NT_CYAN;
     static const std::string					NT_WHITE;
+    static const std::string					NT_NONE;
 
     NcursesTools(void);
 

@@ -14,12 +14,12 @@ namespace arcade
   int				Object::_color_int = 16;
 
   Object::Object() : _name(""), _filename(""), _string(""),
-  _position(Vector3d(0, 0)), _direction(Vector3d(0, 0)), _speed(0)
+  _position(Vector3d(0, 0)), _direction(Vector3d(0, 0)), _speed(0), _isMoving(true)
   {}
 
   Object::Object(const std::string &name, const std::string &filename) :
 	  _name(name), _filename(filename), _string(""),
-	  _position(Vector3d(0, 0)), _direction(Vector3d(0, 0)), _speed(0)
+	  _position(Vector3d(0, 0)), _direction(Vector3d(0, 0)), _speed(0), _isMoving(true)
   {
 //    _filename = directory_name + _filename + file_extension;
     _filename = _filename + file_extension;
@@ -42,12 +42,12 @@ namespace arcade
   void 				Object::setString(const std::string &string) {_string = string;};
   void 				Object::setDirection(const Vector3d &direction) {_direction = direction;}
   void 				Object::setPosition(const Vector3d &position) {_position = position;}
-  void 				Object::setSpeed(uint32_t speed) {_speed = speed;}
+  void 				Object::setSpeed(float speed) {_speed = speed;}
 
   const arcade::Vector3d 	&Object::getDirection() const { return (_direction);}
   const std::string 		&Object::getName() const {return (_name);}
   const arcade::Vector3d 	&Object::getPosition() const {return (_position);}
-  uint32_t 			Object::getSpeed() const {return (_speed);}
+  float 			Object::getSpeed() const {return (_speed);}
   const std::string 		&Object::getString() const {return (_string);}
   const std::string 		&Object::getFilename() const {return (_filename);}
   Object::ObjectType Object::getType() const { return (ObjectType::Object); }
@@ -76,7 +76,7 @@ namespace arcade
 	    if (i == 0 && str.length() != 1)
 	      throw std::runtime_error("The configuration file of " + str + " is invalid.");
 	    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
-	    if (!str.empty() && str != "none")
+	    if (!str.empty() && str != NcursesTools::NT_NONE)
 	      properties[i] = str;
 	    i += 1;
 	  }
@@ -129,5 +129,8 @@ namespace arcade
       }
     return (*this);
   }
+
+  bool Object::isMoving(void) const
+  {return (_isMoving);}
 }
 

@@ -9,6 +9,7 @@ namespace arcade
 {
   Label::Label(const std::string &name, const std::string &filename)
   {
+    _isMoving = false;
     _name = name;
     //_filename = Object::directory_name + _filename + Object::file_extension;
     _filename = filename + file_extension;
@@ -17,7 +18,7 @@ namespace arcade
     _position = Vector3d(0, 0);
     _direction = Vector3d(0, 0);
     _speed = 0;
-    setProperties(filename);
+    //setProperties(filename);
   }
 
   Label::~Label() {}
@@ -36,8 +37,8 @@ namespace arcade
 	  {
 	    getline(fs, str);
 	    if (i != 0)
-	    	std::transform(str.begin(), str.end(), str.begin(), ::tolower);
-	    if (!str.empty() && str != "none")
+	      std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+	    if (!str.empty() && str != NcursesTools::NT_NONE)
 	      properties[i] = str;
 	    i += 1;
 	  }

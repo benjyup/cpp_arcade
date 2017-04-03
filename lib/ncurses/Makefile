@@ -5,10 +5,10 @@
 ## Login   <vincent.mesquita@epitech.net>
 ## 
 ## Started on  Sun Mar 19 14:10:03 2017 Vincent Mesquita
-## Last update Thu Mar 30 12:07:50 2017 vincent.mesquita@epitech.eu
+## Last update Sat Apr  1 11:51:02 2017 vincent.mesquita@epitech.eu
 ##
 
-NAME		=	lib_arcade_ncurses.so
+NAME		=	./lib_arcade_ncurses.so
 
 SRC			=	src
 

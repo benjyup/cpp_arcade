@@ -99,12 +99,7 @@ void 			arcade::Window::addObject(std::shared_ptr <arcade::IObject> &obj, const 
 
 void 			arcade::Window::moveObject(std::shared_ptr <arcade::IObject> &obj, const Vector3d &pos)
 {
-  for (auto it : *_objects)
-    if (obj == it)
-      {
-	obj->setPosition(pos);
-	return ;
-      }
+  obj->setPosition(pos);
 }
 
 void 			arcade::Window::moveObject(std::string name, const Vector3d &pos) // pourquoi pas de std::string & ?
@@ -178,4 +173,11 @@ bool 			arcade::Window::checkWindowSize(const bool flag)
       throw std::runtime_error("The window is too small. " + std::to_string(_min_size.getY()) + " " + std::to_string(_min_size.getX()));
     }
   return false;
+}
+
+void arcade::Window::setMapSize(uint32_t size)
+{
+  _min_size.setX(size);
+  _min_size.setY(size);
+  _min_size.setZ(size * size);
 }

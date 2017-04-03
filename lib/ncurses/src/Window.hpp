@@ -30,6 +30,8 @@ namespace arcade
     virtual int32_t getLenght() const;
     virtual Vector3d const &getSize() const;
 
+    virtual void 		setMapSize(uint32_t);
+
     virtual bool event(void);
     virtual arcade::FrameType refresh(void);
     virtual void addObject(std::shared_ptr<arcade::IObject>&, Vector3d const &);
