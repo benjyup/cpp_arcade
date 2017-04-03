@@ -13,7 +13,10 @@
 #include "ILibrairy.hpp"
 #include "IGraphicalLib.hpp"
 
-void 		Play(void);
+extern "C"
+{
+void		Play(void);
+};
 
 namespace arcade
 {

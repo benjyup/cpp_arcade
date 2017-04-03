@@ -27,7 +27,8 @@ namespace arcade
     {
       Nothing = 0,
       KeyPressDown,
-      KeyRelease
+      KeyRelease,
+      LoadGame
     };
 
     //
@@ -37,6 +38,7 @@ namespace arcade
     enum class KeyCode : char
     {
       Key_Undefined = 0,
+      Key_ENTER,
       Key_UP,
       Key_DOWN,
       Key_LEFT,
@@ -57,7 +59,16 @@ namespace arcade
       Key_D = 'd',
       Key_Q = 'q',
       Key_S = 's',
-      Key_Z = 'z'
+      Key_Z = 'z',
+      Key_1 = '1',
+      Key_2 = '2',
+      Key_3 = '3',
+      Key_4 = '4',
+      Key_5 = '5',
+      Key_6 = '6',
+      Key_7 = '7',
+      Key_8 = '8',
+      Key_9 = '9'
     };
 
     virtual ~IEvenement(void)
@@ -69,7 +80,7 @@ namespace arcade
 
     virtual IEvenement::Action		getAction(void) const = 0;
     virtual IEvenement::KeyCode		getKeyCode(void) const = 0;
-    virtual uint64_t			getScore(void) const = 0;
+    virtual int32_t			getData(void) const = 0;
   };
 
   //

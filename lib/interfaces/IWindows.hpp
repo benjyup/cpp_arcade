@@ -39,6 +39,13 @@ namespace arcade
     virtual bool		isOpen(void) const = 0;
 
     //
+    //		Update Map size and so the size of one tile on the screen
+    //				Ignore for Ncurse
+    //
+
+    virtual void 		setMapSize(uint32_t) = 0;
+
+    //
     //		Getters
     //
 
