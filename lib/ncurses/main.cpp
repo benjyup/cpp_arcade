@@ -9,7 +9,7 @@
 #include "IGraphicalLib.hpp"
 #include "src/Window.hpp"
 #include "src/Object.hpp"
-#include "src/LibraryManager.hpp"
+#include "../../src/LibraryManager.hpp"
 
 #include <stdlib.h>
 
@@ -54,9 +54,9 @@ int main(void)
       obj3->setPosition({20, 10});
       obj4->setPosition({30, 10});
       arcade::Vector3d pos(0,0);
-  uint64_t x = 0;
-  uint64_t y = 0;
-      	while (w->event())
+      uint64_t x = 0;
+      uint64_t y = 0;
+      while (w->event())
 	{
 //    refresh();
 	  // printw("bonjour");

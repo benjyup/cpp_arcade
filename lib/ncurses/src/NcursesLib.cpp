@@ -10,7 +10,10 @@ namespace arcade
   NcursesLib::NcursesLib(void *handle) : _win(NULL), _name("NcursesLib"), _observers(),
 					 _handle(handle) { }
 
-  NcursesLib::~NcursesLib() {  }
+  NcursesLib::~NcursesLib()
+  {
+    //_objects.reset();
+  }
 
   /* virtual functions of IGraphicalLib */
 

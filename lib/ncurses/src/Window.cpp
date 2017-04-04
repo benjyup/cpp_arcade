@@ -2,6 +2,7 @@
 // Created by vincent.mesquita on 3/19/17.
 //
 
+#include <ncurses/curses.h>
 #include "Window.hpp"
 #include "Object.hpp"
 
@@ -134,7 +135,7 @@ void 			arcade::Window::destroyObject(std::shared_ptr <arcade::IObject> &obj)
 void 			arcade::Window::notify(const IEvenement &evenement)
 {
   for (auto it : _observers)
-      it->getNotified(evenement);
+    it->getNotified(evenement);
 }
 
 std::shared_ptr <arcade::IEvenement> arcade::Window::getEvent()
