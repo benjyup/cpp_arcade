@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <ncurses/curses.h>
 #include "NcursesTools.hpp"
 #include "Object.hpp"
 

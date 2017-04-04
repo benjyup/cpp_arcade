@@ -2,31 +2,49 @@
 // Created by vincent on 03/04/17.
 //
 
+#include <fstream>
+#include <map>
 #include "Snake.hpp"
 
-const std::string			MAP_PATH = "../resc/snake/map.ncurses";
-static const std::unordered_map<arcade::TileType,
-	std::string>			TILE_RESOURCES = {
-	{arcade::TileType::EMPTY, "../gfx/ground"},
-	{arcade::TileType::BLOCK, "../gfx/wall"},
-	{arcade::TileType::POWERUP, "../gfx/apple"},
-	{arcade::TileType::EVIL_DUDE, "../gfx/snake"},
+const std::string			        		arcade::Snake::S_MAP_PATH = "./resc/snake/map";
+const std::map<arcade::TileType,
+	std::string>			    			arcade::Snake::S_TILE_RESOURCES = {
+	{arcade::TileType::EMPTY, "./gfx/snake/ground"},
+	{arcade::TileType::BLOCK, "./gfx/snake/wall"},
+	{arcade::TileType::POWERUP, "./gfx/snake/apple"},
+	{arcade::TileType::EVIL_DUDE, "./gfx/snake/snake"},
 };
 
-arcade::Snake::Snake() : _objects(), _lib(NULL), _map()
-{
+const std::map<char, arcade::TileType>				arcade::Snake::S_STRING_TO_TILE = {
+	{'1', TileType::BLOCK},
+	{'0', TileType::EMPTY},
+};
 
+arcade::Snake::Snake(void *handle)
+	: _objects(), _lib(NULL), _map(), _score(0), _snake({}), _map_size({0, 0}), _handle(handle),
+	  _lib_name("lib_arcade_snake")
+{
 }
 
-arcade::Snake::~Snake() { }
+arcade::Snake::~Snake()
+{
+  _objects.reset();
+}
+
+void* arcade::Snake::getHandle() const { return (_handle);}
+
+std::string const& arcade::Snake::getName() const { return (_lib_name);}
+
+void arcade::Snake::freeSharedData() {}
 
 void 			arcade::Snake::initGame(arcade::IGraphicalLib *lib,
 						    std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> & objects)
 {
-  if (lib == NULL)
-    throw std::runtime_error("Not able to init the game with a null graphical library.");
+/*    if (lib == NULL)
+        throw std::runtime_error("Not able to init the game with a null graphical library.");*/
   _lib = lib;
   _objects = objects;
+  createMap();
 }
 
 uint64_t 		arcade::Snake::getScore() const
@@ -39,9 +57,59 @@ void 			arcade::Snake::gameTurn()
 
 }
 
+// private
+
 void 			arcade::Snake::createMap()
 {
+  std::ifstream 		fs;
+  std::string         str;
 
+  fs.open(S_MAP_PATH);
+  if (!(fs.is_open()))
+    throw std::runtime_error("Not able to create the map.");
+
+  std::getline(fs, str);
+  if (fs.eof() || !std::all_of(str.begin(), str.end(), [](char c){return std::isdigit(c);}))
+    throw std::runtime_error("The map's width is invalid.");
+  _map_size.setX(std::stoi(str));
+
+  std::getline(fs, str);
+  if (fs.eof() || !std::all_of(str.begin(), str.end(), [](char c){return std::isdigit(c);}))
+    throw std::runtime_error("The map's height is invalid.");
+  _map_size.setY(std::stoi(str));
+  if (_map_size.getX() <= 0 || _map_size.getX() > 100 || _map_size.getY() <= 0 || _map_size.getY() > 100)
+    throw std::runtime_error("Invalid map's size.");
+  getline(fs, str);
+  arcade::TileType tt;
+  int32_t x, y = 0;
+  arcade::Vector3d v(0, 0);
+  while (!fs.eof())
+    {
+      _map.push_back(std::vector<arcade::TileType>());
+      x = 0;
+      for (const auto &it : str)
+	{
+	  try {
+	      tt = S_STRING_TO_TILE.at(it);
+	      std::shared_ptr<arcade::IObject> obj = _lib->initObject(((tt == arcade::TileType::BLOCK) ? ("wall") : ("ground")),
+								      S_TILE_RESOURCES.at(tt));
+	      v.setX(x);
+	      v.setY(y);
+	      obj->setPosition(v);
+	      _objects->push_back(obj);
+	      _map[_map.size() - 1].push_back(tt);
+	    } catch (const std::exception &e) {
+	      throw std::runtime_error("Invalid map1." + std::to_string(it));
+	    }
+	  x += 1;
+	}
+      if ((int)_map[_map.size() - 1].size() != _map_size.getX())
+	throw std::runtime_error("Invalid map2.");
+      getline(fs, str);
+      y += 1;
+    }
+  if ((int)_map.size() != _map_size.getY())
+    throw std::runtime_error("Invalid map3.");
 }
 
 void arcade::Snake::initGraphicalLib(arcade::IGraphicalLib *)
@@ -50,6 +118,16 @@ void arcade::Snake::initGraphicalLib(arcade::IGraphicalLib *)
 }
 
 void arcade::Snake::getNotified(IEvenement const &)
+{
+
+}
+
+arcade::ILibrairy *arcade::getNewLib(void *handle)
+{
+  return (new arcade::Snake(handle));
+}
+
+void arcade::Snake::_fillTheMap()
 {
 
 }

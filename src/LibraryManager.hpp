@@ -14,13 +14,17 @@
 #include <stdexcept>
 #include <iostream>
 #include <map>
+#include <IGameLib.hpp>
+
 #include "IGraphicalLib.hpp"
+#include "IGameLib.hpp"
 #include "ILibrairy.hpp"
 
 namespace arcade
 {
 
-  typedef arcade::IGraphicalLib *(*getNewLibFptr)(void*);
+  typedef arcade::ILibrairy *(*getNewLibFptr)(void*);
+//    typedef arcade::IGameLib *(*getNewLibFptr)(void*);
 
   class LibraryManager
   {
@@ -33,7 +37,8 @@ namespace arcade
     LibraryManager(void);
     ~LibraryManager(void);
 
-    void 					chooseGraphicalLib();
+    IGraphicalLib                               *getGraphicalLib(const std::string &) const;
+    IGameLib                                    *getGameLib(const std::string &) const;
 
    private:
     std::map<std::string, arcade::ILibrairy*> 	_graphLibraries;
@@ -42,7 +47,6 @@ namespace arcade
     std::map<std::string, arcade::ILibrairy*> _findLibrary(const arcade::ILibrairy::LibType type) const;
     bool _isSharedLibrary(const struct dirent*) const;
     void _displayFoundLibraries(void) const;
-
   };
 }
 

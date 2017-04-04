@@ -13,10 +13,28 @@ arcade::LibraryManager::LibraryManager() : _graphLibraries(), _gameLibraries()
   _graphLibraries = _findLibrary(arcade::ILibrairy::LibType::Graphical);
   _gameLibraries = _findLibrary(arcade::ILibrairy::LibType::Game);
   _displayFoundLibraries();
+  std::cout << "------------------------\n" << std::endl;
 }
 
 arcade::LibraryManager::~LibraryManager()
-{}
+{
+  void *handle;
+  for (auto &it : _graphLibraries)
+    if (it.second)
+      {
+	handle = it.second->getHandle();
+	delete it.second;
+	dlclose(handle);
+      }
+  for (auto &it : _gameLibraries)
+    if (it.second)
+      {
+	handle = it.second->getHandle();
+	delete it.second;
+	dlclose(handle);
+      }
+
+}
 
 std::map<std::string, arcade::ILibrairy*> arcade::LibraryManager::_findLibrary(const arcade::ILibrairy::LibType type) const
 {
@@ -67,7 +85,6 @@ void arcade::LibraryManager::_displayFoundLibraries(void) const
   else
     {
       std::cout << "Graphical libraries found:" << std::endl;
-      auto it = _gameLibraries.begin();
       for (const auto &it : _graphLibraries)
 	std::cout << it.first << std::endl;
     }
@@ -79,5 +96,23 @@ void arcade::LibraryManager::_displayFoundLibraries(void) const
       std::cout << "\nGame libraries found:" << std::endl;
       for (const auto &it : _gameLibraries)
 	std::cout << it.first << std::endl;
+    }
+}
+
+arcade::IGraphicalLib *arcade::LibraryManager::getGraphicalLib(const std::string &libName) const
+{
+  try {
+      return (static_cast<IGraphicalLib*>(_graphLibraries.at(libName)));
+    } catch (const std::exception &e) {
+      throw std::runtime_error(libName + " doesn't exist.");
+    }
+}
+
+arcade::IGameLib *arcade::LibraryManager::getGameLib(const std::string &libName) const
+{
+  try {
+      return (static_cast<IGameLib*>(_gameLibraries.at(libName)));
+    } catch (const std::exception &e) {
+      throw std::runtime_error(libName + " doesn't exist.");
     }
 }

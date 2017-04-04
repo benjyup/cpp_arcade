@@ -81,7 +81,7 @@ namespace arcade
 	    i += 1;
 	  }
 	(void)fs.close();
-      }
+      } // throw si il existe pas
     _string = properties[0];
     _color = properties[1];
     return (true);
