@@ -11,11 +11,22 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "src/Window.h"
+#include <dlfcn.h>
 
-int main(void)
+int	main(void)
 {
-    arcade::Window w;
+  arcade::Window	w;
+  void	*ptr;
 
-    
+  if (!(ptr = dlopen("./sfml.so", RTLD_NOW | RTLD_LAZY)))
+    {
+      fputs(dlerror(), stderr);
+      exit(1);
+    }
+  while (w.get_Window().isOpen())
+    {
+      w.event();
+      w.refresh();
+    }
     return (0);
 }

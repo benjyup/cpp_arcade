@@ -1,4 +1,4 @@
-NAME		=	sfml
+NAME		=	sfml.so
 
 SRC		=	src
 
@@ -8,12 +8,12 @@ CPP 		= 	g++
 
 RM 		= 	rm -rf
 
-CPPFLAGS	+=	-W -Wall -Werror -Wextra -I$(INTERFACES)/
+CPPFLAGS	+=	-fPIC -W -Wall -Werror -Wextra -I$(INTERFACES)/
 
-LDFLAGS		=	-lsfml-graphics -lsfml-window -lsfml-system
+LDFLAGS		=	-shared -lsfml-graphics -lsfml-window -lsfml-system
 
-SRCS		=	main.cpp \
-			$(SRC)/Window.cpp
+SRCS		=	$(SRC)/Window.cpp \
+			$(INTERFACES)/Vector3d.cpp
 
 OBJS		=	$(SRCS:.cpp=.o)
 
@@ -21,7 +21,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	$(CPP) -o $(NAME) $(OBJS) $(LDFLAGS)
-
+	g++ -o sfml main.cpp ./src/Window.cpp ../interfaces/Vector3d.cpp ./src/Object.cpp -g3 -ldl -lsfml-graphics -lsfml-window -lsfml-system -I../interfaces/ -I./src/
 clean:
 	$(RM) $(OBJS)
 

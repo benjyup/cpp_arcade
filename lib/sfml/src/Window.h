@@ -25,32 +25,41 @@ namespace arcade
     virtual				~Window();
 
     virtual bool			isOpen() const;
+
     virtual int32_t			getHeight() const;
     virtual int32_t			getLenght() const;
+
+    virtual sf::RenderWindow const	&get_Window() const;
     virtual Vector3d const		&getSize() const;
 
     virtual bool			event();
     virtual arcade::FrameType		refresh();
 
-    virtual void			addObject(std::shared_ptr<arcade::IObject>, Vector3d const &);
-    virtual void			addObject(std::shared_ptr<arcade::IObject>);
+    virtual void			addObject(std::shared_ptr<arcade::IObject> &, Vector3d const &);
+    virtual void			addObject(std::shared_ptr<arcade::IObject> &);
 
-    virtual void			moveObject(std::shared_ptr<arcade::IObject>, Vector3d const &);
+    virtual void			moveObject(std::shared_ptr<arcade::IObject> &, Vector3d const &);
     virtual void			moveObject(std::string, Vector3d const &);
 
-    virtual void			destroyObject(std::shared_ptr<arcade::IObject>);
+    virtual void			destroyObject(std::shared_ptr<arcade::IObject> &);
 
-    virtual arcade::IEvenement		*getEvent();
+    virtual std::shared_ptr<IEvenement>	getEvent(void);
     virtual void 			removeObserver(IObserver *);
     virtual void 			registerObserver(IObserver *);
 
    protected:
-    Vector3d				_size;
-    bool				_isopen;
-    int32_t				_width;
-    int32_t				_height;
+    Vector3d								_size;
+    bool								_isopen;
+    sf::RenderWindow							_window;
+    sf::Event								_event;
+    std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>>	_objects;
+    int32_t								_height;
+    int32_t								_width;
+    std::shared_ptr<arcade::IObject>					_obj;
+    std::vector<arcade::IObserver*>					_observers;
 
-    virtual void			notify(IEvenement const &);
+
+    virtual void					notify(IEvenement const &);
   };
 
 }
