@@ -19,11 +19,17 @@ const std::map<char, arcade::TileType>				arcade::Snake::S_STRING_TO_TILE = {
 	{'1', TileType::BLOCK},
 	{'0', TileType::EMPTY},
 };
+const unsigned long						arcade::Snake::S_SNAKE_HEAD = 0;
 
 arcade::Snake::Snake(void *handle)
-	: _objects(), _lib(NULL), _map(), _score(0), _snake({}), _map_size({0, 0}), _handle(handle),
+	: _objects(), _lib(NULL), _map(), _score(0), _snake(), _map_size({0, 0}), _handle(handle),
 	  _lib_name("lib_arcade_snake")
 {
+  _snake.ct = arcade::CommandType::PLAY;
+  _snake.body.push_back({2,1});
+  _snake.body.push_back({1,1});
+  _snake.length = 0;
+  _snake.direction = Direction::UNKNOWN;
 }
 
 arcade::Snake::~Snake()
@@ -54,15 +60,15 @@ uint64_t 		arcade::Snake::getScore() const
 
 void 			arcade::Snake::gameTurn()
 {
-
+  _refreshObjects();
 }
 
 // private
 
 void 			arcade::Snake::createMap()
 {
-  std::ifstream 		fs;
-  std::string         str;
+  std::ifstream 	fs;
+  std::string         	str;
 
   fs.open(S_MAP_PATH);
   if (!(fs.is_open()))
@@ -99,7 +105,7 @@ void 			arcade::Snake::createMap()
 	      _objects->push_back(obj);
 	      _map[_map.size() - 1].push_back(tt);
 	    } catch (const std::exception &e) {
-	      throw std::runtime_error("Invalid map1." + std::to_string(it));
+	      throw std::runtime_error("Invalid map1. " + std::to_string(it) + " " + std::string(e.what()));
 	    }
 	  x += 1;
 	}
@@ -110,6 +116,9 @@ void 			arcade::Snake::createMap()
     }
   if ((int)_map.size() != _map_size.getY())
     throw std::runtime_error("Invalid map3.");
+  fs.close();
+  _map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x] = TileType::EVIL_DUDE;
+  _map[_snake.body[1].y][_snake.body[1].x] = TileType::EVIL_DUDE;
 }
 
 void arcade::Snake::initGraphicalLib(arcade::IGraphicalLib *)
@@ -117,9 +126,31 @@ void arcade::Snake::initGraphicalLib(arcade::IGraphicalLib *)
 
 }
 
-void arcade::Snake::getNotified(IEvenement const &)
+void arcade::Snake::getNotified(IEvenement const &event)
 {
+  IEvenement::KeyCode kc = event.getKeyCode();
+  arcade::Vector3d tmp(_snake.body[S_SNAKE_HEAD].x, _snake.body[S_SNAKE_HEAD].y);
 
+  if (kc != IEvenement::KeyCode::Key_Undefined)
+    _kc = kc;
+  for (unsigned int i = 1 ; i < _snake.body.size() ; i++)
+    {
+      tmp.setX(_snake.body[i].x);
+      tmp.setY(_snake.body[i].y);
+      _snake.body[i].x = _snake.body[i - 1].x;
+      _snake.body[i].y = _snake.body[i - 1].y;
+      _map[_snake.body[i].y][_snake.body[i].x] = TileType::EVIL_DUDE;
+    }
+  _map[tmp.getY()][tmp.getX()] = TileType::EMPTY;
+  if (_kc == IEvenement::KeyCode::Key_Z)
+    _snake.body[S_SNAKE_HEAD].y -= 1;
+  else if (_kc == IEvenement::KeyCode::Key_S)
+      _snake.body[S_SNAKE_HEAD].y += 1;
+    else if (_kc == IEvenement::KeyCode::Key_Q)
+	_snake.body[S_SNAKE_HEAD].x -= 1;
+      else if (_kc == IEvenement::KeyCode::Key_D)
+	  _snake.body[S_SNAKE_HEAD].x += 1;
+  _map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x] = TileType::EVIL_DUDE;
 }
 
 arcade::ILibrairy *arcade::getNewLib(void *handle)
@@ -130,4 +161,15 @@ arcade::ILibrairy *arcade::getNewLib(void *handle)
 void arcade::Snake::_fillTheMap()
 {
 
+}
+
+void arcade::Snake::_refreshObjects()
+{
+  arcade::Vector3d v(0,0);
+
+  for (auto &it : *_objects)
+    {
+      v = it->getPosition();
+      _lib->setVisual(it, S_TILE_RESOURCES.at(_map[v.getY()][v.getX()]));
+    }
 }
