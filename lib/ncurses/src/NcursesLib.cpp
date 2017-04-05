@@ -12,6 +12,7 @@ namespace arcade
 
   NcursesLib::~NcursesLib()
   {
+    freeSharedData();
     //_objects.reset();
   }
 
@@ -107,7 +108,13 @@ namespace arcade
 
   ILibrairy::LibType NcursesLib::getType() const {return (ILibrairy::LibType ::Graphical);}
 
-  void NcursesLib::freeSharedData(void) { }
+  void NcursesLib::freeSharedData(void)
+  {
+    for (auto *it : _observers)
+	removeObserver(it);
+    _objects->clear();
+    _objects.reset();
+  }
 
   /* !(virtual functions of ILibrairy) */
 

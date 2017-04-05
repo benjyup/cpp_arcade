@@ -33,7 +33,6 @@ arcade::LibraryManager::~LibraryManager()
 	delete it.second;
 	dlclose(handle);
       }
-
 }
 
 std::map<std::string, arcade::ILibrairy*> arcade::LibraryManager::_findLibrary(const arcade::ILibrairy::LibType type) const

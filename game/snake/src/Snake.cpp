@@ -34,14 +34,18 @@ arcade::Snake::Snake(void *handle)
 
 arcade::Snake::~Snake()
 {
-  _objects.reset();
+  freeSharedData();
 }
 
 void* arcade::Snake::getHandle() const { return (_handle);}
 
 std::string const& arcade::Snake::getName() const { return (_lib_name);}
 
-void arcade::Snake::freeSharedData() {}
+void arcade::Snake::freeSharedData()
+{
+  _objects->clear();
+  _objects.reset();
+}
 
 void 			arcade::Snake::initGame(arcade::IGraphicalLib *lib,
 						    std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> & objects)

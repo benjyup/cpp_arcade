@@ -37,8 +37,8 @@ namespace arcade
 
     virtual void                                *getHandle(void) const;
     virtual std::string const                   &getName(void) const;
-    virtual LibType		                        getType(void) const;
-    virtual void 		                        freeSharedData(void);
+    virtual LibType		                getType(void) const;
+    virtual void 		                freeSharedData(void);
 
     /* !(virtual functions of ILibrairy) */
 

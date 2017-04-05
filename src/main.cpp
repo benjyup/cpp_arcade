@@ -35,10 +35,10 @@ int 	        main(int ac, char **av)
 	  if (window->refresh() == arcade::FrameType::GameFrame)
 	    gameLib->gameTurn();
 	}
+      objects->clear();
     } catch (const std::exception &e) {
       std::cerr << "Error: " << e.what() << std::endl;
     }
   std::cout << objects.use_count() << std::endl;
-  objects.reset();
   return (0);
 }
