@@ -5,7 +5,7 @@
 // Login   <benjamin.peixoto@epitech.eu>
 // 
 // Started on  Wed Mar 22 17:19:21 2017 peixot_b
-// Last update Wed Mar 22 17:50:08 2017 peixot_b
+// Last update Tue Apr  4 17:30:29 2017 Benjamin
 //
 
 #include <iostream>
@@ -16,13 +16,13 @@
 int	main(void)
 {
   arcade::Window	w;
-  void	*ptr;
+  //void	*ptr;
 
-  if (!(ptr = dlopen("./sfml.so", RTLD_NOW | RTLD_LAZY)))
-    {
-      fputs(dlerror(), stderr);
-      exit(1);
-    }
+  //if (!(ptr = dlopen("./sfml.so", RTLD_NOW | RTLD_LAZY)))
+  //{
+  //  fputs(dlerror(), stderr);
+  //  exit(1);
+  // }
   while (w.get_Window().isOpen())
     {
       w.event();
