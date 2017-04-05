@@ -42,6 +42,8 @@ arcade::Window::~Window()
 {
   if (_isopen)
     _ncursesTools.resetTerm(_wmain);
+  _objects->clear();
+  _objects.reset();
   std::cout << "Window supprimée" << std::endl;
 }
 
