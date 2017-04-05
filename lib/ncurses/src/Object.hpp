@@ -78,7 +78,7 @@ namespace arcade
     std::string		_color;
     std::string		_background;
     std::string		_character;
-    bool 		_isMoving;
+        bool 		_isMoving;
 
     static int 	_color_int;
   };

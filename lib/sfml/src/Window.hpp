@@ -8,20 +8,22 @@
 ** Last update Thu Mar 23 13:35:45 2017 peixot_b
 */
 
-#ifndef WINDOW_H
-# define WINDOW_H
+#ifndef WINDOW_HPP_
+# define WINDOW_HPP_
 
 #include <iostream>
 #include <unistd.h>
 #include <memory>
 #include "Vector3d.hpp"
 #include "IWindows.hpp"
+#include <SFML/Graphics.hpp>
+
 
 namespace arcade
 {
     class Window  : public IWindows {
     public:
-        Window();
+        Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>>&, uint64_t height = 0, uint64_t width = 0);
         virtual				                ~Window();
 
         virtual bool			            isOpen() const;
@@ -66,4 +68,4 @@ namespace arcade
 
 }
 
-#endif /* !WINDOW_H_ */
+#endif /* !WINDOW_HPP_ */

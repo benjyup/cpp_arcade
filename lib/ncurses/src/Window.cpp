@@ -13,8 +13,8 @@ void arcade::Window::_close_window(int)
 }
 
 arcade::Window::Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &objects,
-		       uint64_t height,
-		       uint64_t width)
+                       uint64_t height,
+                       uint64_t width)
 	: _size(0, 0),
 	  _min_size(0, 0),
 	  _isopen(false), _wmain(NULL),

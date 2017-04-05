@@ -130,7 +130,7 @@ namespace arcade
     return (*this);
   }
 
-  bool Object::isMoving(void) const
-  {return (_isMoving);}
+    bool Object::isMoving(void) const
+    {return (_isMoving);}
 }
 

@@ -21,7 +21,7 @@ OBJS		=	$(SRCS:.cpp=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	g++ -o sfml main.cpp ./src/Window.cpp ../interfaces/Vector3d.cpp ./src/Object.cpp -std=c++14 -lsfml-graphics -lsfml-window -lsfml-system -I../interfaces/ -I./src/
+	g++ -o sfml main.cpp ./src/Window.cpp ../interfaces/Vector3d.cpp ./src/Object.cpp ./src/Evenement.cpp ./src/SfmlLib.cpp ./src/Label.cpp -std=c++14 -lsfml-graphics -lsfml-window -lsfml-system -I../interfaces/ -I./src/
 
 clean:
 	$(RM) $(OBJS)

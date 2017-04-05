@@ -1,5 +1,5 @@
 //
-// Created by vincy on 28/03/17.
+// Created by peixot_b on 05/04/17.
 //
 
 #ifndef CPP_ARCADE_LABEL_HPP

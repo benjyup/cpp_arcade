@@ -1,23 +1,23 @@
 //
-// NcursesLib.cpp for  in /home/vincent/rendu/cpp_arcade/lib/ncurses
-// 
+// Created by peixot_b on 05/04/17.
+//
 
-#include "NcursesLib.hpp"
+#include "SfmlLib.hpp"
 #include "Object.hpp"
 
 namespace arcade
 {
-    NcursesLib::NcursesLib(void *handle) : _win(NULL), _name("NcursesLib"), _observers(),
+    SfmlLib::SfmlLib(void *handle) : _win(NULL), _name("SfmlLib"), _observers(),
                                            _handle(handle) { }
 
-    NcursesLib::~NcursesLib()
+    SfmlLib::~SfmlLib()
     {
         //_objects.reset();
     }
 
     /* virtual functions of IGraphicalLib */
 
-    std::shared_ptr<arcade::IWindows> &NcursesLib::initWindows(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>> >&objs,
+    std::shared_ptr<arcade::IWindows> &SfmlLib::initWindows(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>> >&objs,
                                                                uint64_t height,
                                                                uint64_t width)
     {
@@ -33,20 +33,20 @@ namespace arcade
         return (_win);
     }
 
-    std::shared_ptr<IObject> NcursesLib::initObject(const std::string &name, const std::string &filename)
+    std::shared_ptr<IObject> SfmlLib::initObject(const std::string &name, const std::string &filename)
     {
         return (std::shared_ptr<IObject>(new Object(name, filename)));
     }
 
-    std::shared_ptr<arcade::IObject> NcursesLib::initLabel(const std::string &name, const std::string &filename)
+    std::shared_ptr<arcade::IObject> SfmlLib::initLabel(const std::string &name, const std::string &filename)
     {return(std::shared_ptr<IObject>(new Label(name, filename)));}
 
-    std::shared_ptr<arcade::IWindows>& NcursesLib::getWindows()
+    std::shared_ptr<arcade::IWindows>& SfmlLib::getWindows()
     {
         return (_win);
     }
 
-    void NcursesLib::setVisual(std::shared_ptr<arcade::IObject> &obj, std::string const & filename)
+    void SfmlLib::setVisual(std::shared_ptr<arcade::IObject> &obj, std::string const & filename)
     {
         Object *o = static_cast<Object*>(obj.get());
         if (o->getType() == Object::ObjectType::Label)
@@ -62,22 +62,22 @@ namespace arcade
 
     /* virtual functions of IObserved */
 
-    std::shared_ptr<IEvenement> NcursesLib::getEvent()
+    std::shared_ptr<IEvenement> SfmlLib::getEvent()
     {return(std::shared_ptr<IEvenement>());}
 
-    void NcursesLib::notify(const IEvenement &evenement)
+    void SfmlLib::notify(const IEvenement &evenement)
     {
         for (auto &it : _observers)
             it->getNotified(evenement);
     }
 
-    void NcursesLib::registerObserver(arcade::IObserver *observer)
+    void SfmlLib::registerObserver(arcade::IObserver *observer)
     {
         _win->registerObserver(observer);
         _observers.push_back(observer);
     }
 
-    void NcursesLib::removeObserver(arcade::IObserver *observer)
+    void SfmlLib::removeObserver(arcade::IObserver *observer)
     {
         if (observer == NULL)
             return ;
@@ -98,20 +98,20 @@ namespace arcade
 
     /* virtual functions of ILibrairy */
 
-    void* NcursesLib::getHandle() const { return ((void *) (_handle)); }
+    void* SfmlLib::getHandle() const { return ((void *) (_handle)); }
 
-    std::string const& NcursesLib::getName() const { return (_name); }
+    std::string const& SfmlLib::getName() const { return (_name); }
 
-    ILibrairy::LibType NcursesLib::getType() const {return (ILibrairy::LibType ::Graphical);}
+    ILibrairy::LibType SfmlLib::getType() const {return (ILibrairy::LibType ::Graphical);}
 
-    void NcursesLib::freeSharedData(void) { }
+    void SfmlLib::freeSharedData(void) { }
 
     /* !(virtual functions of ILibrairy) */
 
 
     ILibrairy *getNewLib(void *handle)
     {
-        return (new NcursesLib(handle));
+        return (new SfmlLib(handle));
     }
 
 }
