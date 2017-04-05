@@ -25,6 +25,8 @@ namespace arcade
       {
 	_objects = objs;
 	_win = std::shared_ptr<IWindows>(new Window(objs, height, width));
+	for (const auto &it : _observers)
+	  _win->registerObserver(it);
       }
     catch (std::exception &e)
       {
@@ -73,7 +75,8 @@ namespace arcade
 
   void NcursesLib::registerObserver(arcade::IObserver *observer)
   {
-    _win->registerObserver(observer);
+    if (_win != NULL)
+      _win->registerObserver(observer);
     _observers.push_back(observer);
   }
 
