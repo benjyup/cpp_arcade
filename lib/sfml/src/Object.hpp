@@ -57,6 +57,8 @@ namespace arcade
         virtual float			            getScale(void) const { return (0.0);};
         virtual Object::ObjectType 		    getType(void) const;
 
+        virtual bool                        isMoving(void) const;
+
         virtual bool 			isTextureOk(void) const;
         virtual void			updateVisual(uint32_t);
 
@@ -70,6 +72,7 @@ namespace arcade
         std::string		_color;
         std::string		_background;
         std::string		_character;
+        bool 		_isMoving;
 
     };
     std::ostream &operator<<(std::ostream &os, const Object &object);

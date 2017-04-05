@@ -5,7 +5,7 @@
 // Login   <benjamin.peixoto@epitech.eu>
 // 
 // Started on  Wed Mar 22 17:34:04 2017 peixot_b
-// Last update Wed Mar 22 18:52:09 2017 peixot_b
+// Last update Wed Apr  5 15:18:29 2017 Benjamin
 //
 
 #include <string>
@@ -13,19 +13,21 @@
 #include <sstream>
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "Window.h"
+#include "Window.hpp"
 #include "Object.hpp"
 
 
 namespace arcade
 {
-	arcade::Window::Window() : _size(1024, 1024), _isopen(false), _window(sf::VideoMode(1024, 1024),
-																		  "SFML works!",
-																		  sf::Style::Close |
-																		  sf::Style::Resize |
-																		  sf::Style::Titlebar),
-							   _height(1024), _width(1024), _min_size(0, 0, 0)
-	{
+    arcade::Window::Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &objects,
+						   uint64_t height,
+                           uint64_t width) : _size(1024, 1024), _isopen(false), _window(sf::VideoMode(1024, 1024),
+                                                                                        "SFML works!",
+                                                                                        sf::Style::Close |
+                                                                                        sf::Style::Resize |
+                                                                                        sf::Style::Titlebar),
+                                             _objects(objects), _height(height), _width(width), _min_size(0, 0, 0)
+    {
 		std::cout << "init" << std::endl;
 		_isopen = true;
 	}

@@ -1,23 +1,24 @@
 //
-// Created by vincy on 24/03/17.
+// Created by peixot_b on 05/04/17.
 //
 
-#ifndef CPP_ARCADE_NCURSESLIB_HPP
-#define CPP_ARCADE_NCURSESLIB_HPP
+#ifndef CPP_ARCADE_SFMLLIB_HPP
+#define CPP_ARCADE_SFMLLIB_HPP
 
 #include <stdexcept>
 #include "IGraphicalLib.hpp"
 #include "IWindows.hpp"
 #include "Window.hpp"
 #include "Label.hpp"
+#include <SFML/Graphics.hpp>
 
 namespace arcade
 {
-    class NcursesLib : public IGraphicalLib
+    class SfmlLib : public IGraphicalLib
     {
     public:
-        NcursesLib(void *handle);
-        virtual ~NcursesLib();
+        SfmlLib(void *handle);
+        virtual ~SfmlLib();
 
         /* virtual functions of IGraphicalLib */
 
@@ -51,14 +52,15 @@ namespace arcade
         /* !(virtual functions of IObserved) */
 
     private:
-        std::shared_ptr<arcade::IWindows> 					_win;
-        std::string								_name;
-        std::vector<arcade::IObserver*>					_observers;
-        void								*_handle;
-        std::map<std::string, std::vector<std::string>>			_visual_save;
+        std::shared_ptr<arcade::IWindows> 					                _win;
+        std::string								                            _name;
+        std::vector<arcade::IObserver*>					                    _observers;
+        void								                                *_handle;
+        std::map<std::string, std::vector<std::string>>			            _visual_save;
         std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>> > 	_objects;
 
         virtual void notify(IEvenement const &); // virtual function of IObserved
     };
 }
-#endif //CPP_ARCADE_NCURSESLIB_HPP
+
+#endif //CPP_ARCADE_SFMLLIB_HPP

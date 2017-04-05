@@ -55,23 +55,26 @@ namespace arcade
 	bool 				Object::isTextureOk(void) const {return (true);}
 	void 				Object::updateVisual(uint32_t obj) {}
 
-	bool 				Object::operator==(const Object &rhs) const
+	bool 				Object::operator==(const Object &other) const
   {
-	  return this == &rhs &&
-			 _name == rhs._name &&
-			 _filename == rhs._filename &&
-			 _string == rhs._string &&
-			 _position == rhs._position &&
-			 _direction == rhs._direction &&
-			 _speed == rhs._speed &&
-			 _color == rhs._color &&
-			 _background == rhs._background &&
-			 _character == rhs._character;
+	  return this == &other &&
+			 _name == other._name &&
+			 _filename == other._filename &&
+			 _string == other._string &&
+			 _position == other._position &&
+			 _direction == other._direction &&
+			 _speed == other._speed &&
+			 _color == other._color &&
+			 _background == other._background &&
+			 _character == other._character;
   }
 
-	bool 				Object::operator!=(const Object &rhs) const
+    bool Object::isMoving(void) const
+    {return (_isMoving);}
+
+	bool 				Object::operator!=(const Object &other) const
 	{
-		return !(rhs == *this);
+		return !(other == *this);
 	}
 
 	std::ostream 			&operator<<(std::ostream &os, const Object &object)

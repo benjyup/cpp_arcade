@@ -5,28 +5,30 @@
 // Login   <benjamin.peixoto@epitech.eu>
 // 
 // Started on  Wed Mar 22 17:19:21 2017 peixot_b
-// Last update Tue Apr  4 17:30:29 2017 Benjamin
+// Last update Wed Apr  5 15:18:51 2017 Benjamin
 //
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "src/Window.h"
+#include "src/Window.hpp"
 #include <dlfcn.h>
 
 int	main(void)
 {
-  arcade::Window	w;
-  //void	*ptr;
 
-  //if (!(ptr = dlopen("./sfml.so", RTLD_NOW | RTLD_LAZY)))
-  //{
-  //  fputs(dlerror(), stderr);
-  //  exit(1);
-  // }
-  while (w.get_Window().isOpen())
-    {
+    std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> m(new std::vector<std::shared_ptr<arcade::IObject>>());
+    arcade::Window	w(m, 1024, 1024);
+    //void	*ptr;
+
+    //if (!(ptr = dlopen("./sfml.so", RTLD_NOW | RTLD_LAZY)))
+    //{
+    //  fputs(dlerror(), stderr);
+    //  exit(1);
+    // }
+    while (w.get_Window().isOpen())
+  {
       w.event();
       w.refresh();
-    }
+  }
     return (0);
 }

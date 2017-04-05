@@ -20,7 +20,7 @@ namespace arcade
 {
   class Window : public IWindows {
    public:
-    Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>>&, uint64_t height = 0, uint64_t width = 0);
+      Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>>&, uint64_t height = 0, uint64_t width = 0);
     virtual ~Window();
 
     /* virtual functions of IWindows */

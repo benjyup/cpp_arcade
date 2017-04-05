@@ -23,7 +23,7 @@ int main(void)
   void	*ptr;
   fptr	lib_fptr;
   arcade::IGraphicalLib	*lib;
-  std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> m(new std::vector<std::shared_ptr<arcade::IObject>>());
+    std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> m(new std::vector<std::shared_ptr<arcade::IObject>>());
 
   if (!(ptr = dlopen("./lib_arcade_ncurses.so", RTLD_NOW|RTLD_LAZY)))
     {
