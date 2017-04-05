@@ -54,7 +54,7 @@ std::map<std::string, arcade::ILibrairy*> arcade::LibraryManager::_findLibrary(c
       if(_isSharedLibrary(dirp))
 	{
 	  filepath = libraryPath + dirp->d_name;
-	  if (!(handle = dlopen(filepath.c_str(), RTLD_NOW|RTLD_LAZY)) || !(sym = ((arcade::getNewLibFptr)dlsym(handle, "getNewLib"))))
+	  if (!(handle = dlopen(filepath.c_str(), RTLD_NOW | RTLD_LAZY)) || !(sym = ((arcade::getNewLibFptr)dlsym(handle, "getNewLib"))))
 	    throw std::runtime_error(dlerror());
 	  libraries[dirp->d_name] = sym(handle);
 	}

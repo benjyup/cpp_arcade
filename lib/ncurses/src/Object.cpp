@@ -21,8 +21,6 @@ namespace arcade
 	  _name(name), _filename(filename), _string(""),
 	  _position(Vector3d(0, 0)), _direction(Vector3d(0, 0)), _speed(0), _isMoving(true)
   {
-//    _filename = directory_name + _filename + file_extension;
-    _filename = _filename + file_extension;
     setProperties(_filename);
   }
 
@@ -60,16 +58,18 @@ namespace arcade
   std::string 			Object::getColor() const { return _color; }
   std::string 			Object::getBackground() const { return _background;  }
 
-  bool 				Object::setProperties(const std::string &filename)
+  bool 				Object::setProperties(const std::string &file)
   {
     std::ifstream 		fs;
     std::vector<std::string>	properties = NcursesTools::NT_DEFAULT_PROPERTIES;
     std::string			str;
     unsigned int		i = 0;
+    std::string			filename;
 
+    filename = file + Object::file_extension;
     fs.open(filename);
-    if (fs.is_open())
-      {
+    if (!fs.is_open())
+      throw std::runtime_error(filename + " doesn't exist.");
 	while (!fs.eof() && i < properties.size())
 	  {
 	    getline(fs, str);
@@ -80,8 +80,7 @@ namespace arcade
 	      properties[i] = str;
 	    i += 1;
 	  }
-	(void)fs.close();
-      } // throw si il existe pas
+    (void)fs.close();
     _string = properties[0];
     _color = properties[1];
     return (true);

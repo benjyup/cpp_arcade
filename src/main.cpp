@@ -26,13 +26,14 @@ int 	        main(int ac, char **av)
       arcade::LibraryManager  libraryManager;
       arcade::IGameLib        *gameLib = libraryManager.getGameLib("lib_arcade_snake.so");
       arcade::IGraphicalLib   *graphicalLib = libraryManager.getGraphicalLib(av[1]);
-      (void)(gameLib);
+      graphicalLib->registerObserver(gameLib);
       gameLib->initGame(graphicalLib, objects);
       std::cout << "ici = " << std::to_string(objects.use_count()) << std::endl;
       arcade::IWindows        *window = graphicalLib->initWindows(objects).get();
       while (window->event())
 	{
-	  window->refresh();
+	  if (window->refresh() == arcade::FrameType::GameFrame)
+	    gameLib->gameTurn();
 	}
     } catch (const std::exception &e) {
       std::cerr << "Error: " << e.what() << std::endl;
