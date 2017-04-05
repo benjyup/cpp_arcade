@@ -1,5 +1,5 @@
 //
-// Created by vincy on 27/03/17.
+// Created by peixot_b on 05/04/17.
 //
 
 #ifndef CPP_ARCADE_EVENEMENT_HPP

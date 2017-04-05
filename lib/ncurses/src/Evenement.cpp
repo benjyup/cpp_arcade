@@ -5,8 +5,8 @@
 #include "Evenement.hpp"
 
 arcade::Evenement::Evenement(IEvenement::KeyCode keycode) : _keyCode(keycode),
-							    _action(IEvenement::Action::KeyPressDown),
-							    _score(0)
+															_action(IEvenement::Action::KeyPressDown),
+															_score(0)
 {  }
 
 arcade::Evenement::~Evenement()
