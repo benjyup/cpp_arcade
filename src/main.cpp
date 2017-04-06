@@ -27,6 +27,7 @@ int 	        main(int ac, char **av)
       arcade::IGameLib        *gameLib = libraryManager.getGameLib("lib_arcade_snake.so");
       arcade::IGraphicalLib   *graphicalLib = libraryManager.getGraphicalLib(av[1]);
       graphicalLib->registerObserver(gameLib);
+      std::cout << "ici = " << std::to_string(objects.use_count()) << std::endl;
       gameLib->initGame(graphicalLib, objects);
       std::cout << "ici = " << std::to_string(objects.use_count()) << std::endl;
       arcade::IWindows        *window = graphicalLib->initWindows(objects).get();
@@ -35,7 +36,6 @@ int 	        main(int ac, char **av)
 	  if (window->refresh() == arcade::FrameType::GameFrame)
 	    gameLib->gameTurn();
 	}
-      objects->clear();
     } catch (const std::exception &e) {
       std::cerr << "Error: " << e.what() << std::endl;
     }

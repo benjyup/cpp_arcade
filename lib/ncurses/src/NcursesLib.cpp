@@ -25,7 +25,8 @@ namespace arcade
     try
       {
 	_objects = objs;
-	_win = std::shared_ptr<IWindows>(new Window(objs, height, width));
+//	_win = std::shared_ptr<IWindows>(new Window(objs, height, width));
+	_win = std::make_shared<Window>(objs, height, width);
 	for (const auto &it : _observers)
 	  _win->registerObserver(it);
       }
@@ -58,7 +59,7 @@ namespace arcade
 	label->setProperties(filename);
       }
     else
-    	o->setProperties(filename);
+      o->setProperties(filename);
   }
 
   /* !(virtual functions of IGraphicalLib) */
@@ -111,8 +112,9 @@ namespace arcade
   void NcursesLib::freeSharedData(void)
   {
     for (auto *it : _observers)
-	removeObserver(it);
-    _objects->clear();
+      removeObserver(it);
+    if (_objects)
+      _objects->clear();
     _objects.reset();
   }
 

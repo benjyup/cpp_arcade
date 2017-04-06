@@ -27,6 +27,7 @@ namespace arcade
 
     virtual void			setName(std::string const &) = 0;
     virtual void			setString(std::string const &) = 0;
+    virtual void			setTextureFile(std::string const &) = 0;
     virtual void			setPosition(Vector3d const &) = 0;
     virtual void			setDirection(Vector3d const &) = 0;
     virtual void			setSpeed(float) = 0;
@@ -38,6 +39,7 @@ namespace arcade
 
     virtual std::string const &		getName(void) const = 0;
     virtual std::string const &		getString(void) const = 0;
+    virtual std::string const &		getTextureFile(void) const = 0;
     virtual arcade::Vector3d const &	getPosition (void) const = 0;
     virtual arcade::Vector3d const &	getDirection(void) const = 0;
     virtual float			getSpeed(void) const = 0;
