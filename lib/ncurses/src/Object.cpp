@@ -67,6 +67,7 @@ namespace arcade
     std::string			filename;
 
     filename = file + Object::file_extension;
+    _filename = file;
     fs.open(filename);
     if (!fs.is_open())
       throw std::runtime_error(filename + " doesn't exist.");
@@ -131,5 +132,15 @@ namespace arcade
 
   bool Object::isMoving(void) const
   {return (_isMoving);}
+
+  std::string const& Object::getTextureFile() const
+  {
+    return (_filename);
+  }
+
+  void Object::setTextureFile(std::string const &filename)
+  {
+    setProperties(filename);
+  }
 }
 

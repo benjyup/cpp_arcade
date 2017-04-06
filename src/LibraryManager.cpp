@@ -19,14 +19,14 @@ arcade::LibraryManager::LibraryManager() : _graphLibraries(), _gameLibraries()
 arcade::LibraryManager::~LibraryManager()
 {
   void *handle;
-  for (auto &it : _graphLibraries)
+  for (auto &it : _gameLibraries)
     if (it.second)
       {
 	handle = it.second->getHandle();
 	delete it.second;
 	dlclose(handle);
       }
-  for (auto &it : _gameLibraries)
+  for (auto &it : _graphLibraries)
     if (it.second)
       {
 	handle = it.second->getHandle();
