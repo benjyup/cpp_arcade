@@ -63,7 +63,7 @@ namespace arcade
     //		Set visual following the path given in parameters
     //
 
-    //virtual void			setVisual(std::string const &) = 0;
+    virtual void			setVisual(std::string const &) = 0;
 
     //
     //		Update Sprite with animation, etc, ...

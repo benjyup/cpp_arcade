@@ -4,8 +4,6 @@
 
 #include <csignal>
 #include "Windows.hpp"
-#include "./SDL_image.h"
-#include "Object.hpp"
 
 void arcade::Window::_close_window(int)
 {
@@ -18,12 +16,13 @@ arcade::Window::Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObje
                        uint64_t width)
         : _size(0, 0),
           _min_size(0, 0),
-          _isopen(false), _win(new SDL_Window(0)),
+          _isopen(false),
           _contexte(SDL_GLContext(0)),
           _width(width), _height(height),
-          evenement(IEvenement::KeyCode::Key_Undefined),
-          _OpenGltools()
+          evenement(new Evenement(IEvenement::KeyCode::Key_Undefined)),
+          _openGltools()
 {
+    (void)objects;
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         SDL_Quit();
         return ;
@@ -46,10 +45,19 @@ arcade::Window::Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObje
         if( !( IMG_Init( imgFlags ) & imgFlags ) ) {
             printf("SDL_image could not initialize! SDL_mage Error: %s\n", IMG_GetError());
         }
+    if (TTF_Init() < 0) // load font
+        printf("Can't load ttf lib\n");
     signal(SIGINT, _close_window);
     _size.setX(getLenght());
     _size.setY(getHeight());
     _isopen = true;
+}
+
+arcade::Window::~Window() {
+    SDL_DestroyWindow(_win);
+    IMG_Quit();
+    TTF_Quit();
+    SDL_Quit();
 }
 
 /* virtual functions of IWindows */
@@ -79,10 +87,10 @@ void arcade::Window::setMapSize(uint32_t size)
 
 bool 			arcade::Window::event(void)
 {
-    evenement.setKeyCode(IEvenement::KeyCode::Key_Undefined);
+    evenement->setKeyCode(IEvenement::KeyCode::Key_Undefined);
     while (SDL_PollEvent(&events) == 1) {
-        evenement.setKeyCode(_OpenGltools.getKey(events.type));
-        notify(evenement);
+        evenement->setKeyCode(_openGltools.getKey(events.type));
+        notify(*evenement);
     }
     return (true);
 }
@@ -118,12 +126,27 @@ void 			arcade::Window::moveObject(std::shared_ptr <arcade::IObject> &obj, const
 
 void 			arcade::Window::moveObject(std::string name, const Vector3d &pos) // pourquoi pas de std::string & ?
 {
-    //dunno
+    for (auto it : *_objects)
+        if (name == it->getName())
+        {
+            it->setPosition(pos);
+            return ;
+        }
 }
 
 void 			arcade::Window::destroyObject(std::shared_ptr <arcade::IObject> &obj)
 {
-    //todoo
+    auto it = _objects->begin();
+
+    while (it != _objects->end())
+    {
+        if (*it == obj)
+        {
+            _objects->erase(it);
+            return;
+        }
+        ++it;
+    }
 }
 
 void 			arcade::Window::removeObserver(arcade::IObserver *observer) // pq pas de const
@@ -142,7 +165,7 @@ void 			arcade::Window::removeObserver(arcade::IObserver *observer) // pq pas de
 }
 
 std::shared_ptr<arcade::IEvenement> arcade::Window::getEvent() {
-    return (std::shared_ptr<arcade::IEvenement>(NULL));
+    return (evenement); //dunno
 }
 
 void arcade::Window::notify(const IEvenement &evenement) {

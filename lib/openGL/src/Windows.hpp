@@ -5,13 +5,13 @@
 #ifndef CPP_ARCADE_WINDOWS_HPP
 #define CPP_ARCADE_WINDOWS_HPP
 
-#include <SDL2/SDL.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <map>
 #include <vector>
 #include <string>
 #include "IWindows.hpp"
+#include "Object.hpp"
 #include "Evenement.hpp"
 #include "OpenGltools.hpp"
 
@@ -46,7 +46,7 @@ namespace arcade {
         /* virtual functions of IObserved */
 
 
-/       virtual std::shared_ptr<IEvenement> getEvent(void);
+        virtual std::shared_ptr<IEvenement> getEvent(void);
         virtual void registerObserver(arcade::IObserver*);
         virtual void removeObserver(arcade::IObserver*);
 
@@ -60,25 +60,27 @@ namespace arcade {
         virtual void notify(IEvenement const &);
 
     protected:
-        SDL_Window *_win;
-        SDL_GLContext _contexte;
-        Evenement evenement;
         SDL_Event events;
 
         Vector3d _size;
         Vector3d _min_size;
         bool _isopen;
+
+        SDL_Window *_win;
+        SDL_GLContext _contexte;
+
         int32_t _width;
         int32_t _height;
+
+        std::shared_ptr<Evenement>        evenement;
+
         char _pressed_key[10];
-        OpenGltools _OpenGltools;
+        OpenGltools _openGltools;
 
         std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> _objects;
         std::vector<arcade::IObserver *> _observers;
 
         std::shared_ptr<arcade::IObject> _obj; // à supprimer
-
-
     };
 }
 
