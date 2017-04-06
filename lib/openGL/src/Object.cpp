@@ -5,16 +5,13 @@
 #include "Object.hpp"
 
 namespace arcade {
-    const std::string        Object::directory_name = "./resources/";
-    const std::string        Object::file_extension = ".openGl";
-
     Object::Object() : _name(""), _filename(""), _string(""),
                        _position(Vector3d(0, 0)), _direction(Vector3d(0, 0)), _speed(0), _isMoving(true) {}
 
     Object::Object(const std::string &name, const std::string &filename) :
             _name(name), _filename(filename), _string(""),
             _position(Vector3d(0, 0)), _direction(Vector3d(0, 0)), _speed(0), _isMoving(true) {
-        _filename = _filename + file_extension;
+        setProperties();
     }
 
     Object::Object(const Object &other) :
@@ -36,6 +33,11 @@ namespace arcade {
 
     void Object::setSpeed(float speed) { _speed = speed; }
 
+    void Object::setScale(float scale) { _scale = scale; }
+
+    void Object::setTextureFile(std::string const &newFile) { _filename = newFile; }
+
+
     const arcade::Vector3d &Object::getDirection() const { return (_direction); }
 
     const std::string &Object::getName() const { return (_name); }
@@ -46,22 +48,31 @@ namespace arcade {
 
     const std::string &Object::getString() const { return (_string); }
 
-    const std::string &Object::getFilename() const { return (_filename); }
-
     Object::ObjectType Object::getType() const { return (ObjectType::Object); }
 
-    bool Object::isTextureOk(void) const { return (true); }
+    std::string const &Object::getTextureFile(void) const { return (_filename); }
+
+    bool Object::isTextureOk(void) const {
+        if (mTexture)
+            return (true);
+        return (false);
+    }
+
+    void Object::setVisual(std::string const &file) {
+        setTextureFile(file);
+        setProperties();
+    }
 
     void Object::updateVisual(uint32_t obj) {
+        (void) obj;
+        //todo
     }
 
-    virtual bool setProperties(const std::string &path) {
-        if (!loadTexture(path))
-            return (false);
-        loadSprite();
+    bool Object::isMoving() const {
+        return (_isMoving);
     }
 
-    void        loadSprite() {
+    void        Object::loadSprite() {
         int     i = 0;
         int     j = 0;
 
@@ -73,15 +84,15 @@ namespace arcade {
                 rect.y = i;
                 rect.w = 100;
                 rect.h = 100;
-                sprite.push(rect);
+                sprite.push_back(rect);
                 j += 100;
             }
-            _sprite.push(sprite);
+            _sprite.push_back(sprite);
             i += 100;
         }
     }
 
-    bool        loadTexture(const std::string &path){
+    bool        Object::loadTexture(const std::string &path){
         SDL_Surface *loadedSurface = IMG_Load(path.c_str());
         SDL_Texture* newTexture = NULL;
 
@@ -96,13 +107,20 @@ namespace arcade {
                 printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
             } else {
 //Get image dimensions
-                mWidth = loadedSurface->w;
-                mHeight = loadedSurface->h;
+                _mWidth = loadedSurface->w;
+                _mHeight = loadedSurface->h;
             }
         }
         SDL_FreeSurface(loadedSurface);
         //Return success
         mTexture = newTexture;
         return (mTexture != NULL);
+    }
+
+    bool    Object::setProperties() {
+        if (!loadTexture(_filename))
+            return (false);
+        loadSprite();
+        return (true);
     }
 }

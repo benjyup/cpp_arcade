@@ -5,7 +5,9 @@
 #ifndef CPP_ARCADE_OPENGLTOOLS_HPP
 #define CPP_ARCADE_OPENGLTOOLS_HPP
 
-#include "Windows.hpp"
+
+#include <IObserve.hpp>
+#include <SDL2/SDL.h>
 
 namespace arcade {
 
