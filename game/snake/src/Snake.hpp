@@ -66,7 +66,8 @@ namespace arcade
     std::mt19937 						_gen;
     std::uniform_int_distribution<int> 				_dis_width;
     std::uniform_int_distribution<int> 				_dis_height;
-    std::map<arcade::TileType, std::function<void(void)>> 	_actions;
+    std::map<arcade::TileType, std::function<void(void)>> 	_checkMove;
+    std::map<arcade::CommandType , std::function<void(void)>> 	_actions;
 
     /* virtual functions of IGameLib */
     virtual void 						createMap(void);

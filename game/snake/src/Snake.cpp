@@ -48,11 +48,19 @@ arcade::Snake::Snake(void *handle)
 {
   _snake.ct = arcade::CommandType::PLAY;
 
-  _actions = {
+  _checkMove = {
 	  {arcade::TileType::BLOCK, [&]() -> void { _dead(); }},
 	  {arcade::TileType::EVIL_DUDE, [&]() -> void { _dead(); }},
 	  {arcade::TileType::EMPTY, [&]() -> void { _move(); }},
 	  {arcade::TileType::POWERUP, [&]() -> void { _powerUp(); }}
+  };
+
+  _actions = {
+	  {arcade::CommandType::PLAY, [&]() -> void {}},
+	  {arcade::CommandType::GO_UP, [&]() -> void {_snake.body[S_SNAKE_HEAD].y -= 1; }},
+	  {arcade::CommandType::GO_DOWN, [&]() -> void {_snake.body[S_SNAKE_HEAD].y += 1; }},
+	  {arcade::CommandType::GO_LEFT, [&]() -> void {_snake.body[S_SNAKE_HEAD].x -= 1; }},
+	  {arcade::CommandType::GO_RIGHT, [&]() -> void {_snake.body[S_SNAKE_HEAD].x += 1; }},
   };
 }
 
@@ -91,6 +99,33 @@ uint64_t 		arcade::Snake::getScore() const
 
 void 			arcade::Snake::gameTurn()
 {
+  arcade::Vector3d tmp(0, 0);
+
+  tmp.setX(_snake.body[_snake.body.size() - 1].x);
+  tmp.setY(_snake.body[_snake.body.size() - 1].y);
+  if (_snake.ct != CommandType::PLAY)
+    {
+      for (unsigned int i = _snake.body.size() - 1; i != 0; i--)
+	{
+	  _snake.body[i].x = _snake.body[i - 1].x;
+	  _snake.body[i].y = _snake.body[i - 1].y;
+	  _map[_snake.body[i].y][_snake.body[i].x] = TileType::EVIL_DUDE;
+	}
+      _map[tmp.getY()][tmp.getX()] = TileType::EMPTY;
+    }
+
+  (_actions[_snake.ct])();
+
+  if (_snake.ct != arcade::CommandType::PLAY)
+    (_checkMove[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
+  if (_snake.body[S_SNAKE_HEAD].y >= _map_size.getY() || _snake.body[S_SNAKE_HEAD].x >= _map_size.getX())
+    {
+      _map[_snake.body[S_SNAKE_HEAD].y % _map_size.getY()][_snake.body[S_SNAKE_HEAD].x % _map_size.getX()] = TileType::EVIL_DUDE;
+      _refreshObjects();
+      _win->refresh();
+      sleep(1);
+      throw std::runtime_error("Game Over !");
+    }
   _refreshObjects();
 }
 
@@ -138,20 +173,21 @@ void 			arcade::Snake::createMap()
 	      v.setX(x);
 	      v.setY(y);
 	      obj->setPosition(v);
-	      _objects->push_back(obj);
+	      _win->addObject(obj);
+//	      _objects->push_back(obj);
 	      _map[_map.size() - 1].push_back(tt);
 	    } catch (const std::exception &e) {
-	      throw std::runtime_error("Invalid map. " + std::to_string(it) + " " + std::string(e.what()));
+	      throw std::runtime_error("Invalid map2. " + std::to_string(it) + " " + std::string(e.what()));
 	    }
 	  x += 1;
 	}
       if ((int)_map[_map.size() - 1].size() != _map_size.getX())
-	throw std::runtime_error("Invalid map.");
+	throw std::runtime_error("Invalid map1.");
       getline(fs, str);
       y += 1;
     }
   if ((int)_map.size() != _map_size.getY())
-    throw std::runtime_error("Invalid map.");
+    throw std::runtime_error("Invalid map3.");
   fs.close();
   _initPowerUp();
   _initPowerUp();
@@ -183,11 +219,9 @@ void arcade::Snake::initGraphicalLib(arcade::IGraphicalLib *)
 void arcade::Snake::getNotified(IEvenement const &event)
 {
   IEvenement::KeyCode kc = event.getKeyCode();
-  arcade::Vector3d tmp(0, 0);
-
   try
     {
-      if (kc != IEvenement::KeyCode::Key_Undefined
+      if (event.getAction() == IEvenement::Action::KeyPressDown	 && kc != IEvenement::KeyCode::Key_Undefined
 	  && S_FORBIDEN_COMMAND.at(_snake.ct)!=
 	     S_BINDING.at(kc))
 	{
@@ -200,37 +234,6 @@ void arcade::Snake::getNotified(IEvenement const &event)
 	} catch (std::exception e) {
 	  throw std::runtime_error("ICI");
 	}}
-
-  tmp.setX(_snake.body[_snake.body.size() - 1].x);
-  tmp.setY(_snake.body[_snake.body.size() - 1].y);
-  if (_snake.ct != CommandType::PLAY)
-    {
-      for (unsigned int i = _snake.body.size() - 1; i != 0; i--)
-	{
-	  _snake.body[i].x = _snake.body[i - 1].x;
-	  _snake.body[i].y = _snake.body[i - 1].y;
-	  _map[_snake.body[i].y][_snake.body[i].x] = TileType::EVIL_DUDE;
-	}
-      _map[tmp.getY()][tmp.getX()] = TileType::EMPTY;
-    }
-  if (_snake.ct == arcade::CommandType::GO_UP)
-    _snake.body[S_SNAKE_HEAD].y -= 1;
-  else if (_snake.ct == arcade::CommandType::GO_DOWN)
-      _snake.body[S_SNAKE_HEAD].y += 1;
-    else if (_snake.ct == arcade::CommandType::GO_LEFT)
-	_snake.body[S_SNAKE_HEAD].x -= 1;
-      else if (_snake.ct == arcade::CommandType::GO_RIGHT)
-	  _snake.body[S_SNAKE_HEAD].x += 1;
-  if (_snake.ct != arcade::CommandType::PLAY)
-    (_actions[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
-  if (_snake.body[S_SNAKE_HEAD].y >= _map_size.getY() || _snake.body[S_SNAKE_HEAD].x >= _map_size.getX())
-    {
-      _map[_snake.body[S_SNAKE_HEAD].y % _map_size.getY()][_snake.body[S_SNAKE_HEAD].x % _map_size.getX()] = TileType::EVIL_DUDE;
-      _refreshObjects();
-      _win->refresh();
-      sleep(1);
-      throw std::runtime_error("Game Over !");
-    }
 }
 
 arcade::ILibrairy *arcade::getNewLib(void *handle)
@@ -260,16 +263,22 @@ void arcade::Snake::_refreshObjects()
       v = it->getPosition();
       if (v.getX() == _snake.body[S_SNAKE_HEAD].x && v.getY() == _snake.body[S_SNAKE_HEAD].y)
 	{
+	  _lib->setVisual(it, S_HEAD_RESOURCES);
 	  it->setVisual(S_HEAD_RESOURCES);
 	  it->setName("snake_head");
 	}
       else if(v.getX() == _snake.body[_snake.body.size() - 1].x && v.getY() == _snake.body[_snake.body.size() - 1].y)
 	  {
+	    _lib->setVisual(it, S_TAIL_RESOURCES);
 	    it->setVisual(S_TAIL_RESOURCES);
 	    it->setName("snake_tail");
 	  }
 	else
-	  it->setVisual(S_TILE_RESOURCES.at(_map[v.getY()][v.getX()]));
+	  {
+	    it->setVisual(S_TILE_RESOURCES.at(_map[v.getY()][v.getX()]));
+	    _lib->setVisual(it, S_TILE_RESOURCES.at(_map[v.getY()][v.getX()]));
+	  }
+      it->setSpeed(500);
     }
 }
 
