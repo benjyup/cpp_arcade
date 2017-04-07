@@ -18,20 +18,37 @@ namespace arcade
 
     /* virtual functions of IGraphicalLib */
 
-    std::shared_ptr<arcade::IWindows> &SfmlLib::initWindows(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>> >&objs,
-                                                               uint64_t height,
-                                                               uint64_t width)
+    void                                    SfmlLib::reloadObject(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > > & objs)
     {
-        try
+        std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > >      newObjs(new std::vector<std::shared_ptr<arcade::IObject> >);
+        std::shared_ptr<arcade::IObject>      tmp;
+
+        for (auto & obj : (*objs))
         {
-            _objects = objs;
-            _win = std::shared_ptr<IWindows>(new Window(objs, height, width));
+            if (obj->getString() == "")
+                tmp = this->initObject(obj->getName(), obj->getTextureFile());
+            else
+            {
+                tmp = this->initLabel(obj->getName(), obj->getTextureFile());
+                tmp->setString(obj->getString());
+            }
+            tmp->setDirection(obj->getDirection());
+            tmp->setPosition(obj->getPosition());
+            tmp->setScale(obj->getScale());
+            tmp->setSpeed(obj->getSpeed());
+            obj = tmp;
         }
-        catch (std::exception &e)
-        {
-            throw std::runtime_error("Not able to open the window : " + std::string(e.what()));
-        }
-        return (_win);
+    }
+
+    std::shared_ptr<arcade::IWindows> &SfmlLib::initWindows(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>> >&objs,
+                                                               uint64_t,
+                                                               uint64_t)
+    {
+        _win.reset();
+        if (objs->size() > 0 && !std::dynamic_pointer_cast<arcade::Object>((*objs)[0]))
+            reloadObject(objs);
+        _win = std::make_shared<arcade::Window>(objs);
+        return (this->_win);
     }
 
     std::shared_ptr<IObject> SfmlLib::initObject(const std::string &name, const std::string &filename)
