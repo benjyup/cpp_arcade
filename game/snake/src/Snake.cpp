@@ -7,7 +7,10 @@
 #include <unistd.h>
 #include "Snake.hpp"
 
-const std::string			        		arcade::Snake::S_MAP_PATH = "./resc/snake/map";
+const std::string			        		arcade::Snake::S_MAP_PATH 	= "./resc/snake/map";
+const std::string						arcade::Snake::S_HEAD_RESOURCES = "./gfx/snake/snake_head";
+const std::string						arcade::Snake::S_TAIL_RESOURCES = "./gfx/snake/snake_tail";
+
 const std::map<arcade::TileType,
 	std::string>			    			arcade::Snake::S_TILE_RESOURCES = {
 	{arcade::TileType::EMPTY, "./gfx/snake/ground"},
@@ -44,8 +47,6 @@ arcade::Snake::Snake(void *handle)
 	  _lib_name("lib_arcade_snake"), _gen(getpid()), _dis_width(0, 0), _dis_height(0, 0)
 {
   _snake.ct = arcade::CommandType::PLAY;
-  _snake.length = 0;
-  _snake.direction = Direction::UNKNOWN;
 
   _actions = {
 	  {arcade::TileType::BLOCK, [&]() -> void { _dead(); }},
@@ -78,7 +79,7 @@ void 			arcade::Snake::initGame(arcade::IGraphicalLib *lib,
         throw std::runtime_error("Not able to init the game with a null graphical library.");*/
   _lib = lib;
   if (!(_win = _lib->getWindows().get()))
-    throw std::runtime_error("You have to init the window before init the game.");
+    throw std::runtime_error("Not able to init the game until the window is not.");
   _objects = objects;
   createMap();
 }
@@ -186,12 +187,19 @@ void arcade::Snake::getNotified(IEvenement const &event)
 
   try
     {
-      if (kc != IEvenement::KeyCode::Key_Undefined && S_BINDING.at(kc) != S_FORBIDEN_COMMAND.at(_snake.ct))
+      if (kc != IEvenement::KeyCode::Key_Undefined
+	  && S_FORBIDEN_COMMAND.at(_snake.ct)!=
+	     S_BINDING.at(kc))
 	{
 	  _snake.ct = S_BINDING.at(kc);
 	}
     } catch (const std::exception &)
-    { _snake.ct = S_BINDING.at(kc); }
+    {
+      try {
+	  _snake.ct = S_BINDING.at(kc);
+	} catch (std::exception e) {
+	  throw std::runtime_error("ICI");
+	}}
 
   tmp.setX(_snake.body[_snake.body.size() - 1].x);
   tmp.setY(_snake.body[_snake.body.size() - 1].y);
@@ -214,7 +222,7 @@ void arcade::Snake::getNotified(IEvenement const &event)
       else if (_snake.ct == arcade::CommandType::GO_RIGHT)
 	  _snake.body[S_SNAKE_HEAD].x += 1;
   if (_snake.ct != arcade::CommandType::PLAY)
-  	(_actions[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
+    (_actions[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
   if (_snake.body[S_SNAKE_HEAD].y >= _map_size.getY() || _snake.body[S_SNAKE_HEAD].x >= _map_size.getX())
     {
       _map[_snake.body[S_SNAKE_HEAD].y % _map_size.getY()][_snake.body[S_SNAKE_HEAD].x % _map_size.getX()] = TileType::EVIL_DUDE;
@@ -250,7 +258,18 @@ void arcade::Snake::_refreshObjects()
   for (auto &it : *_objects)
     {
       v = it->getPosition();
-      it->setVisual(S_TILE_RESOURCES.at(_map[v.getY()][v.getX()]));
+      if (v.getX() == _snake.body[S_SNAKE_HEAD].x && v.getY() == _snake.body[S_SNAKE_HEAD].y)
+	{
+	  it->setVisual(S_HEAD_RESOURCES);
+	  it->setName("snake_head");
+	}
+      else if(v.getX() == _snake.body[_snake.body.size() - 1].x && v.getY() == _snake.body[_snake.body.size() - 1].y)
+	  {
+	    it->setVisual(S_TAIL_RESOURCES);
+	    it->setName("snake_tail");
+	  }
+	else
+	  it->setVisual(S_TILE_RESOURCES.at(_map[v.getY()][v.getX()]));
     }
 }
 
@@ -276,7 +295,7 @@ void arcade::Snake::_powerUp()
   p.y = _snake.body[_snake.body.size() - 1].y;
 
   if (p.x - 1 >= 0 && _map[p.y][p.x - 1] == arcade::TileType::EMPTY)
-      _snake.body.push_back({static_cast<uint16_t >(p.x - 1), p.y});
+    _snake.body.push_back({static_cast<uint16_t >(p.x - 1), p.y});
   else if (p.y - 1 >= 0 && _map[p.y - 1][p.x] == arcade::TileType::EMPTY)
       _snake.body.push_back({p.x, static_cast<uint16_t >(p.y - 1)});
     else if (p.y + 1 < _map_size.getY() && _map[p.y + 1][p.x] == arcade::TileType::EMPTY)
