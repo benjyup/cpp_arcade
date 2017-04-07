@@ -40,7 +40,7 @@ namespace arcade
         }
     }
 
-    std::shared_ptr<arcade::IWindows> &SfmlLib::initWindows(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>> >&objs,
+    std::shared_ptr<arcade::IWindows> &SfmlLib::initWindows(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &objs,
                                                                uint64_t,
                                                                uint64_t)
     {
