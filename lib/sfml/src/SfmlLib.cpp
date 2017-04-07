@@ -112,19 +112,8 @@ namespace arcade
 
     void SfmlLib::removeObserver(arcade::IObserver *observer)
     {
-        if (observer == NULL)
-            return ;
-        auto it = _observers.begin();
-
-        while (it != _observers.end())
-        {
-            if (*it == observer)
-            {
-                _observers.erase(it);
-                return ;
-            }
-            ++it;
-        }
+        if (this->_win)
+            this->_win->removeObserver(observer);
     }
 
     /* !(virtual functions of IObserved) */
@@ -137,7 +126,10 @@ namespace arcade
 
     ILibrairy::LibType SfmlLib::getType() const {return (ILibrairy::LibType ::Graphical);}
 
-    void SfmlLib::freeSharedData(void) { }
+    void SfmlLib::freeSharedData(void)
+    {
+
+    }
 
     std::shared_ptr<sf::Texture>            &SfmlLib::getTexture(std::string const &fileName)
     {

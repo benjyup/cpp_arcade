@@ -147,16 +147,16 @@ std::shared_ptr <arcade::IEvenement> arcade::Window::getEvent()
 
 void 			arcade::Window::removeObserver(arcade::IObserver *observer) // pq pas de const
 {
-  auto it = _observers.begin();
+    auto it = _observers.begin();
 
-  while (it != _observers.end())
+    while (it != _observers.end())
     {
-      if (*it == observer)
-	{
-	  _observers.erase(it);
-	  return ;
-	}
-      ++it;
+        if (*it == observer)
+        {
+            _observers.erase(it);
+            return ;
+        }
+        ++it;
     }
 }
 
