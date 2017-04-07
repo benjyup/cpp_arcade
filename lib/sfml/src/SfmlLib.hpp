@@ -25,6 +25,7 @@ namespace arcade
         virtual std::shared_ptr<arcade::IWindows> &	initWindows(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > >&,
                                                                    uint64_t height = 0,
                                                                    uint64_t lenght = 0);
+        void                    reloadObject(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> & objs);
 
         virtual std::shared_ptr<IObject>		    initObject(std::string const &, std::string const &);
         virtual std::shared_ptr<arcade::IObject>	initLabel(std::string const &, std::string const &);
