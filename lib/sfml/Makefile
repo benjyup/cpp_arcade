@@ -1,5 +1,5 @@
 
-NAME		=	sfml.so
+NAME		=	../lib_arcade_sfml.so
 
 SRC		=	src
 
@@ -9,11 +9,16 @@ CPP 		= 	g++
 
 RM 		= 	rm -rf
 
-CPPFLAGS	+=	 -std=c++14 -W -Wall -Werror -Wextra -I$(INTERFACES)/
+CPPFLAGS	+=	 -std=c++14 -W -Wall -Werror -Wextra -I$(INTERFACES)/ -fPIC
 
 LDFLAGS		=	-shared -lsfml-graphics -lsfml-window -lsfml-system
 
 SRCS		=	$(SRC)/Window.cpp \
+                $(SRC)/Object.cpp \
+                $(SRC)/Evenement.cpp \
+                $(SRC)/SfmlLib.cpp \
+                $(SRC)/Label.cpp \
+                $(SRC)/Sprite.cpp \
 			$(INTERFACES)/Vector3d.cpp
 
 OBJS		=	$(SRCS:.cpp=.o)
@@ -21,8 +26,7 @@ OBJS		=	$(SRCS:.cpp=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	g++ -o sfml main.cpp ./src/Window.cpp ../interfaces/Vector3d.cpp ./src/Object.cpp ./src/Evenement.cpp ./src/SfmlLib.cpp ./src/Label.cpp -std=c++14 -lsfml-graphics -lsfml-window -lsfml-system -I../interfaces/ -I./src/
-
+	$(CPP) -o $(NAME) $(OBJS) $(LDFLAGS)
 clean:
 	$(RM) $(OBJS)
 

@@ -4,6 +4,7 @@
 
 #include "SfmlLib.hpp"
 #include "Object.hpp"
+#include "Sprite.hpp"
 
 namespace arcade
 {
@@ -35,11 +36,17 @@ namespace arcade
 
     std::shared_ptr<IObject> SfmlLib::initObject(const std::string &name, const std::string &filename)
     {
-        return (std::shared_ptr<IObject>(new Object(name, filename)));
+        std::shared_ptr<arcade::Sprite>   tmp(new arcade::Sprite(name, getTexture(filename)));
+        tmp->setTextureFile(filename);
+        return (tmp);
     }
 
     std::shared_ptr<arcade::IObject> SfmlLib::initLabel(const std::string &name, const std::string &filename)
-    {return(std::shared_ptr<IObject>(new Label(name, filename)));}
+    {
+        std::shared_ptr<Label>    tmp(new Label(name, this->getFont(filename)));
+        tmp->setTextureFile(filename);
+        return (tmp);
+    }
 
     std::shared_ptr<arcade::IWindows>& SfmlLib::getWindows()
     {
@@ -48,14 +55,23 @@ namespace arcade
 
     void SfmlLib::setVisual(std::shared_ptr<arcade::IObject> &obj, std::string const & filename)
     {
-        Object *o = static_cast<Object*>(obj.get());
-        if (o->getType() == Object::ObjectType::Label)
+        std::shared_ptr<Sprite> sprite = std::dynamic_pointer_cast<Sprite>(obj);
+
+        if (sprite)
         {
-            Label *label = static_cast<Label*>(obj.get());
-            label->setProperties(filename);
+            sprite->setVisual(this->getTexture(filename));
+            sprite->setTextureFile(filename);
         }
         else
-            o->setProperties(filename);
+        {
+            std::shared_ptr<Label> label = std::dynamic_pointer_cast<Label>(obj);
+            if (label)
+            {
+                label->setVisual(this->getFont(filename));
+                label->setTextureFile(filename);
+            }
+        }
+
     }
 
     /* !(virtual functions of IGraphicalLib) */
@@ -106,8 +122,30 @@ namespace arcade
 
     void SfmlLib::freeSharedData(void) { }
 
-    /* !(virtual functions of ILibrairy) */
+    std::shared_ptr<sf::Texture>            &SfmlLib::getTexture(std::string const &fileName)
+    {
+        if (this->_textureDump.find(fileName) == this->_textureDump.end())
+        {
+            auto tmp = std::make_shared<sf::Texture>();
+            this->_textureDump.emplace(fileName, tmp);
+            this->_textureDump[fileName]->setSmooth(true);
+            if (!(this->_textureDump[fileName]->loadFromFile(fileName + ".png")))
+                throw std::string("Failed to load a texture");
+        }
+        return (this->_textureDump[fileName]);
+    }
 
+    std::shared_ptr<sf::Font>               &SfmlLib::getFont(std::string const &fileName)
+    {
+        if (this->_fontDump.find(fileName) == this->_fontDump.end())
+        {
+            auto tmp = std::make_shared<sf::Font>();
+            this->_fontDump.emplace(fileName, tmp);
+            if (!(this->_fontDump[fileName]->loadFromFile(fileName + ".ttf")))
+                throw std::string("Failed to load a font");
+        }
+        return (this->_fontDump[fileName]);
+    }
 
     ILibrairy *getNewLib(void *handle)
     {

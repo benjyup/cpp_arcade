@@ -51,6 +51,9 @@ namespace arcade
         virtual void 			            removeObserver(IObserver *);
         virtual void 			            registerObserver(IObserver *);
 
+        static uint32_t const                               WINSIZE = 1000;
+        static uint32_t                                     MAPSIZE;
+        static float                                        TILESIZE;
     protected:
         Vector3d								                            _size;
         bool								                                _isopen;
@@ -61,7 +64,8 @@ namespace arcade
         int32_t								                                _width;
         std::vector<arcade::IObserver*>					                    _observers;
         Vector3d                                                            _min_size;
-
+        sf::Clock                                                           _clock;
+        sf::Int32                                                           _calc;
 
         virtual void					notify(IEvenement const &);
     };

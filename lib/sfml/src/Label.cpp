@@ -2,52 +2,59 @@
 // Created by peixot_b on 05/04/17.
 //
 
+#include <memory>
+#include <SFML/Graphics.hpp>
 #include "Label.hpp"
-#include "NcursesTools.hpp"
+#include "Window.hpp"
 
 namespace arcade
 {
-    Label::Label(const std::string &name, const std::string &filename)
+    Label::Label(const std::string &name, std::shared_ptr<sf::Font> &font) : Object(name)
     {
+        setVisual(font);
         _isMoving = false;
         _name = name;
-        //_filename = Object::directory_name + _filename + Object::file_extension;
-        _filename = filename + file_extension;
-        setProperties(_filename);
         _string = "";
         _position = Vector3d(0, 0);
         _direction = Vector3d(0, 0);
         _speed = 0;
-        //setProperties(filename);
     }
 
     Label::~Label() {}
 
-    bool Label::setProperties(const std::string &filename)
+    void        Label::setVisual(std::shared_ptr<sf::Font>& font)
     {
-        std::ifstream 		fs;
-        std::vector<std::string>	properties = NcursesTools::NT_DEFAULT_PROPERTIES;
-        std::string			str;
-        unsigned int		i = 0;
-
-        fs.open(filename);
-        if (fs.is_open())
-        {
-            while (!fs.eof() && i < properties.size())
-            {
-                getline(fs, str);
-                if (i != 0)
-                    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
-                if (!str.empty() && str != NcursesTools::NT_NONE)
-                    properties[i] = str;
-                i += 1;
-            }
-            (void)fs.close();
-        }
-        _string = properties[0];
-        _color = properties[1];
-        return (true);
+        this->_font = font;
+        this->_text.setFont(*this->_font);
+        this->setTextPosition(this->getPosition());
+        this->updateVisual(0);
     }
 
-    Object::ObjectType Label::getType() const { return (ObjectType::Label); }
+    void                    Label::setTextPosition(int32_t x, int32_t y)
+    {
+        this->_text.setPosition(x * Window::TILESIZE,
+                                y * Window::TILESIZE);
+    }
+
+    void                    Label::setTextPosition(arcade::Vector3d const & pos)
+    {
+        this->setTextPosition(pos.getX(), pos.getY());
+    }
+
+    bool                    Label::isTextureOk(void) const
+    {
+        return (this->_font != NULL);
+    }
+
+    bool                    Label::isMoving(void) const { return (false); }
+
+    sf::Text                &Label::getText(void) { return (this->_text); }
+
+    sf::Drawable            &Label::getDrawable(void) { return (this->getText()); }
+
+    void                    Label::updateVisual(uint32_t)
+    {
+        this->_text.setCharacterSize((unsigned int) ((Window::TILESIZE) * this->getScale()));
+    }
+
 }

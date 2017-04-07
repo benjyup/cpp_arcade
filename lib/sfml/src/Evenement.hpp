@@ -5,6 +5,8 @@
 #ifndef CPP_ARCADE_EVENEMENT_HPP
 #define CPP_ARCADE_EVENEMENT_HPP
 
+
+#include <SFML/Graphics.hpp>
 #include "IObserve.hpp"
 
 namespace arcade
@@ -12,7 +14,9 @@ namespace arcade
     class Evenement : public IEvenement
     {
     public:
+        Evenement();
         Evenement(IEvenement::KeyCode);
+        Evenement(sf::Event const &event);
         virtual ~Evenement();
 
         virtual IEvenement::Action		getAction(void) const;
