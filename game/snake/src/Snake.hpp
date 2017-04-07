@@ -16,24 +16,15 @@ namespace arcade
   {
    public:
 
-    enum class Direction : int
-    {
-      NORTH = 1,
-      SOUTH,
-      EAST,
-      WEST,
-      UNKNOWN
-    };
-
     struct t_snake
     {
       CommandType                                     		ct;
-      uint64_t                                        		length;
       std::vector<arcade::Position>				body;
-      arcade::Snake::Direction 					direction;
     };
 
     static const std::string					S_MAP_PATH;
+    static const std::string					S_HEAD_RESOURCES;
+    static const std::string					S_TAIL_RESOURCES;
     static const std::map<arcade::TileType,
 	    std::string>					S_TILE_RESOURCES;
     static const std::map<char, arcade::TileType>		S_STRING_TO_TILE;
