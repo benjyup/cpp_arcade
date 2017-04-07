@@ -5,7 +5,7 @@
 // Login   <benjamin.peixoto@epitech.eu>
 // 
 // Started on  Wed Mar 22 17:34:04 2017 peixot_b
-// Last update Wed Apr  5 15:18:29 2017 Benjamin
+// Last update Fri Apr  7 15:23:53 2017 Benjamin
 //
 
 #include <string>
@@ -25,17 +25,16 @@ namespace arcade
 {
     arcade::Window::Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &objects,
 						   uint64_t height,
-                           uint64_t width) : _size(height, width), _isopen(true), _window(sf::VideoMode(height, width),
+                           uint64_t width) : _size(height, width), _isopen(true), _window(sf::VideoMode(1024, 1024),
                                                                                         "Arcade - LibSFML",
                                                                                         sf::Style::Close |
-                                                                                        sf::Style::Resize |
                                                                                         sf::Style::Titlebar),
                                              _objects(objects), _height(height), _width(width), _min_size(0, 0, 0),
                                              _calc(0)
     {
-		_window.pollEvent(_event);
-		std::cout << "init" << std::endl;
-	}
+      _window.pollEvent(_event);
+      std::cout << "init" << std::endl;
+    }
 
     arcade::Window::~Window() {
 		std::cout << "Window supprimée" << std::endl;
@@ -82,29 +81,31 @@ namespace arcade
 
         t = _clock.getElapsedTime().asMilliseconds();
         frame = arcade::FrameType::UpdateFrame;
-        if (t >= 83 * 60)
-        {
-            t = 0;
-            _calc = t;
-            _clock.restart();
-        }
-        if (t >= _calc + 16)
-        {
-            frame = arcade::FrameType::GameFrame;
-            _calc = t;
-        }
-        _window.clear();
+
+	if (t >= 83 * 60)
+	  {
+	    t = 0;
+	    _calc = t;
+	    _clock.restart();
+	  }
+	if (t >= _calc + 16)
+	  {
+	    frame = arcade::FrameType::GameFrame;
+	    _calc = t;
+	  }
+	_window.clear();
         for(auto & obj : *_objects) {
             try {
                 obj_s = std::dynamic_pointer_cast<arcade::Object>(obj);
-                if (obj_s->isTextureOk()) {
+                if (obj_s->isTextureOk())
+                {
                     obj_s->updateVisual((uint32_t)(_clock.getElapsedTime().asMilliseconds() / 100));
                     _window.draw(obj_s->getDrawable());
                 }
 
             }
             catch (std::bad_cast const &) {
-                throw ("The Object got another type");
+                throw ("Another type of Object");
             }
         }
         _window.display();
@@ -112,7 +113,8 @@ namespace arcade
 	}
 
 	void arcade::Window::addObject(std::shared_ptr<arcade::IObject> &obj) {
-		_objects->push_back(obj);
+	  destroyObject(obj);
+	  _objects->push_back(std::shared_ptr<arcade::IObject>(obj));
 	}
 
 	void arcade::Window::addObject(std::shared_ptr<arcade::IObject> &obj, const Vector3d &pos) {
@@ -130,26 +132,28 @@ namespace arcade
     }
 
 	void arcade::Window::moveObject(std::string name, const Vector3d &pos) {
-		for (auto it : *_objects)
+		for (auto &it : *_objects)
 			if (name == it->getName()) {
                 it->setPosition(pos);
 			}
 	}
 
-	void arcade::Window::destroyObject(std::shared_ptr<arcade::IObject> &obj) {
-		auto it = _objects->begin();
+    void arcade::Window::destroyObject(std::shared_ptr<arcade::IObject> &obj) {
+        std::vector<std::shared_ptr<arcade::IObject> >::iterator it;
 
-		while (it != _objects->end()) {
-			if (*it == obj) {
-				_objects->erase(it);
-				return;
-			}
-			++it;
-		}
-	}
+        for (it = _objects->begin(); it != _objects->end(); it++)
+        {
+            if (*it == obj)
+            {
+		  _objects->erase(it);
+                return;
+            }
+        }
+
+    }
 
 	void arcade::Window::notify(const IEvenement &evenement) {
-		for (auto it : _observers)
+		for (auto &it : _observers)
 			it->getNotified(evenement);
 	}
 
@@ -158,18 +162,15 @@ namespace arcade
 	}
 
 	void arcade::Window::removeObserver(IObserver *observer) {
-		auto it = _observers.begin();
+        auto          it = std::find(_observers.begin(), _observers.end(), observer);
 
-		while (it != _observers.end()) {
-			if (*it == observer) {
-				_observers.erase(it);
-				return;
-			}
-			++it;
-		}
-	}
+        if (it != _observers.end())
+            _observers.erase(it);
+
+    }
 
 	void arcade::Window::registerObserver(IObserver *observer) {
-		_observers.push_back(observer);
-	}
+        if (std::find(this->_observers.begin(), this->_observers.end(), observer) == this->_observers.end())
+            this->_observers.push_back(observer);
+    }
 }

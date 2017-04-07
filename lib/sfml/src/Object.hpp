@@ -5,7 +5,7 @@
 ** Login   <benjamin.peixoto@epitech.eu>
 **
 ** Started on  Mon Apr 03 14:18:52 2017 benjamin.peixoto
-** Last update Mon Apr 03 14:18:52 2017 benjamin.peixoto
+// Last update Fri Apr  7 15:36:07 2017 Benjamin
 */
 
 #ifndef Object_HPP_
@@ -71,15 +71,18 @@ namespace arcade
 
 
     protected:
+      
+      sf::Color			_color;
+      char		_colorTurn;
         std::string		_name;
-        std::string		_filename;
+            std::string	_str;
+      std::string		_filename;
         std::string		_string;
         Vector3d		_position;
         Vector3d		_direction;
         float		    _speed;
         float           _scale;
-        std::string		_color;
-        std::string		_background;
+      std::string		_background;
         std::string		_character;
         bool 		_isMoving;
 
