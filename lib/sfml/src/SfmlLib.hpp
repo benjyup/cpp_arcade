@@ -56,8 +56,15 @@ namespace arcade
         std::string								                            _name;
         std::vector<arcade::IObserver*>					                    _observers;
         void								                                *_handle;
+
         std::map<std::string, std::vector<std::string>>			            _visual_save;
         std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>> > 	_objects;
+
+        std::map<std::string, std::shared_ptr<sf::Texture> >        _textureDump;
+        std::shared_ptr<sf::Texture>                                &getTexture(std::string const &);
+
+        std::map<std::string, std::shared_ptr<sf::Font> >           _fontDump;
+        std::shared_ptr<sf::Font>                                   &getFont(std::string const &);
 
         virtual void notify(IEvenement const &); // virtual function of IObserved
     };

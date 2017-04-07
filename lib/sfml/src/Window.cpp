@@ -12,28 +12,35 @@
 #include <iostream>
 #include <sstream>
 #include <memory>
+#include <vector>
 #include <SFML/Graphics.hpp>
 #include "Window.hpp"
 #include "Object.hpp"
+#include "Evenement.hpp"
 
+uint32_t                        arcade::Window::MAPSIZE = 40;
+float                           arcade::Window::TILESIZE = 1000 / 40;
 
 namespace arcade
 {
     arcade::Window::Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &objects,
 						   uint64_t height,
-                           uint64_t width) : _size(1024, 1024), _isopen(false), _window(sf::VideoMode(1024, 1024),
-                                                                                        "SFML works!",
+                           uint64_t width) : _size(1024, 1024), _isopen(true), _window(sf::VideoMode(1024, 1024),
+                                                                                        "Arcade - LibSFML",
                                                                                         sf::Style::Close |
                                                                                         sf::Style::Resize |
                                                                                         sf::Style::Titlebar),
-                                             _objects(objects), _height(height), _width(width), _min_size(0, 0, 0)
+                                             _objects(objects), _height(height), _width(width), _min_size(0, 0, 0),
+                                             _calc(0)
     {
 		std::cout << "init" << std::endl;
-		_isopen = true;
 	}
 
-	arcade::Window::~Window() {
+    arcade::Window::~Window() {
 		std::cout << "Window supprimée" << std::endl;
+        _objects.reset();
+        if(_window.isOpen())
+            _window.close();
 		_isopen = false;
 	}
 
@@ -54,73 +61,53 @@ namespace arcade
 		_min_size.setZ(size * size);
 	}
 
-	bool arcade::Window::event() {
-		while (_window.pollEvent(_event)) {
-			switch (_event.type) {
-				case sf::Event::Closed: // CHECK IF THE WINDOW IS CLOSED
-				{
-					_window.close();
-					break;
-				}
-
-				case sf::Event::Resized: // CHECK WHEN THE WINDOW IS RESIZED BY USER
-				{
-					std::cout << "new width: " << _event.size.width << std::endl;
-					std::cout << "new height: " << _event.size.height << std::endl;
-					break;
-				}
-
-				case sf::Event::KeyPressed: // CHECK WHEN A KEY IS PRESSED
-				{
-					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-						std::cout << "The character is moving to left" << std::endl;
-						// character.move(1, 0)
-					}
-					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) ||
-						sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-						std::cout << "The character is moving to Right" << std::endl;
-						// character.move(1, 0);
-					}
-					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-						std::cout << "The character is moving to Up" << std::endl;
-						// character.move(1, 0);
-					}
-					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-						std::cout << "The character is moving to Down" << std::endl;
-						// character.move(1, 0)
-					}
-					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
-						std::cout << "Previous Library" << std::endl;
-					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
-						std::cout << "Next Library" << std::endl;
-					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
-						std::cout << "Previous Game" << std::endl;
-					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
-						std::cout << "Next Game" << std::endl;
-					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num6))
-						std::cout << "Restart the game" << std::endl;
-					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num7))
-						std::cout << "Return to the Menu" << std::endl;
-					break;
-				}
-
-				default:
-					break;
-			}
-		}
-		return (false);
+    bool arcade::Window::event()
+    {
+        if (_window.pollEvent(_event))
+        {
+            if ((_event.type == sf::Event::KeyPressed && _event.key.code == sf::Keyboard::Escape)
+                || _event.type == sf::Event::Closed)
+                return (false);
+            notify(arcade::Evenement(_event));
+        }
+        return (true);
 	}
 
-	arcade::FrameType arcade::Window::refresh() {
-		_height = _event.size.height;
-		_width = _event.size.width;
-		_window.clear();
+	arcade::FrameType arcade::Window::refresh()
+    {
+        sf::Int32                       t;
+        arcade::FrameType               frame;
+        std::shared_ptr<arcade::Object> obj_s;
 
-		//for (auto obj : *_objects) A VOIR AVEC TIMOTHEE
-		//_window.draw();
+        t = _clock.getElapsedTime().asMilliseconds();
+        frame = arcade::FrameType::UpdateFrame;
+        if (t >= 83 * 60)
+        {
+            t = 0;
+            _calc = t;
+            _clock.restart();
+        }
+        if (t >= _calc + 16)
+        {
+            frame = arcade::FrameType::GameFrame;
+            _calc = t;
+        }
+        _window.clear();
+        for(auto & obj : *_objects) {
+            try {
+                obj_s = std::dynamic_pointer_cast<arcade::Object>(obj);
+                if (obj_s->isTextureOk()) {
+                    obj_s->updateVisual((uint32_t)(_clock.getElapsedTime().asMilliseconds() / 100));
+                    _window.draw(obj_s->getDrawable());
+                }
 
-		_window.display();
-		return (arcade::FrameType::GameFrame);
+            }
+            catch (std::bad_cast const &) {
+                throw ("The Object got another type");
+            }
+        }
+        _window.display();
+        return (frame);
 	}
 
 	void arcade::Window::addObject(std::shared_ptr<arcade::IObject> &obj) {
@@ -134,14 +121,17 @@ namespace arcade
 
 	void arcade::Window::moveObject(std::shared_ptr<arcade::IObject> &obj, const Vector3d &pos)
 	{
-		obj->setPosition(pos);
-	}
+        for (auto &it : *_objects)
+        {
+            if (it == obj)
+                it->setPosition(pos);
+        }
+    }
 
 	void arcade::Window::moveObject(std::string name, const Vector3d &pos) {
 		for (auto it : *_objects)
 			if (name == it->getName()) {
-				it->setPosition(pos);
-				return;
+                it->setPosition(pos);
 			}
 	}
 
@@ -163,7 +153,7 @@ namespace arcade
 	}
 
 	std::shared_ptr<arcade::IEvenement> arcade::Window::getEvent() {
-		return (std::shared_ptr<arcade::IEvenement>(NULL));
+		return (std::make_shared<arcade::Evenement>(_event));
 	}
 
 	void arcade::Window::removeObserver(IObserver *observer) {

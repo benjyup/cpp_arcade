@@ -15,10 +15,16 @@
 #include <algorithm>
 #include <ostream>
 #include <cstdint>
+#include <SFML/Graphics.hpp>
 #include "IObject.hpp"
+
+# define        NEG_OR(c)               ((c < 0) ? (-1) : (1))
 
 namespace arcade
 {
+    class Window;
+    class SfmlLib;
+
     class Object : public IObject
     {
     public:
@@ -33,6 +39,7 @@ namespace arcade
 
         Object();
         Object(const std::string &name, const std::string &filename);
+        Object(const std::string &name);
         Object(const Object& other);
 
         bool operator==(const Object &rhs) const;
@@ -46,7 +53,8 @@ namespace arcade
         virtual void			setPosition(Vector3d const &);
         virtual void			setDirection(Vector3d const &);
         virtual void			setSpeed(float);
-        virtual void			setScale(float) {};
+        virtual void			setScale(float);
+        virtual void            setTextureFile(std::string const &);
 
         virtual std::string const &		    getName(void) const;
         virtual std::string const &	    	getString(void) const;
@@ -54,13 +62,10 @@ namespace arcade
         virtual arcade::Vector3d const &	getPosition (void) const;
         virtual arcade::Vector3d const &	getDirection(void) const;
         virtual float                       getSpeed(void) const;
-        virtual float			            getScale(void) const { return (0.0);};
+        virtual float			            getScale(void) const;
         virtual Object::ObjectType 		    getType(void) const;
 
-        virtual bool                        isMoving(void) const;
-
-        virtual bool 			isTextureOk(void) const;
-        virtual void			updateVisual(uint32_t);
+        virtual sf::Drawable    &getDrawable(void) = 0;
 
     protected:
         std::string		_name;
@@ -69,6 +74,7 @@ namespace arcade
         Vector3d		_position;
         Vector3d		_direction;
         float		    _speed;
+        float           _scale;
         std::string		_color;
         std::string		_background;
         std::string		_character;

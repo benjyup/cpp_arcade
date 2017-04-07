@@ -28,6 +28,13 @@ namespace arcade
 		_filename = _filename + file_extension;
 	}
 
+    Object::Object(std::string const &name) :
+            _name(name), _filename(""), _string(""),
+            _position(Vector3d(0, 0)), _direction(Vector3d(0, 0)), _speed(0),
+            _scale(0)
+    {
+    }
+
 	Object::Object(const Object &other) :
 			_name(other._name), _filename(other._filename), _string(other._string),
 			_position(other._position), _direction(other._direction), _speed(other._speed),
@@ -42,18 +49,20 @@ namespace arcade
 	void 				Object::setDirection(const Vector3d &direction) {_direction = direction;}
 	void 				Object::setPosition(const Vector3d &position) {_position = position;}
 	void 				Object::setSpeed(float speed) {_speed = speed;}
-
+    void                Object::setScale(float scale) {_scale = scale;}
+    void                Object::setTextureFile(std::string const &file)
+    {
+        _filename = file;
+    }
 
 	const arcade::Vector3d 	&Object::getDirection() const { return (_direction);}
 	const std::string 		&Object::getName() const {return (_name);}
 	const arcade::Vector3d 	&Object::getPosition() const {return (_position);}
-	float					Object::getSpeed() const {return (_speed);}
+    float					Object::getSpeed() const {return (_speed);}
+    float					Object::getScale() const {return (_scale);}
 	const std::string 		&Object::getString() const {return (_string);}
 	const std::string 		&Object::getFilename() const {return (_filename);}
 	Object::ObjectType		Object::getType() const { return (ObjectType::Object); }
-
-	bool 				Object::isTextureOk(void) const {return (true);}
-	void 				Object::updateVisual(uint32_t obj) {}
 
 	bool 				Object::operator==(const Object &other) const
   {
@@ -68,9 +77,6 @@ namespace arcade
 			 _background == other._background &&
 			 _character == other._character;
   }
-
-    bool Object::isMoving(void) const
-    {return (_isMoving);}
 
 	bool 				Object::operator!=(const Object &other) const
 	{

@@ -13,12 +13,21 @@ namespace arcade
     class Label : public Object
     {
     public:
-        Label(const std::string &name, const std::string &filename);
+        Label(const std::string &name, std::shared_ptr<sf::Font> &);
         virtual ~Label();
+        void        setVisual(std::shared_ptr<sf::Font>&);
 
-        virtual bool 			setProperties(const std::string &pahtname);
-        virtual Object::ObjectType 		getType(void) const;
-    private:
+        virtual void                        updateVisual(uint32_t);
+        virtual bool                        isTextureOk(void) const;
+        virtual bool                        isMoving(void) const;
+        virtual sf::Drawable                &getDrawable(void);
+        sf::Text                            &getText(void);
+
+    protected:
+        sf::Text                            _text;
+        std::shared_ptr<sf::Font>           _font;
+        void                                setTextPosition(arcade::Vector3d const &);
+        void                                setTextPosition(int32_t, int32_t);
     };
 }
 
