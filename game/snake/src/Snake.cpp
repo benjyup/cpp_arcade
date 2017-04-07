@@ -41,7 +41,7 @@ const unsigned long						arcade::Snake::S_DEFAULT_SNAKE_LENGTH = 8;
 
 arcade::Snake::Snake(void *handle)
 	: _objects(), _lib(NULL), _map(), _score(0), _snake(), _map_size({0, 0}), _handle(handle),
-	  _lib_name("lib_arcade_snake")
+	  _lib_name("lib_arcade_snake"), _gen(getpid()), _dis_width(0, 0), _dis_height(0, 0)
 {
   _snake.ct = arcade::CommandType::PLAY;
   _snake.length = 0;
@@ -109,6 +109,9 @@ void 			arcade::Snake::createMap()
   if (_map_size.getX() < 10 || _map_size.getX() > 100 || _map_size.getY() < 10 || _map_size.getY() > 100)
     throw std::runtime_error("Invalid map's size.");
 
+  _dis_width = std::uniform_int_distribution<int>(0, _map_size.getX() - 1);
+  _dis_height = std::uniform_int_distribution<int>(0, _map_size.getY() - 1);
+
   getline(fs, str);
   arcade::TileType tt;
   int32_t x, y = 0;
@@ -143,6 +146,9 @@ void 			arcade::Snake::createMap()
   fs.close();
 /*  _map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x] = TileType::EVIL_DUDE;
   _map[_snake.body[1].y][_snake.body[1].x] = TileType::EVIL_DUDE;*/
+  _initPowerUp();
+  _initPowerUp();
+  _initPowerUp();
   _initSnake();
 }
 
@@ -171,7 +177,7 @@ void arcade::Snake::initGraphicalLib(arcade::IGraphicalLib *)
 void arcade::Snake::getNotified(IEvenement const &event)
 {
   IEvenement::KeyCode kc = event.getKeyCode();
-  arcade::Vector3d tmp(_snake.body[S_SNAKE_HEAD].x, _snake.body[S_SNAKE_HEAD].y);
+  arcade::Vector3d tmp(0, 0);
 
   try
     {
@@ -195,7 +201,6 @@ void arcade::Snake::getNotified(IEvenement const &event)
 	  std::cerr << "i =" << i << " body.x = " << _snake.body[i].x << " body.y = " << _snake.body[i].y << std::endl;
 	  _map[_snake.body[i].y][_snake.body[i].x] = TileType::EVIL_DUDE;
 	}
-      std::cerr << "apres le for" << std::endl;
       _map[tmp.getY()][tmp.getX()] = TileType::EMPTY;
     }
   if (_snake.ct == arcade::CommandType::GO_UP)
@@ -215,9 +220,12 @@ void arcade::Snake::getNotified(IEvenement const &event)
       sleep(1);
       throw std::runtime_error("You die ! from size");
     }
+/*  if (_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x] == TileType::POWERUP)
+    _snake.body.push_back({_snake.body[_snake.body.size() - 1].x - 1, _snake.body[_snake.body.size() - 1].y});*/
   std::cerr << "x = " << _snake.body[S_SNAKE_HEAD].x << " y = " << _snake.body[S_SNAKE_HEAD].y << std::endl;
   _map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x] = TileType::EVIL_DUDE;
 }
+
 
 arcade::ILibrairy *arcade::getNewLib(void *handle)
 {
@@ -227,6 +235,11 @@ arcade::ILibrairy *arcade::getNewLib(void *handle)
 void arcade::Snake::_fillTheMap()
 {
 
+}
+
+void arcade::Snake::_initPowerUp()
+{
+  _map[_dis_height(_gen)][_dis_width(_gen)] = arcade::TileType::POWERUP;
 }
 
 void arcade::Snake::_refreshObjects()
