@@ -50,10 +50,9 @@ namespace arcade
 	void 				Object::setPosition(const Vector3d &position) {_position = position;}
 	void 				Object::setSpeed(float speed) {_speed = speed;}
     void                Object::setScale(float scale) {_scale = scale;}
-    void                Object::setTextureFile(std::string const &file)
-    {
-        _filename = file;
-    }
+    void                Object::setTextureFile(std::string const &file) {_filename = file;}
+    void                Object::setVisual(std::string const &) {}
+
 
 	const arcade::Vector3d 	&Object::getDirection() const { return (_direction);}
 	const std::string 		&Object::getName() const {return (_name);}
@@ -62,9 +61,10 @@ namespace arcade
     float					Object::getScale() const {return (_scale);}
 	const std::string 		&Object::getString() const {return (_string);}
 	const std::string 		&Object::getFilename() const {return (_filename);}
-	Object::ObjectType		Object::getType() const { return (ObjectType::Object); }
+	Object::ObjectType		Object::getType() const {return (ObjectType::Object); }
+    const std::string       &Object::getTextureFile() const {return (_filename);}
 
-	bool 				Object::operator==(const Object &other) const
+    bool 				Object::operator==(const Object &other) const
   {
 	  return this == &other &&
 			 _name == other._name &&

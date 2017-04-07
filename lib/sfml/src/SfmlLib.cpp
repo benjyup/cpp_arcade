@@ -89,8 +89,8 @@ namespace arcade
 
     void SfmlLib::registerObserver(arcade::IObserver *observer)
     {
-        _win->registerObserver(observer);
-        _observers.push_back(observer);
+        if (this->_win)
+            this->_win->registerObserver(observer);
     }
 
     void SfmlLib::removeObserver(arcade::IObserver *observer)
