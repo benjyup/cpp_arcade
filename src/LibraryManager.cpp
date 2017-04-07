@@ -19,13 +19,6 @@ arcade::LibraryManager::LibraryManager() : _graphLibraries(), _gameLibraries()
 arcade::LibraryManager::~LibraryManager()
 {
   void *handle;
-  for (auto &it : _graphLibraries)
-    if (it.second)
-      {
-	handle = it.second->getHandle();
-	delete it.second;
-	dlclose(handle);
-      }
   for (auto &it : _gameLibraries)
     if (it.second)
       {
@@ -33,7 +26,13 @@ arcade::LibraryManager::~LibraryManager()
 	delete it.second;
 	dlclose(handle);
       }
-
+  for (auto &it : _graphLibraries)
+    if (it.second)
+      {
+	handle = it.second->getHandle();
+	delete it.second;
+	dlclose(handle);
+      }
 }
 
 std::map<std::string, arcade::ILibrairy*> arcade::LibraryManager::_findLibrary(const arcade::ILibrairy::LibType type) const

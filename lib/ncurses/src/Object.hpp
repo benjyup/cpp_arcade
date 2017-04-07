@@ -47,6 +47,7 @@ namespace arcade
     virtual void			setDirection(Vector3d const &);
     virtual void			setSpeed(float);
     virtual void			setScale(float) {};
+    virtual void			setTextureFile(std::string const &);
 
     virtual std::string const &		getName(void) const;
     virtual std::string const &		getString(void) const;
@@ -56,6 +57,7 @@ namespace arcade
     virtual float			getSpeed(void) const;
     virtual float			getScale(void) const { return (0.0);};
     virtual Object::ObjectType 		getType(void) const;
+    virtual std::string const &		getTextureFile(void) const;
 
     virtual bool 			isTextureOk(void) const;
     virtual void			updateVisual(uint32_t);
