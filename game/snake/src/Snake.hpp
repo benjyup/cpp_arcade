@@ -65,6 +65,7 @@ namespace arcade
    private:
     std::shared_ptr<std::vector<std::shared_ptr<IObject>>> 	_objects;
     arcade::IGraphicalLib					*_lib;
+    arcade::IWindows						*_win;
     std::vector<std::vector<arcade::TileType>>			_map;
     uint64_t 							_score;
     t_snake                                                 	_snake;
@@ -74,16 +75,19 @@ namespace arcade
     std::mt19937 						_gen;
     std::uniform_int_distribution<int> 				_dis_width;
     std::uniform_int_distribution<int> 				_dis_height;
+    std::map<arcade::TileType, std::function<void(void)>> 	_actions;
 
     /* virtual functions of IGameLib */
     virtual void 						createMap(void);
     virtual void						initGraphicalLib(arcade::IGraphicalLib*);
     /* !virtual functions of IGameLib */
 
-    void							_fillTheMap(void);
     void							_refreshObjects(void);
     void 							_initSnake(void);
     void 							_initPowerUp(void);
+    void 							_dead(void);
+    void 							_move(void);
+    void 							_powerUp(void);
 
   };
 }

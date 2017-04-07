@@ -142,5 +142,9 @@ namespace arcade
   {
     setProperties(filename);
   }
-}
 
+  void Object::setVisual(std::string const &filename)
+  {
+    setProperties(filename);
+  }
+}

@@ -46,6 +46,13 @@ arcade::Snake::Snake(void *handle)
   _snake.ct = arcade::CommandType::PLAY;
   _snake.length = 0;
   _snake.direction = Direction::UNKNOWN;
+
+  _actions = {
+	  {arcade::TileType::BLOCK, [&]() -> void { _dead(); }},
+	  {arcade::TileType::EVIL_DUDE, [&]() -> void { _dead(); }},
+	  {arcade::TileType::EMPTY, [&]() -> void { _move(); }},
+	  {arcade::TileType::POWERUP, [&]() -> void { _powerUp(); }}
+  };
 }
 
 arcade::Snake::~Snake()
@@ -70,6 +77,8 @@ void 			arcade::Snake::initGame(arcade::IGraphicalLib *lib,
 /*    if (lib == NULL)
         throw std::runtime_error("Not able to init the game with a null graphical library.");*/
   _lib = lib;
+  if (!(_win = _lib->getWindows().get()))
+    throw std::runtime_error("You have to init the window before init the game.");
   _objects = objects;
   createMap();
 }
@@ -82,7 +91,6 @@ uint64_t 		arcade::Snake::getScore() const
 void 			arcade::Snake::gameTurn()
 {
   _refreshObjects();
-  usleep(10000);
 }
 
 // private
@@ -132,20 +140,18 @@ void 			arcade::Snake::createMap()
 	      _objects->push_back(obj);
 	      _map[_map.size() - 1].push_back(tt);
 	    } catch (const std::exception &e) {
-	      throw std::runtime_error("Invalid map1. " + std::to_string(it) + " " + std::string(e.what()));
+	      throw std::runtime_error("Invalid map. " + std::to_string(it) + " " + std::string(e.what()));
 	    }
 	  x += 1;
 	}
       if ((int)_map[_map.size() - 1].size() != _map_size.getX())
-	throw std::runtime_error("Invalid map2.");
+	throw std::runtime_error("Invalid map.");
       getline(fs, str);
       y += 1;
     }
   if ((int)_map.size() != _map_size.getY())
-    throw std::runtime_error("Invalid map3.");
+    throw std::runtime_error("Invalid map.");
   fs.close();
-/*  _map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x] = TileType::EVIL_DUDE;
-  _map[_snake.body[1].y][_snake.body[1].x] = TileType::EVIL_DUDE;*/
   _initPowerUp();
   _initPowerUp();
   _initPowerUp();
@@ -166,7 +172,6 @@ void arcade::Snake::_initSnake()
       i += 1;
       p.x -= 1;
     }
-  std::cerr << "snake taille = " << _snake.body.size() << std::endl;
 }
 
 void arcade::Snake::initGraphicalLib(arcade::IGraphicalLib *)
@@ -188,17 +193,14 @@ void arcade::Snake::getNotified(IEvenement const &event)
     } catch (const std::exception &)
     { _snake.ct = S_BINDING.at(kc); }
 
-  std::cerr << "avant le for" << std::endl;
   tmp.setX(_snake.body[_snake.body.size() - 1].x);
   tmp.setY(_snake.body[_snake.body.size() - 1].y);
   if (_snake.ct != CommandType::PLAY)
     {
       for (unsigned int i = _snake.body.size() - 1; i != 0; i--)
 	{
-	  std::cerr << "i =" << i << " body.x = " << _snake.body[i].x << " body.y = " << _snake.body[i].y << std::endl;
 	  _snake.body[i].x = _snake.body[i - 1].x;
 	  _snake.body[i].y = _snake.body[i - 1].y;
-	  std::cerr << "i =" << i << " body.x = " << _snake.body[i].x << " body.y = " << _snake.body[i].y << std::endl;
 	  _map[_snake.body[i].y][_snake.body[i].x] = TileType::EVIL_DUDE;
 	}
       _map[tmp.getY()][tmp.getX()] = TileType::EMPTY;
@@ -211,35 +213,34 @@ void arcade::Snake::getNotified(IEvenement const &event)
 	_snake.body[S_SNAKE_HEAD].x -= 1;
       else if (_snake.ct == arcade::CommandType::GO_RIGHT)
 	  _snake.body[S_SNAKE_HEAD].x += 1;
-  if (_snake.body[S_SNAKE_HEAD].y >= _map_size.getY() || _snake.body[S_SNAKE_HEAD].x >= _map_size.getX() || (_snake.ct != arcade::CommandType::PLAY && (_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x] == TileType::EVIL_DUDE || _map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x] == TileType::BLOCK)))
+  if (_snake.ct != arcade::CommandType::PLAY)
+  	(_actions[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
+  if (_snake.body[S_SNAKE_HEAD].y >= _map_size.getY() || _snake.body[S_SNAKE_HEAD].x >= _map_size.getX())
     {
-      std::cerr << " x = " << _snake.body[S_SNAKE_HEAD].x << " y " << _snake.body[S_SNAKE_HEAD].y << std::endl;
       _map[_snake.body[S_SNAKE_HEAD].y % _map_size.getY()][_snake.body[S_SNAKE_HEAD].x % _map_size.getX()] = TileType::EVIL_DUDE;
       _refreshObjects();
-      _lib->getWindows()->refresh();
+      _win->refresh();
       sleep(1);
-      throw std::runtime_error("You die ! from size");
+      throw std::runtime_error("Game Over !");
     }
-/*  if (_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x] == TileType::POWERUP)
-    _snake.body.push_back({_snake.body[_snake.body.size() - 1].x - 1, _snake.body[_snake.body.size() - 1].y});*/
-  std::cerr << "x = " << _snake.body[S_SNAKE_HEAD].x << " y = " << _snake.body[S_SNAKE_HEAD].y << std::endl;
-  _map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x] = TileType::EVIL_DUDE;
 }
-
 
 arcade::ILibrairy *arcade::getNewLib(void *handle)
 {
   return (new arcade::Snake(handle));
 }
 
-void arcade::Snake::_fillTheMap()
-{
-
-}
-
 void arcade::Snake::_initPowerUp()
 {
-  _map[_dis_height(_gen)][_dis_width(_gen)] = arcade::TileType::POWERUP;
+  arcade::Position p;
+  p.x = static_cast<uint16_t>(_dis_width(_gen));
+  p.y = static_cast<uint16_t>(_dis_height(_gen));
+  while (_map[p.y][p.x] != arcade::TileType::EMPTY)
+    {
+      p.x = static_cast<uint16_t>(_dis_width(_gen));
+      p.y = static_cast<uint16_t>(_dis_height(_gen));
+    }
+  _map[p.y][p.x] = arcade::TileType::POWERUP;
 }
 
 void arcade::Snake::_refreshObjects()
@@ -249,6 +250,36 @@ void arcade::Snake::_refreshObjects()
   for (auto &it : *_objects)
     {
       v = it->getPosition();
-      _lib->setVisual(it, S_TILE_RESOURCES.at(_map[v.getY()][v.getX()]));
+      it->setVisual(S_TILE_RESOURCES.at(_map[v.getY()][v.getX()]));
     }
+}
+
+void arcade::Snake::_dead()
+{
+  _map[_snake.body[S_SNAKE_HEAD].y % _map_size.getY()][_snake.body[S_SNAKE_HEAD].x % _map_size.getX()] = TileType::EVIL_DUDE;
+  _refreshObjects();
+  _lib->getWindows()->refresh();
+  sleep(1);
+  throw std::runtime_error("Game Over !");
+}
+
+void arcade::Snake::_move()
+{
+  _map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x] = TileType::EVIL_DUDE;
+}
+
+void arcade::Snake::_powerUp()
+{
+  arcade::Position p;
+
+  p.x = _snake.body[_snake.body.size() - 1].x;
+  p.y = _snake.body[_snake.body.size() - 1].y;
+
+  if (p.x - 1 >= 0 && _map[p.y][p.x - 1] == arcade::TileType::EMPTY)
+      _snake.body.push_back({static_cast<uint16_t >(p.x - 1), p.y});
+  else if (p.y - 1 >= 0 && _map[p.y - 1][p.x] == arcade::TileType::EMPTY)
+      _snake.body.push_back({p.x, static_cast<uint16_t >(p.y - 1)});
+    else if (p.y + 1 < _map_size.getY() && _map[p.y + 1][p.x] == arcade::TileType::EMPTY)
+	_snake.body.push_back({p.x, static_cast<uint16_t >(p.y + 1)});
+  _initPowerUp();
 }
