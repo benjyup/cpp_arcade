@@ -30,6 +30,7 @@ int 	        main(int ac, char **av)
       graphicalLib->registerObserver(gameLib);
       std::cout << "ici = " << std::to_string(objects.use_count()) << std::endl;
       gameLib->initGame(graphicalLib, objects);
+      graphicalLib->registerObserver(gameLib);
       std::cout << "ici = " << std::to_string(objects.use_count()) << std::endl;
       while (window->event())
 	{
