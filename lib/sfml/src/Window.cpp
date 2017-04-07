@@ -56,9 +56,8 @@ namespace arcade
 
 	void arcade::Window::setMapSize(uint32_t size)
 	{
-		_min_size.setX(size);
-		_min_size.setY(size);
-		_min_size.setZ(size * size);
+        Window::MAPSIZE = size;
+        Window::TILESIZE = Window::WINSIZE / Window::MAPSIZE;
 	}
 
     bool arcade::Window::event()
@@ -153,20 +152,18 @@ namespace arcade
     }
 
 	void arcade::Window::notify(const IEvenement &evenement) {
-		for (auto &it : _observers)
-			it->getNotified(evenement);
-	}
+        for (auto &it : _observers)
+            it->getNotified(evenement);
+    }
 
 	std::shared_ptr<arcade::IEvenement> arcade::Window::getEvent() {
 		return (std::make_shared<arcade::Evenement>(_event));
 	}
 
 	void arcade::Window::removeObserver(IObserver *observer) {
-        auto          it = std::find(_observers.begin(), _observers.end(), observer);
-
+        auto it = std::find(_observers.begin(), _observers.end(), observer);
         if (it != _observers.end())
             _observers.erase(it);
-
     }
 
 	void arcade::Window::registerObserver(IObserver *observer) {
