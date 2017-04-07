@@ -37,7 +37,7 @@ const std::map<arcade::IEvenement::KeyCode , arcade::CommandType>			arcade::Snak
 };
 
 const unsigned long						arcade::Snake::S_SNAKE_HEAD = 0;
-const unsigned long						arcade::Snake::S_DEFAULT_SNAKE_LENGTH = 8;
+const unsigned long						arcade::Snake::S_DEFAULT_SNAKE_LENGTH = 4;
 
 arcade::Snake::Snake(void *handle)
 	: _objects(), _lib(NULL), _map(), _score(0), _snake(), _map_size({0, 0}), _handle(handle),
