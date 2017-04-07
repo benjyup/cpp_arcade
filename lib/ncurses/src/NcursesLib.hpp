@@ -35,10 +35,17 @@ namespace arcade
 
         /* virtual functions of ILibrairy */
 
+<<<<<<< HEAD
         virtual void                                *getHandle(void) const;
         virtual std::string const                   &getName(void) const;
         virtual LibType		                        getType(void) const;
         virtual void 		                        freeSharedData(void);
+=======
+    virtual void                                *getHandle(void) const;
+    virtual std::string const                   &getName(void) const;
+    virtual LibType		                getType(void) const;
+    virtual void 		                freeSharedData(void);
+>>>>>>> 64b9dc3cdc5f3b8609f6a9db11d6838c951d4157
 
         /* !(virtual functions of ILibrairy) */
 
@@ -50,6 +57,7 @@ namespace arcade
 
         /* !(virtual functions of IObserved) */
 
+<<<<<<< HEAD
     private:
         std::shared_ptr<arcade::IWindows> 					_win;
         std::string								_name;
@@ -57,6 +65,14 @@ namespace arcade
         void								*_handle;
         std::map<std::string, std::vector<std::string>>			_visual_save;
         std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>> > 	_objects;
+=======
+   private:
+    std::shared_ptr<arcade::IWindows> 					_win;
+    std::string								_name;
+    std::vector<arcade::IObserver*>					_observers;
+    void								*_handle;
+    std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>> > 	_objects;
+>>>>>>> 64b9dc3cdc5f3b8609f6a9db11d6838c951d4157
 
         virtual void notify(IEvenement const &); // virtual function of IObserved
     };

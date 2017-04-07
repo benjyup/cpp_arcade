@@ -55,6 +55,8 @@ namespace arcade
         virtual void			setSpeed(float);
         virtual void			setScale(float);
         virtual void            setTextureFile(std::string const &);
+        virtual void            setVisual(std::string const &);
+
 
         virtual std::string const &		    getName(void) const;
         virtual std::string const &	    	getString(void) const;
@@ -64,8 +66,9 @@ namespace arcade
         virtual float                       getSpeed(void) const;
         virtual float			            getScale(void) const;
         virtual Object::ObjectType 		    getType(void) const;
-
         virtual sf::Drawable    &getDrawable(void) = 0;
+        virtual std::string const &  getTextureFile(void) const;
+
 
     protected:
         std::string		_name;

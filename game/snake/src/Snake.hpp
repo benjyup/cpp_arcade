@@ -37,7 +37,10 @@ namespace arcade
     static const std::map<arcade::TileType,
 	    std::string>					S_TILE_RESOURCES;
     static const std::map<char, arcade::TileType>		S_STRING_TO_TILE;
+    static const std::map<CommandType, CommandType>		S_FORBIDEN_COMMAND;
+    static const std::map<arcade::IEvenement::KeyCode, CommandType>	S_BINDING;
     static const unsigned long					S_SNAKE_HEAD;
+    static const unsigned long					S_DEFAULT_SNAKE_LENGTH;
 
     Snake(void *handle);
     virtual ~Snake(void);
@@ -68,8 +71,9 @@ namespace arcade
     arcade::Vector3d                                        	_map_size;
     void                                                    	*_handle;
     std::string                                             	_lib_name;
-    unsigned long						_getSnake;
-    IEvenement::KeyCode 					_kc;
+    std::mt19937 						_gen;
+    std::uniform_int_distribution<int> 				_dis_width;
+    std::uniform_int_distribution<int> 				_dis_height;
 
     /* virtual functions of IGameLib */
     virtual void 						createMap(void);
@@ -78,6 +82,9 @@ namespace arcade
 
     void							_fillTheMap(void);
     void							_refreshObjects(void);
+    void 							_initSnake(void);
+    void 							_initPowerUp(void);
+
   };
 }
 

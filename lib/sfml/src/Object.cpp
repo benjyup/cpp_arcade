@@ -91,7 +91,7 @@ namespace arcade
 		return os;
 	}
 
-	Object 			&Object::operator=(const Object &other)
+    Object 			&Object::operator=(const Object &other)
 	{
 		if (this != &other)
 		{

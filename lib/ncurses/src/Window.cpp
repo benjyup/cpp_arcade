@@ -9,7 +9,6 @@
 void arcade::Window::_close_window(int)
 {
   throw std::runtime_error("CTRL + C");
-/*  _ncursesTools.resetTerm(_wmain);*/
 }
 
 arcade::Window::Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &objects,
@@ -42,6 +41,9 @@ arcade::Window::~Window()
 {
   if (_isopen)
     _ncursesTools.resetTerm(_wmain);
+  _objects.reset();
+  if (_objects)
+      _objects->clear();
   std::cout << "Window supprimée" << std::endl;
 }
 
