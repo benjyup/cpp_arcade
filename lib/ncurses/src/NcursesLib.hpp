@@ -13,68 +13,52 @@
 
 namespace arcade
 {
-    class NcursesLib : public IGraphicalLib
-    {
-    public:
-        NcursesLib(void *handle);
-        virtual ~NcursesLib();
+  class NcursesLib : public IGraphicalLib
+  {
+   public:
+    NcursesLib(void *handle);
+    virtual ~NcursesLib();
 
-        /* virtual functions of IGraphicalLib */
+    /* virtual functions of IGraphicalLib */
 
-        virtual std::shared_ptr<arcade::IWindows> &	initWindows(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > >&,
-                                                                   uint64_t height = 0,
-                                                                   uint64_t lenght = 0);
+    virtual std::shared_ptr<arcade::IWindows> &	initWindows(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > >&,
+								   uint64_t height = 0,
+								   uint64_t lenght = 0);
 
-        virtual std::shared_ptr<IObject>		    initObject(std::string const &, std::string const &);
-        virtual std::shared_ptr<arcade::IObject>	initLabel(std::string const &, std::string const &);
-        virtual std::shared_ptr<arcade::IWindows>   &getWindows(void);
-        virtual void				                setVisual(std::shared_ptr<arcade::IObject> &, std::string const &);
+    virtual std::shared_ptr<IObject>		    initObject(std::string const &, std::string const &);
+    virtual std::shared_ptr<arcade::IObject>	initLabel(std::string const &, std::string const &);
+    virtual std::shared_ptr<arcade::IWindows>   &getWindows(void);
+    virtual void				                setVisual(std::shared_ptr<arcade::IObject> &, std::string const &);
 
-        /* !(virtual functions of IGraphicalLib) */
+    /* !(virtual functions of IGraphicalLib) */
 
 
-        /* virtual functions of ILibrairy */
+    /* virtual functions of ILibrairy */
 
-<<<<<<< HEAD
-        virtual void                                *getHandle(void) const;
-        virtual std::string const                   &getName(void) const;
-        virtual LibType		                        getType(void) const;
-        virtual void 		                        freeSharedData(void);
-=======
     virtual void                                *getHandle(void) const;
     virtual std::string const                   &getName(void) const;
-    virtual LibType		                getType(void) const;
-    virtual void 		                freeSharedData(void);
->>>>>>> 64b9dc3cdc5f3b8609f6a9db11d6838c951d4157
+    virtual LibType		                        getType(void) const;
+    virtual void 		                        freeSharedData(void);
 
-        /* !(virtual functions of ILibrairy) */
+    /* !(virtual functions of ILibrairy) */
 
-        /* virtual functions of IObserved */
+    /* virtual functions of IObserved */
 
-        virtual std::shared_ptr<IEvenement>         getEvent(void);
-        virtual void                                registerObserver(arcade::IObserver*);
-        virtual void                                removeObserver(arcade::IObserver*);
+    virtual std::shared_ptr<IEvenement>         getEvent(void);
+    virtual void                                registerObserver(arcade::IObserver*);
+    virtual void                                removeObserver(arcade::IObserver*);
 
-        /* !(virtual functions of IObserved) */
+    /* !(virtual functions of IObserved) */
 
-<<<<<<< HEAD
-    private:
-        std::shared_ptr<arcade::IWindows> 					_win;
-        std::string								_name;
-        std::vector<arcade::IObserver*>					_observers;
-        void								*_handle;
-        std::map<std::string, std::vector<std::string>>			_visual_save;
-        std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>> > 	_objects;
-=======
    private:
     std::shared_ptr<arcade::IWindows> 					_win;
     std::string								_name;
     std::vector<arcade::IObserver*>					_observers;
     void								*_handle;
+    std::map<std::string, std::vector<std::string>>			_visual_save;
     std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>> > 	_objects;
->>>>>>> 64b9dc3cdc5f3b8609f6a9db11d6838c951d4157
 
-        virtual void notify(IEvenement const &); // virtual function of IObserved
-    };
+    virtual void notify(IEvenement const &); // virtual function of IObserved
+  };
 }
 #endif //CPP_ARCADE_NCURSESLIB_HPP

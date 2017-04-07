@@ -48,6 +48,7 @@ namespace arcade
     virtual void			setSpeed(float);
     virtual void			setScale(float) {};
     virtual void			setTextureFile(std::string const &);
+    virtual void			setVisual(std::string const &);
 
     virtual std::string const &		getName(void) const;
     virtual std::string const &		getString(void) const;
@@ -80,7 +81,7 @@ namespace arcade
     std::string		_color;
     std::string		_background;
     std::string		_character;
-        bool 		_isMoving;
+    bool 		_isMoving;
 
     static int 	_color_int;
   };
