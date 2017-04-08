@@ -3,6 +3,9 @@
 //
 
 #include "openglLib.hpp"
+#include "Window.hpp"
+#include "Sprite.hpp"
+#include "Label.hpp"
 
 namespace arcade {
 
@@ -31,7 +34,7 @@ namespace arcade {
     }
 
     std::shared_ptr<IObject>		OpenGlLib::initObject(std::string const &name, std::string const &filename){
-        return (std::shared_ptr<IObject>(new Object(name, filename)));
+        return (std::shared_ptr<IObject>(new Sprite(name, filename)));
     }
 
     std::shared_ptr<IObject>		OpenGlLib::initLabel(std::string const &name, std::string const &filename){
@@ -44,14 +47,7 @@ namespace arcade {
 
     void OpenGlLib::setVisual(std::shared_ptr<arcade::IObject> &obj, std::string const & filename)
     {
-        Object *o = static_cast<Object*>(obj.get());
-        if (o->getType() == Object::ObjectType::Label)
-        {
-            Label *label = static_cast<Label*>(obj.get());
-            label->setProperties(filename);
-        }
-        else
-            o->setProperties();
+        obj->setTextureFile(filename);
     }
 
     void* OpenGlLib::getHandle() const { return ((void *) (_handle)); }

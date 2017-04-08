@@ -11,7 +11,7 @@ namespace arcade
 {
 
   //
-  //		Game/Graphical Librairy Interfaces
+  //		Game / Graphical Librairy Interfaces
   //
 
   class ILibrairy

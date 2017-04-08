@@ -1,9 +1,12 @@
 #ifndef CPP_ARCADE_OPENGLLIB_HPP
 #define CPP_ARCADE_OPENGLLIB_HPP
 
+#include <memory>
+#include <GL/gl.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 #include "IGraphicalLib.hpp"
-#include "Windows.hpp"
-#include "Label.hpp"
 
 namespace arcade {
 
@@ -17,8 +20,8 @@ namespace arcade {
 
         virtual std::shared_ptr<arcade::IWindows> &
         initWindows(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > > &,
-                    uint64_t height = 0,
-                    uint64_t lenght = 0);
+                    uint64_t height = 1000,
+                    uint64_t lenght = 1000);
 
         virtual std::shared_ptr<IObject> initObject(std::string const &, std::string const &);
 
