@@ -263,6 +263,7 @@ std::shared_ptr<arcade::IObject> arcade::Snake::_createObject(const std::string 
   if (_lib)
     {
       obj = _lib->initObject(name, filename);
+      obj->setScale(2);
       obj->setPosition(pos);
       obj->setSpeed(speed);
       _win->addObject(obj, pos);
@@ -281,6 +282,7 @@ void arcade::Snake::_goUp()
       _followHead();
       _snake.body[S_SNAKE_HEAD].y -= 1;
       _win->moveObject(_snake.objs[0], {_snake.body[S_SNAKE_HEAD].x , _snake.body[S_SNAKE_HEAD].y});
+      (_snake.objs[0])->setDirection({0, -1, 0});
       (_checkMove[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
       _map[_snake.body[0].y][_snake.body[0].x] = TileType::EVIL_DUDE;
     }
@@ -293,6 +295,7 @@ void arcade::Snake::_goDown()
       _followHead();
       _snake.body[S_SNAKE_HEAD].y += 1;
       _win->moveObject(_snake.objs[0], {_snake.body[S_SNAKE_HEAD].x , _snake.body[S_SNAKE_HEAD].y});
+      (_snake.objs[0])->setDirection({0, 1, 0});
       (_checkMove[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
       _map[_snake.body[0].y][_snake.body[0].x] = TileType::EVIL_DUDE;
     }
@@ -305,6 +308,7 @@ void arcade::Snake::_goLeft()
       _followHead();
       _snake.body[S_SNAKE_HEAD].x -= 1;
       _win->moveObject(_snake.objs[0], {_snake.body[S_SNAKE_HEAD].x , _snake.body[S_SNAKE_HEAD].y});
+      (_snake.objs[0])->setDirection({-1, 0, 0});
       (_checkMove[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
       _map[_snake.body[0].y][_snake.body[0].x] = TileType::EVIL_DUDE;
     }
@@ -317,6 +321,7 @@ void arcade::Snake::_goRight()
       _followHead();
       _snake.body[S_SNAKE_HEAD].x += 1;
       _win->moveObject(_snake.objs[0], {_snake.body[S_SNAKE_HEAD].x , _snake.body[S_SNAKE_HEAD].y});
+      (_snake.objs[0])->setDirection({1, 0, 0});
       (_checkMove[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
       _map[_snake.body[0].y][_snake.body[0].x] = TileType::EVIL_DUDE;
     }
@@ -333,6 +338,7 @@ void arcade::Snake::_followHead()
       for (unsigned long i = _snake.body.size() - 1; i != 0; i--)
 	{
 	  _snake.objs[i]->setPosition({_snake.body[i - 1].x, _snake.body[i - 1].y});
+	  _snake.objs[i]->setDirection(_snake.objs[i - 1]->getDirection());
 	  _snake.body[i].x = _snake.body[i - 1].x;
 	  _snake.body[i].y = _snake.body[i - 1].y;
 	  _map[_snake.body[i].y][_snake.body[i].x] = TileType::EVIL_DUDE;
