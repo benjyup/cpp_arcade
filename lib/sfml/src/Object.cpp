@@ -25,15 +25,14 @@ namespace arcade
 
   Object::~Object() {}
 
-  void 				Object::setName(const std::string &name) {_name = name;}
-  void 				Object::setString(const std::string &string) {_string = string;};
-  void 				Object::setDirection(const Vector3d &direction) {_direction = direction;}
-  void 				Object::setPosition(const Vector3d &position) {_position = position;}
-  void 				Object::setSpeed(float speed) {_speed = speed;}
-  void                Object::setScale(float scale) {_scale = scale;}
-  void                Object::setTextureFile(std::string const &file) {_filename = file;}
+    void 				Object::setName(const std::string &name) {_name = name;}
+    void 				Object::setString(const std::string &string) {_string = string;};
+    void 				Object::setDirection(const Vector3d &direction) {_direction = direction;}
+    void 				Object::setPosition(const Vector3d &position) {_position = position;}
+    void 				Object::setSpeed(float speed) {_speed = speed;}
+    void                Object::setScale(float scale) {_scale = scale;}
+    void                Object::setTextureFile(std::string const &file) {_filename = file;}
 
-  
   const arcade::Vector3d 	&Object::getDirection() const { return (_direction);}
   const std::string 		&Object::getName() const {return (_name);}
   const arcade::Vector3d 	&Object::getPosition() const {return (_position);}
