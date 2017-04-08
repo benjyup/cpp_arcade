@@ -10,8 +10,8 @@
 #include <ArcadeProtocol.hpp>
 #include "IGameLib.hpp"
 
-# define S_WIDTH 15
-# define S_HEIGHT 15
+# define S_WIDTH 20
+# define S_HEIGHT 20
 
 namespace arcade
 {
@@ -24,8 +24,10 @@ namespace arcade
       CommandType                                     		ct;
       std::vector<arcade::Position>				body;
       std::vector<std::shared_ptr<arcade::IObject>>		objs;
+      std::vector<std::shared_ptr<arcade::IObject>>		objsPowerUp;
     };
 
+    static const unsigned int						S_POWERUP_NBR_DEFAULT;
     static const std::string					S_MAP_PATH;
     static const std::string					S_HEAD_RESOURCES;
     static const std::string					S_TAIL_RESOURCES;
