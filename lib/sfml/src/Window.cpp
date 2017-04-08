@@ -80,19 +80,18 @@ namespace arcade
 
         t = _clock.getElapsedTime().asMilliseconds();
         frame = arcade::FrameType::UpdateFrame;
-
-	if (t >= 83 * 60)
-	  {
-	    t = 0;
-	    _calc = t;
-	    _clock.restart();
-	  }
-	if (t >= _calc + 16)
-	  {
-	    frame = arcade::FrameType::GameFrame;
-	    _calc = t;
-	  }
-	_window.clear();
+        if (t >= 83 * 60)
+        {
+            t = 0;
+            _calc = t;
+            _clock.restart();
+        }
+        if (t >= _calc + 16)
+        {
+            frame = arcade::FrameType::GameFrame;
+            _calc = t;
+        }
+        _window.clear();
         for(auto & obj : *_objects) {
             try {
                 obj_s = std::dynamic_pointer_cast<arcade::Object>(obj);
@@ -108,7 +107,7 @@ namespace arcade
         }
         _window.display();
         return (frame);
-	}
+    }
 
 	void arcade::Window::addObject(std::shared_ptr<arcade::IObject> &obj) {
 	  destroyObject(obj);
