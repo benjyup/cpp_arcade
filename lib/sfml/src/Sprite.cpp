@@ -76,7 +76,7 @@ namespace arcade
         if (x != 0)
         {
             ret = _speed * (((x < 0) ? (-1) : (1)) * Window::SIZECELL / 60);
-            if (((ret < 0) ? (-1) : (1)) * ret > ((y < 0) ? (-1) : (1)) * x)
+            if (((ret < 0) ? (-1) : (1)) * ret > ((x < 0) ? (-1) : (1)) * x)
                 x = _position.getX() * Window::SIZECELL;
             else
                 x = _sprite.getPosition().x + ret;

@@ -25,7 +25,7 @@ namespace arcade
 {
     arcade::Window::Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &objects,
 						   uint64_t height,
-                           uint64_t width) : _size(height, width), _isopen(true), _window(sf::VideoMode(1024, 1024),
+                           uint64_t width) : _size(height, width), _isopen(true), _window(sf::VideoMode(1000, 1000),
                                                                                         "Arcade - LibSFML",
                                                                                         sf::Style::Close |
                                                                                         sf::Style::Titlebar),
@@ -101,7 +101,6 @@ namespace arcade
                     obj_s->updateVisual((uint32_t)(_clock.getElapsedTime().asMilliseconds() / 100));
                     _window.draw(obj_s->getDrawable());
                 }
-
             }
             catch (std::bad_cast const &) {
                 throw ("Another type of Object");
