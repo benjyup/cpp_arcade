@@ -58,19 +58,19 @@ namespace arcade
         return (tmp);
     }
 
-    std::shared_ptr<arcade::IObject> SfmlLib::initLabel(const std::string &name, const std::string &filename)
+    std::shared_ptr<arcade::IObject>    SfmlLib::initLabel(const std::string &name, const std::string &filename)
     {
         std::shared_ptr<Label>    tmp(new Label(name, getFont(filename)));
         tmp->setTextureFile(filename);
         return (tmp);
     }
 
-    std::shared_ptr<arcade::IWindows>& SfmlLib::getWindows()
+    std::shared_ptr<arcade::IWindows>   &SfmlLib::getWindows()
     {
         return (_win);
     }
 
-    void SfmlLib::setVisual(std::shared_ptr<arcade::IObject> &obj, std::string const & filename)
+    void                                SfmlLib::setVisual(std::shared_ptr<arcade::IObject> &obj, std::string const & filename)
     {
         std::shared_ptr<Sprite> sprite = std::dynamic_pointer_cast<Sprite>(obj);
 
