@@ -5,9 +5,6 @@
 #include <string>
 #include <iostream>
 #include "LibraryManager.hpp"
-#include "IObject.hpp"
-#include "../lib/ncurses/src/Object.hpp"
-
 
 static int      usage(char *bin)
 {
@@ -24,12 +21,11 @@ int 	        main(int ac, char **av)
 
   try {
       arcade::LibraryManager  libraryManager;
-      arcade::IGameLib        *gameLib = libraryManager.getGameLib("lib_arcade_snake.so");
+      arcade::IGameLib        *gameLib = libraryManager.getGameLib("lib_arcade_nibbler.so");
       arcade::IGraphicalLib   *graphicalLib = libraryManager.getGraphicalLib(av[1]);
       arcade::IWindows        *window = graphicalLib->initWindows(objects, 1024, 1024).get();
-      graphicalLib->registerObserver(gameLib);
       std::cout << "ici = " << std::to_string(objects.use_count()) << std::endl;
-      gameLib->initGame(graphicalLib, objects);
+      gameLib->initGame(graphicalLib, NULL, objects);
       graphicalLib->registerObserver(gameLib);
       std::cout << "ici = " << std::to_string(objects.use_count()) << std::endl;
       while (window->event())
