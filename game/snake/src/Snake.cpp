@@ -8,13 +8,14 @@
 #include "Snake.hpp"
 
 const std::string			        		arcade::Snake::S_MAP_PATH 	= "./resc/snake/map";
-const std::string						arcade::Snake::S_HEAD_RESOURCES = "./gfx/snake/snake_head";
-const std::string						arcade::Snake::S_TAIL_RESOURCES = "./gfx/snake/snake_tail";
+const std::string						arcade::Snake::S_HEAD_RESOURCES = "./gfx/snake/yoshi";
+const std::string						arcade::Snake::S_TAIL_RESOURCES = "./gfx/snake/eggs";
 const std::string						arcade::Snake::S_WALL_RESOURCES = "./gfx/snake/wall";
 const std::string						arcade::Snake::S_GROUND_RESOURCES = "./gfx/snake/ground";
 const std::string						arcade::Snake::S_POWERUP_RESOURCES = "./gfx/snake/apple";
-const std::string						arcade::Snake::S_SNAKE_RESOURCES = "./gfx/snake/snake";
+const std::string						arcade::Snake::S_SNAKE_RESOURCES = "./gfx/snake/eggs";
 const unsigned int						arcade::Snake::S_POWERUP_NBR_DEFAULT = 3;
+
 
 const std::map<arcade::TileType,
 	std::string>			    			arcade::Snake::S_TILE_RESOURCES = {
@@ -263,7 +264,7 @@ std::shared_ptr<arcade::IObject> arcade::Snake::_createObject(const std::string 
   if (_lib)
     {
       obj = _lib->initObject(name, filename);
-      obj->setScale(2);
+      obj->setScale(1);
       obj->setPosition(pos);
       obj->setSpeed(speed);
       _win->addObject(obj, pos);
@@ -282,7 +283,7 @@ void arcade::Snake::_goUp()
       _followHead();
       _snake.body[S_SNAKE_HEAD].y -= 1;
       _win->moveObject(_snake.objs[0], {_snake.body[S_SNAKE_HEAD].x , _snake.body[S_SNAKE_HEAD].y});
-      (_snake.objs[0])->setDirection({0, -1, 0});
+      (_snake.objs[0])->setDirection({0, 1, 0});
       (_checkMove[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
       _map[_snake.body[0].y][_snake.body[0].x] = TileType::EVIL_DUDE;
     }
@@ -295,7 +296,7 @@ void arcade::Snake::_goDown()
       _followHead();
       _snake.body[S_SNAKE_HEAD].y += 1;
       _win->moveObject(_snake.objs[0], {_snake.body[S_SNAKE_HEAD].x , _snake.body[S_SNAKE_HEAD].y});
-      (_snake.objs[0])->setDirection({0, 1, 0});
+      (_snake.objs[0])->setDirection({0, -1, 0});
       (_checkMove[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
       _map[_snake.body[0].y][_snake.body[0].x] = TileType::EVIL_DUDE;
     }
@@ -308,7 +309,7 @@ void arcade::Snake::_goLeft()
       _followHead();
       _snake.body[S_SNAKE_HEAD].x -= 1;
       _win->moveObject(_snake.objs[0], {_snake.body[S_SNAKE_HEAD].x , _snake.body[S_SNAKE_HEAD].y});
-      (_snake.objs[0])->setDirection({-1, 0, 0});
+      (_snake.objs[0])->setDirection({1, 0, 0});
       (_checkMove[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
       _map[_snake.body[0].y][_snake.body[0].x] = TileType::EVIL_DUDE;
     }
@@ -321,10 +322,23 @@ void arcade::Snake::_goRight()
       _followHead();
       _snake.body[S_SNAKE_HEAD].x += 1;
       _win->moveObject(_snake.objs[0], {_snake.body[S_SNAKE_HEAD].x , _snake.body[S_SNAKE_HEAD].y});
-      (_snake.objs[0])->setDirection({1, 0, 0});
+      (_snake.objs[0])->setDirection({-1, 0, 0});
       (_checkMove[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
       _map[_snake.body[0].y][_snake.body[0].x] = TileType::EVIL_DUDE;
     }
+}
+
+arcade::WhereAmI             arcade::Snake::where_Am_I(void){
+    struct WhereAmI         wai;
+
+    wai.type = arcade::CommandType::GET_MAP;
+    (void)wai;
+    return (wai);
+}
+
+void                          arcade::Snake::setDirection(arcade::Vector3d const &dir)
+{
+    (this->_snake.objs[0])->setDirection(dir);
 }
 
 void arcade::Snake::_followHead()
@@ -345,4 +359,49 @@ void arcade::Snake::_followHead()
 	}
       _map[tmp.getY()][tmp.getX()] = TileType::EMPTY;
     }
+}
+
+extern "C"
+{
+void Play(void) {
+    arcade::CommandType cmd;
+    std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> objs(
+            new std::vector<std::shared_ptr<arcade::IObject>>);
+    arcade::Snake jeu(NULL);
+    char b[2];
+    std::ifstream f("/dev/stdin");
+
+    jeu.initGame(NULL, NULL, objs);
+    while (f.read((char *)b, sizeof(b))) {
+        cmd = (arcade::CommandType) std::atoi((char *)b);
+        switch (cmd){
+            case arcade::CommandType::WHERE_AM_I :
+                jeu.where_Am_I();
+                break ;
+            case arcade::CommandType::GET_MAP :
+/*
+                jeu.get_map();
+*/
+                break ;
+            case arcade::CommandType::GO_UP :
+                jeu.setDirection({0, -1, 0});
+                break ;
+            case arcade::CommandType::GO_DOWN :
+                jeu.setDirection({0, 1, 0});
+                break ;
+            case arcade::CommandType::GO_LEFT:
+                jeu.setDirection({-1, 0, 0});
+                break ;
+            case arcade::CommandType::GO_RIGHT :
+                jeu.setDirection({1, 0, 0});
+                break ;
+            case arcade::CommandType::PLAY :
+                jeu.setDirection({0, -1, 0});
+                break ;
+            default :
+                break ;
+        }
+    }
+
+}
 }
