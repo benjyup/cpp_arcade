@@ -5,19 +5,16 @@
 #ifndef CPP_ARCADE_OBJECT_HPP
 #define CPP_ARCADE_OBJECT_HPP
 
-
-#include <fstream>
-#include <algorithm>
-#include <ostream>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_image.h>
-#include <vector>
+#include "Window.hpp"
+#include "Vector3d.hpp"
 #include "IObject.hpp"
-#include "Object.hpp"
+
+# define        NEG_OR(c)               ((c < 0) ? (-1) : (1))
 
 namespace arcade
 {
+    class Window;
+
     class Object : public IObject
     {
     public:
@@ -49,7 +46,6 @@ namespace arcade
         virtual void			setDirection(Vector3d const &);
         virtual void			setSpeed(float);
         virtual void			setScale(float);
-        virtual void			setTextureFile(std::string const &);
 
         virtual std::string const &		getName(void) const;
         virtual std::string const &		getString(void) const;
@@ -57,17 +53,12 @@ namespace arcade
         virtual arcade::Vector3d const &	getDirection(void) const;
         virtual float			getSpeed(void) const;
         virtual float			getScale(void) const { return (0.0);};
-        virtual Object::ObjectType 		getType(void) const;
         virtual std::string const &		getTextureFile(void) const;
 
-        virtual bool 			isMoving(void) const;
-        virtual bool 			isTextureOk(void) const;
-        virtual void			setVisual(std::string const &);
-        virtual void			updateVisual(uint32_t); //directionn
-
-        virtual bool 			setProperties();
-        bool                    loadTexture(const std::string &path);
-        void                    loadSprite();
+        virtual SDL_Rect &                          getSprite(void) = 0;
+        virtual SDL_Surface      *getSurface(void) = 0;
+        virtual SDL_Rect      &getSpritePos(void) = 0;
+        virtual Object::ObjectType 		getType(void) const = 0;
 
         /* !(virtual functions of IObject) */
 
@@ -87,11 +78,7 @@ namespace arcade
         int             _mWidth;
         int             _mHeight;
 
-        std::vector<std::vector<SDL_Rect>>    _sprite;
-        SDL_Texture* mTexture;
     };
-
-    std::ostream &operator<<(std::ostream &os, const Object &object); //demander si on à le droit à friend
 }
 
 #endif //CPP_ARCADE_OBJECT_HPP

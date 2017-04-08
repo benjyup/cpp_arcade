@@ -1,4 +1,3 @@
-//
 // Created by puente_t on 13/03/17.
 //
 
@@ -48,6 +47,7 @@ namespace arcade
     //
 
     virtual void 				initGame(arcade::IGraphicalLib *,
+							 arcade::IObserver *,
 							 std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > >&) = 0;
 
     //

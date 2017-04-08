@@ -4,30 +4,58 @@
 
 #include "Label.hpp"
 
-namespace arcade
-{
+namespace arcade {
     Label::Label(const std::string &name, const std::string &filename)
-    {
-        _isMoving = false;
-        _name = name;
-        _filename = filename + file_extension;
-        setProperties(_filename);
-        _string = "";
-        _position = Vector3d(0, 0);
-        _direction = Vector3d(0, 0);
-        _speed = 0;
-        setProperties(filename);
+            : Object(name, filename) {
+        this->setTextureFile(filename);
+        _pos.x = this->_position.getX();
+        _pos.y = this->_position.getY();
+        this->updateVisual(0);
     }
 
     Label::~Label() {}
 
-    bool Label::setProperties(const std::string &filename)
-    {
-        if (!(font = TTF_OpenFont((directory_name + filename + file_extension).c_str(), 1)))
-            return (false);
-        return (true);
-        //set size;
+    void                            arcade::Label::updateVisual(uint32_t state) {
+        (void)state;
+        _pos.w = (int)(_string.length() * arcade::Window::SQUARE) / 2;
+        _pos.h = (int)arcade::Window::SQUARE;
     }
 
-    Object::ObjectType Label::getType() const { return (ObjectType::Label); }
+    void arcade::Label::setTextureFile(std::string const &filename) {
+        if ((font = TTF_OpenFont((filename + ".ttf").c_str(), 20)) == NULL)
+            std::cout << "Fail to open font file " << filename << "\n";
+        //(int) arcade::Window::SQUARE);
+    }
+
+    bool                    arcade::Label::isTextureOk(void) const {
+        return (this->_texture != NULL);
+    }
+
+    bool            arcade::Label::isMoving(void) const {
+        return (!(this->_pos.x == (this->getPosition().getX() * arcade::Window::SQUARE) &&
+                  this->_pos.y == (this->getPosition().getY() * arcade::Window::SQUARE)));
+    }
+
+    void arcade::Label::setString(std::string const &str) {
+        this->_string = str;
+        SDL_Color   white = {255, 255, 255, 0};
+        _texture = TTF_RenderText_Blended(font, str.c_str(), white);
+        _mWidth = _texture->w;
+        _mHeight = _texture->h;
+    }
+
+    SDL_Rect &arcade::Label::getSprite(void) {
+        SDL_Rect *Rect = NULL;
+        return (*Rect);
+    }
+
+    SDL_Surface *arcade::Label::getSurface(void) {
+        return (_texture);
+    }
+
+    SDL_Rect &arcade::Label::getSpritePos(void) {
+        return (_pos);
+    }
+
+          Object::ObjectType Label::getType() const { return (ObjectType::Label); }
 }

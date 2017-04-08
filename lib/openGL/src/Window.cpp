@@ -3,7 +3,9 @@
 //
 
 #include <csignal>
-#include "Windows.hpp"
+#include "Window.hpp"
+
+float   arcade::Window::SQUARE = 20;
 
 void arcade::Window::_close_window(int)
 {
@@ -19,11 +21,12 @@ arcade::Window::Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObje
           _isopen(false),
           _contexte(SDL_GLContext(0)),
           _width(width), _height(height),
-          evenement(new Evenement(IEvenement::KeyCode::Key_Undefined)),
-          _openGltools()
+          evenement(IEvenement::KeyCode::Key_Undefined),
+          _openGltools(), _objects(objects)
 {
-    (void)objects;
+    std::cout << "bbb\n";
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
+        std::cout << "aaaa\n";
         SDL_Quit();
         return ;
     }
@@ -31,22 +34,20 @@ arcade::Window::Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObje
                                SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
     if(_win == 0)
     {
+        std::cout << "aaaa\n";
         SDL_Quit();
         return ;
     }
-    _contexte = SDL_GL_CreateContext(_win);
-    if(_contexte == 0)
-    {
-        SDL_DestroyWindow(_win);
-        SDL_Quit();
-        return ;
-    }
+    std::cout << "ccccc\n";
      int imgFlags = IMG_INIT_PNG;
         if( !( IMG_Init( imgFlags ) & imgFlags ) ) {
             printf("SDL_image could not initialize! SDL_mage Error: %s\n", IMG_GetError());
         }
+    std::cout << "ccccc\n";
     if (TTF_Init() < 0) // load font
         printf("Can't load ttf lib\n");
+    std::cout << "ccccc\n";
+    screenSurface = SDL_GetWindowSurface(_win);
     signal(SIGINT, _close_window);
     _size.setX(getLenght());
     _size.setY(getHeight());
@@ -87,10 +88,10 @@ void arcade::Window::setMapSize(uint32_t size)
 
 bool 			arcade::Window::event(void)
 {
-    evenement->setKeyCode(IEvenement::KeyCode::Key_Undefined);
+    evenement.setKeyCode(IEvenement::KeyCode::Key_Undefined);
     while (SDL_PollEvent(&events) == 1) {
-        evenement->setKeyCode(_openGltools.getKey(events.type));
-        notify(*evenement);
+        evenement.setKeyCode(_openGltools.getKey(events.type));
+        notify(evenement);
     }
     return (true);
 }
@@ -101,11 +102,15 @@ arcade::FrameType 	arcade::Window::refresh()
     _size.setY(getHeight());
     _size.setZ(_size.getX() * _size.getY());
 //    checkWindowSize(false);
-    glClear( GL_COLOR_BUFFER_BIT );
-    /*  for (auto obj : *_objects)
-          _ncursesTools.drawObject(obj);
-      Clear color buffer  */
-    SDL_GL_SwapWindow(_win);
+//    glClear( GL_COLOR_BUFFER_BIT );
+  for (auto obj : *_objects)
+  {
+      std::cout << "Print object\n";
+      _printObject(obj);
+  }
+    SDL_UpdateWindowSurface(_win);
+    SDL_Delay(1);
+    //  SDL_GL_SwapWindow(_win);
     return (FrameType::GameFrame);
 }
 
@@ -165,7 +170,7 @@ void 			arcade::Window::removeObserver(arcade::IObserver *observer) // pq pas de
 }
 
 std::shared_ptr<arcade::IEvenement> arcade::Window::getEvent() {
-    return (evenement); //dunno
+    return (std::make_shared<arcade::Evenement>(evenement)); //dunno
 }
 
 void arcade::Window::notify(const IEvenement &evenement) {
@@ -176,4 +181,28 @@ void arcade::Window::notify(const IEvenement &evenement) {
 void 			arcade::Window::registerObserver(arcade::IObserver *observer) //pq pas de const
 {
     _observers.push_back(observer);
+}
+
+void                    arcade::Window::_printObject(std::shared_ptr<arcade::IObject> obj)
+{
+    try
+    {
+        std::shared_ptr<arcade::Object> objs = std::dynamic_pointer_cast<arcade::Object>(obj);
+        if (objs->isTextureOk())
+        {
+            objs->updateVisual(0);//static_cast<uint32_t>(this->_clock.getElapsedTime().asMilliseconds() / 100));
+            std::cout << "Printing " << obj->getTextureFile() << std::endl ;
+            SDL_BlitScaled(objs->getSurface(), NULL, screenSurface, &objs->getSpritePos());
+        }
+    }
+    catch (std::bad_cast const &)
+    {
+        throw std::exception();
+    }
+}
+
+void            arcade::Window::_printObjects(void)
+{
+    for (auto & obj : *this->_objects)
+        this->_printObject(obj);
 }
