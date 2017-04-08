@@ -24,37 +24,37 @@ namespace arcade
 
     void        Label::setVisual(std::shared_ptr<sf::Font>& font)
     {
-        this->_font = font;
-        this->_text.setFont(*this->_font);
-        this->setTextPosition(this->getPosition());
-        this->updateVisual(0);
+        _font = font;
+        _text.setFont(*_font);
+        setTextPosition(getPosition());
+        updateVisual(0);
     }
 
     void                    Label::setTextPosition(int32_t x, int32_t y)
     {
-        this->_text.setPosition(x * Window::SIZECELL,
+        _text.setPosition(x * Window::SIZECELL,
                                 y * Window::SIZECELL);
     }
 
     void                    Label::setTextPosition(arcade::Vector3d const & pos)
     {
-        this->setTextPosition(pos.getX(), pos.getY());
+        setTextPosition(pos.getX(), pos.getY());
     }
 
     bool                    Label::isTextureOk(void) const
     {
-        return (this->_font != NULL);
+        return (_font != NULL);
     }
 
     bool                    Label::isMoving(void) const { return (false); }
 
-    sf::Text                &Label::getText(void) { return (this->_text); }
+    sf::Text                &Label::getText(void) { return (_text); }
 
-    sf::Drawable            &Label::getDrawable(void) { return (this->getText()); }
+    sf::Drawable            &Label::getDrawable(void) { return (getText()); }
 
     void                    Label::updateVisual(uint32_t)
     {
-        this->_text.setCharacterSize((unsigned int) ((Window::SIZECELL) * this->getScale()));
+        _text.setCharacterSize((unsigned int) ((Window::SIZECELL) * getScale()));
     }
 
 }
