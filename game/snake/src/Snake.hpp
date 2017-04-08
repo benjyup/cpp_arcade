@@ -66,8 +66,9 @@ namespace arcade
     virtual void 						getNotified(IEvenement const &);
     /* !virtual functions IObserver */
 
-        WhereAmI             where_Am_I(void);
-        void                              setDirection(arcade::Vector3d const &);
+    void             where_Am_I(void);
+    void             get_map(void);
+    void                              setDirection(arcade::Vector3d const &);
 
    private:
     std::shared_ptr<std::vector<std::shared_ptr<IObject>>> 	_objects;

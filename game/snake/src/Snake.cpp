@@ -87,15 +87,16 @@ void arcade::Snake::freeSharedData()
 }
 
 void arcade::Snake::initGame(arcade::IGraphicalLib *lib, arcade::IObserver *,
-			     std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > > &objects)
-{
+			     std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > > &objects) {
 /*    if (lib == NULL)
         throw std::runtime_error("Not able to init the game with a null graphical library.");*/
-  _lib = lib;
-  if (!(_win = _lib->getWindows().get()))
-    throw std::runtime_error("Not able to init the game until the window is not.");
-  _objects = objects;
-  createMap();
+    _lib = lib;
+    if (_lib) {
+        if (!(_win = _lib->getWindows().get()))
+            throw std::runtime_error("Not able to init the game until the window is not.");
+    }
+    _objects = objects;
+    createMap();
 }
 
 uint64_t 		arcade::Snake::getScore() const
@@ -328,12 +329,36 @@ void arcade::Snake::_goRight()
     }
 }
 
-arcade::WhereAmI             arcade::Snake::where_Am_I(void){
+void             arcade::Snake::where_Am_I(void){
     struct WhereAmI         wai;
+    Position *p = new Position[_snake.objs.size()];
+    int                         count = 0;
 
-    wai.type = arcade::CommandType::GET_MAP;
-    (void)wai;
-    return (wai);
+    wai.type = arcade::CommandType::WHERE_AM_I;
+    wai.lenght = (uint16_t )_snake.objs.size();
+    for (auto i : _snake.objs)
+    {
+        p[count].x = (uint16_t) i->getPosition().getX();
+        p[count].y = (uint16_t) i->getPosition().getY();
+        count++;
+    }
+    write(1, &wai, sizeof(wai));
+    write(1, wai.position, sizeof(arcade::Position) * _snake.objs.size());
+    delete p;
+}
+
+void            arcade::Snake::get_map(void) {
+/*
+    struct GetMap       getMap;
+    TileType  *tile = new TileType[S_HEIGHT * S_WIDTH];
+    getMap.type = arcade::CommandType::GET_MAP;
+    getMap.height = S_HEIGHT;
+
+    getMap.width = S_WIDTH;
+    for (auto i : *this->_objects){
+
+    }
+*/
 }
 
 void                          arcade::Snake::setDirection(arcade::Vector3d const &dir)
@@ -379,9 +404,7 @@ void Play(void) {
                 jeu.where_Am_I();
                 break ;
             case arcade::CommandType::GET_MAP :
-/*
                 jeu.get_map();
-*/
                 break ;
             case arcade::CommandType::GO_UP :
                 jeu.setDirection({0, -1, 0});
