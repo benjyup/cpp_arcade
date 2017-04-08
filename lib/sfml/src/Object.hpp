@@ -18,8 +18,6 @@
 #include <SFML/Graphics.hpp>
 #include "IObject.hpp"
 
-# define        NEG_OR(c)               ((c < 0) ? (-1) : (1))
-
 namespace arcade
 {
     class Window;
@@ -55,7 +53,6 @@ namespace arcade
         virtual void			setSpeed(float);
         virtual void			setScale(float);
         virtual void            setTextureFile(std::string const &);
-        virtual void            setVisual(std::string const &);
 
 
         virtual std::string const &		    getName(void) const;

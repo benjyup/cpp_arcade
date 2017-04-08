@@ -11,6 +11,7 @@
 #include <memory>
 #include "Object.hpp"
 
+
 namespace arcade
 {
     class Sprite : public Object

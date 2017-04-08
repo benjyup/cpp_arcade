@@ -32,7 +32,6 @@ namespace arcade
   void 				Object::setSpeed(float speed) {_speed = speed;}
   void                Object::setScale(float scale) {_scale = scale;}
   void                Object::setTextureFile(std::string const &file) {_filename = file;}
-  void                Object::setVisual(std::string const &) {}
 
   
   const arcade::Vector3d 	&Object::getDirection() const { return (_direction);}
