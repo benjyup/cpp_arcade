@@ -138,20 +138,24 @@ void 			arcade::Snake::gameTurn()
 void 			arcade::Snake::createMap()
 {
   int32_t		x = 0, y = 0;
+  arcade::Vector3d	v{0, 0, 0};
 
   while (y < S_HEIGHT)
     {
       x = 0;
       while (x < S_WIDTH)
 	{
+	  v.setX(x);
+	  v.setY(y);
+	  v.setZ(0);
 	  if (y == 0 || y == S_HEIGHT - 1 || x == 0 || x == S_WIDTH - 1)
 	    {
-	      _createObject("ground", S_WALL_RESOURCES, {x, y, 0});
+	      _createObject("ground" + std::to_string(y) + std::to_string(x), S_WALL_RESOURCES, v);
 	      _map[y][x] = arcade::TileType::BLOCK;
 	    }
 	  else
 	    {
-	      _createObject("ground", S_GROUND_RESOURCES, {x, y, 0});
+	      _createObject("wall" + std::to_string(y) + std::to_string(x), S_GROUND_RESOURCES, v);
 	      _map[y][x] = arcade::TileType::EMPTY;
 	    }
 	  x += 1;
@@ -289,7 +293,7 @@ std::shared_ptr<arcade::IObject> arcade::Snake::_createObject(const std::string 
       obj = _lib->initObject(name, filename);
       obj->setPosition(pos);
       obj->setSpeed(pos.getZ());
-      _win->addObject(obj);
+      _win->addObject(obj, pos);
     }
   return (obj);
 }
