@@ -23,6 +23,8 @@ namespace arcade
         virtual sf::Drawable                &getDrawable(void);
         sf::Text                            &getText(void);
 
+        virtual void                        setString(std::string const &);
+
     protected:
         sf::Text                            _text;
         std::shared_ptr<sf::Font>           _font;

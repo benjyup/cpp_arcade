@@ -46,6 +46,11 @@ namespace arcade
         return (_font != NULL);
     }
 
+    void 				    Label::setString(const std::string &string) {
+        _string = string;
+        _text.setString(_string);
+    };
+
     bool                    Label::isMoving(void) const { return (false); }
 
     sf::Text                &Label::getText(void) { return (_text); }
