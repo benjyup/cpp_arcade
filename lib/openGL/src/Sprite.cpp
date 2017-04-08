@@ -21,61 +21,12 @@ arcade::Sprite::~Sprite()
 
 void                            arcade::Sprite::moveSprite(void)
 {
-    float                         x = (this->_position.getX() * arcade::Window::SQUARE) - this->_pos.x;
-    float                         y = (this->_position.getY() * arcade::Window::SQUARE) - this->_pos.y;
-    float                         add;
-
-    if (x == 0 && y == 0)
-        return;
-    if (x != 0)
-    {
-        add = this->_speed * (NEG_OR(x) * arcade::Window::SQUARE / 60);
-        if (NEG_OR(add) * add > NEG_OR(x) * x)
-            x = this->_position.getX() * arcade::Window::SQUARE;
-        else
-            x = this->_pos.x + add;
-    }
-    else
-        x = this->_pos.x;
-    if (y != 0)
-    {
-        add = this->_speed * (NEG_OR(y) * arcade::Window::SQUARE / 60);
-        if (NEG_OR(add) * add > NEG_OR(y) * y)
-            y = this->_position.getY() * arcade::Window::SQUARE;
-        else
-            y = this->_pos.y + add;
-    }
-    else
-        y = this->_pos.y;
-    this->_pos.x = x;
-    this->_pos.y = y;
+    //todo
 }
 
 void                            arcade::Sprite::updateVisual(uint32_t state)
 {
-    uint32_t orientation = 0;
-
-    this->moveSprite();
-    if (this->getDirection().getX() > 0)
-        orientation = 3;
-    else
-    if (this->getDirection().getX() < 0)
-        orientation = 2;
-    else
-    if (this->getDirection().getY() < 0)
-        orientation = 0;
-    else
-    if (this->getDirection().getY() > 0)
-        orientation = 1;
-    state = (state % (_mWidth / 100));
-    this->_sprite.x = state * 100;
-    this->_sprite.y = orientation * 100;
-    this->_sprite.h = 100;
-    this->_sprite.w = 100;
-/*
-    this->_sprite.setScale(static_cast<float>(arcade::WindowSFML::SQUARE / 100.0 * this->getScale()),
-                           static_cast<float>(arcade::WindowSFML::SQUARE / 100.0 * this->getScale()));
-*/
+    //todo
 }
 
 bool                    arcade::Sprite::isTextureOk(void) const

@@ -16,9 +16,7 @@ namespace arcade {
     Label::~Label() {}
 
     void                            arcade::Label::updateVisual(uint32_t state) {
-        (void)state;
-        _pos.w = (int)(_string.length() * arcade::Window::SQUARE) / 2;
-        _pos.h = (int)arcade::Window::SQUARE;
+        //todo
     }
 
     void arcade::Label::setTextureFile(std::string const &filename) {

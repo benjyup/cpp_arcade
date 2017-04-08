@@ -70,7 +70,6 @@ namespace arcade
         Vector3d		_direction;
         float		    _speed;
         std::string		_color;
-        std::string		_background;
         std::string		_character;
         bool 		    _isMoving;
         static int 	    _color_int;
