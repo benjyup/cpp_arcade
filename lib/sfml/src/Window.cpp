@@ -101,7 +101,6 @@ namespace arcade
                     obj_s->updateVisual((uint32_t)(_clock.getElapsedTime().asMilliseconds() / 100));
                     _window.draw(obj_s->getDrawable());
                 }
-
             }
             catch (std::bad_cast const &) {
                 throw ("Another type of Object");
