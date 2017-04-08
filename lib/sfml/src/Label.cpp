@@ -54,7 +54,7 @@ namespace arcade
     void 				    Label::setPosition(const Vector3d &position)
     {
         _position = position;
-        _text.setPosition(_position);
+        _text.setPosition(_position.getX(), _position.getY());
     }
 
 
