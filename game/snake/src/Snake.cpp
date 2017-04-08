@@ -10,13 +10,17 @@
 const std::string			        		arcade::Snake::S_MAP_PATH 	= "./resc/snake/map";
 const std::string						arcade::Snake::S_HEAD_RESOURCES = "./gfx/snake/snake_head";
 const std::string						arcade::Snake::S_TAIL_RESOURCES = "./gfx/snake/snake_tail";
+const std::string						arcade::Snake::S_WALL_RESOURCES = "./gfx/snake/wall";
+const std::string						arcade::Snake::S_GROUND_RESOURCES = "./gfx/snake/ground";
+const std::string						arcade::Snake::S_POWERUP_RESOURCES = "./gfx/snake/apple";
+const std::string						arcade::Snake::S_SNAKE_RESOURCES = "./gfx/snake/snake";
 
 const std::map<arcade::TileType,
 	std::string>			    			arcade::Snake::S_TILE_RESOURCES = {
-	{arcade::TileType::EMPTY, "./gfx/snake/ground"},
-	{arcade::TileType::BLOCK, "./gfx/snake/wall"},
-	{arcade::TileType::POWERUP, "./gfx/snake/apple"},
-	{arcade::TileType::EVIL_DUDE, "./gfx/snake/snake"},
+	{arcade::TileType::EMPTY, S_GROUND_RESOURCES},
+	{arcade::TileType::BLOCK, S_WALL_RESOURCES},
+	{arcade::TileType::POWERUP, S_POWERUP_RESOURCES},
+	{arcade::TileType::EVIL_DUDE, S_SNAKE_RESOURCES},
 };
 
 const std::map<char, arcade::TileType>				arcade::Snake::S_STRING_TO_TILE = {
@@ -43,7 +47,7 @@ const unsigned long						arcade::Snake::S_SNAKE_HEAD = 0;
 const unsigned long						arcade::Snake::S_DEFAULT_SNAKE_LENGTH = 4;
 
 arcade::Snake::Snake(void *handle)
-	: _objects(), _lib(NULL), _map(), _score(0), _snake(), _map_size({0, 0}), _handle(handle),
+	: _objects(), _lib(NULL), _win(NULL), _map(), _score(0), _snake(), _map_size({0, 0}), _handle(handle),
 	  _lib_name("lib_arcade_snake"), _gen(getpid()), _dis_width(0, 0), _dis_height(0, 0)
 {
   _snake.ct = arcade::CommandType::PLAY;
@@ -99,7 +103,7 @@ uint64_t 		arcade::Snake::getScore() const
 
 void 			arcade::Snake::gameTurn()
 {
-  arcade::Vector3d tmp(0, 0);
+  /*arcade::Vector3d tmp(0, 0);
 
   tmp.setX(_snake.body[_snake.body.size() - 1].x);
   tmp.setY(_snake.body[_snake.body.size() - 1].y);
@@ -126,74 +130,39 @@ void 			arcade::Snake::gameTurn()
       sleep(1);
       throw std::runtime_error("Game Over !");
     }
-  _refreshObjects();
+  _refreshObjects();*/
 }
 
 // private
 
 void 			arcade::Snake::createMap()
 {
-  std::ifstream 	fs;
-  std::string         	str;
+  int32_t		x = 0, y = 0;
 
-  fs.open(S_MAP_PATH);
-  if (!(fs.is_open()))
-    throw std::runtime_error("Not able to create the map.");
-
-  std::getline(fs, str);
-  if (fs.eof() || !std::all_of(str.begin(), str.end(), [](char c){return std::isdigit(c);}))
-    throw std::runtime_error("The map's width is invalid.");
-  _map_size.setX(std::stoi(str));
-
-  std::getline(fs, str);
-  if (fs.eof() || !std::all_of(str.begin(), str.end(), [](char c){return std::isdigit(c);}))
-    throw std::runtime_error("The map's height is invalid.");
-  _map_size.setY(std::stoi(str));
-
-  if (_map_size.getX() < 10 || _map_size.getX() > 100 || _map_size.getY() < 10 || _map_size.getY() > 100)
-    throw std::runtime_error("Invalid map's size.");
-
-  _dis_width = std::uniform_int_distribution<int>(0, _map_size.getX() - 1);
-  _dis_height = std::uniform_int_distribution<int>(0, _map_size.getY() - 1);
-
-  getline(fs, str);
-  arcade::TileType tt;
-  int32_t x, y = 0;
-  arcade::Vector3d v(0, 0);
-  while (!fs.eof())
+  while (y < S_HEIGHT)
     {
-      _map.push_back(std::vector<arcade::TileType>());
       x = 0;
-      for (const auto &it : str)
+      while (x < S_WIDTH)
 	{
-	  try {
-	      tt = S_STRING_TO_TILE.at(it);
-	      std::shared_ptr<arcade::IObject> obj = _lib->initObject(((tt == arcade::TileType::BLOCK) ? ("wall") : ("ground")),
-								      S_TILE_RESOURCES.at(tt));
-	      v.setX(x);
-	      v.setY(y);
-	      obj->setPosition(v);
-	      obj->setSpeed(0.25);
-	      _win->addObject(obj);
-//	      _objects->push_back(obj);
-	      _map[_map.size() - 1].push_back(tt);
-	    } catch (const std::exception &e) {
-	      throw std::runtime_error("Invalid map2. " + std::to_string(it) + " " + std::string(e.what()));
+	  if (y == 0 || y == S_HEIGHT - 1 || x == 0 || x == S_WIDTH - 1)
+	    {
+	      _createObject("ground", S_WALL_RESOURCES, {x, y, 0});
+	      _map[y][x] = arcade::TileType::BLOCK;
+	    }
+	  else
+	    {
+	      _createObject("ground", S_GROUND_RESOURCES, {x, y, 0});
+	      _map[y][x] = arcade::TileType::EMPTY;
 	    }
 	  x += 1;
 	}
-      if ((int)_map[_map.size() - 1].size() != _map_size.getX())
-	throw std::runtime_error("Invalid map1.");
-      getline(fs, str);
       y += 1;
     }
-  if ((int)_map.size() != _map_size.getY())
-    throw std::runtime_error("Invalid map3.");
-  fs.close();
+  std::cout << "y = " << _objects->size() << std::endl;
+/*  _initPowerUp();
   _initPowerUp();
   _initPowerUp();
-  _initPowerUp();
-  _initSnake();
+  _initSnake();*/
 }
 
 void arcade::Snake::_initSnake()
@@ -307,4 +276,20 @@ void arcade::Snake::_powerUp()
     else if (p.y + 1 < _map_size.getY() && _map[p.y + 1][p.x] == arcade::TileType::EMPTY)
 	_snake.body.push_back({p.x, static_cast<uint16_t >(p.y + 1)});
   _initPowerUp();
+}
+
+std::shared_ptr<arcade::IObject> arcade::Snake::_createObject(const std::string &name, const std::string &filename,
+							      const arcade::Vector3d &pos)
+{
+  std::shared_ptr<arcade::IObject> obj;
+
+  obj.reset();
+  if (_lib)
+    {
+      obj = _lib->initObject(name, filename);
+      obj->setPosition(pos);
+      obj->setSpeed(pos.getZ());
+      _win->addObject(obj);
+    }
+  return (obj);
 }
