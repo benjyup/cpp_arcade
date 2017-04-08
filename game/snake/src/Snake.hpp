@@ -8,6 +8,7 @@
 #include <map>
 #include <vector>
 #include <ArcadeProtocol.hpp>
+#include <fstream>
 #include "IGameLib.hpp"
 
 # define S_WIDTH 20
@@ -65,6 +66,9 @@ namespace arcade
     virtual void 						getNotified(IEvenement const &);
     /* !virtual functions IObserver */
 
+        WhereAmI             where_Am_I(void);
+        void                              setDirection(arcade::Vector3d const &);
+
    private:
     std::shared_ptr<std::vector<std::shared_ptr<IObject>>> 	_objects;
     arcade::IGraphicalLib					*_lib;
@@ -102,6 +106,11 @@ namespace arcade
     void							_goRight(void);
     void							_followHead(void);
   };
+};
+
+extern "C"
+{
+void		Play(void);
 }
 
 #endif //CPP_ARCADE_SNAKE_HPP
