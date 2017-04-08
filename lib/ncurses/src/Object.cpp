@@ -131,7 +131,7 @@ namespace arcade
   }
 
   bool Object::isMoving(void) const
-  {return (_isMoving);}
+  {return (false);}
 
   std::string const& Object::getTextureFile() const
   {
