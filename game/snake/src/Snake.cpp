@@ -44,7 +44,7 @@ const std::map<arcade::IEvenement::KeyCode , arcade::CommandType>			arcade::Snak
 };
 
 const unsigned long						arcade::Snake::S_SNAKE_HEAD = 0;
-const unsigned long						arcade::Snake::S_DEFAULT_SNAKE_LENGTH = 4;
+const unsigned long						arcade::Snake::S_DEFAULT_SNAKE_LENGTH = 8;
 
 arcade::Snake::Snake(void *handle)
 	: _objects(), _lib(NULL), _win(NULL), _map(), _score(0), _snake(), _map_size({0, 0}), _handle(handle),
@@ -61,10 +61,10 @@ arcade::Snake::Snake(void *handle)
 
   _actions = {
 	  {arcade::CommandType::PLAY, [&]() -> void {}},
-	  {arcade::CommandType::GO_UP, [&]() -> void {_snake.body[S_SNAKE_HEAD].y -= 1; }},
-	  {arcade::CommandType::GO_DOWN, [&]() -> void {_snake.body[S_SNAKE_HEAD].y += 1; }},
-	  {arcade::CommandType::GO_LEFT, [&]() -> void {_snake.body[S_SNAKE_HEAD].x -= 1; }},
-	  {arcade::CommandType::GO_RIGHT, [&]() -> void {_snake.body[S_SNAKE_HEAD].x += 1; }},
+	  {arcade::CommandType::GO_UP, [&]() -> void {_goUp(); }},
+	  {arcade::CommandType::GO_DOWN, [&]() -> void {_goDown(); }},
+	  {arcade::CommandType::GO_LEFT, [&]() -> void {_goLeft(); }},
+	  {arcade::CommandType::GO_RIGHT, [&]() -> void {_goRight(); }},
   };
 }
 
@@ -103,7 +103,8 @@ uint64_t 		arcade::Snake::getScore() const
 
 void 			arcade::Snake::gameTurn()
 {
-  /*arcade::Vector3d tmp(0, 0);
+  (_actions[_snake.ct])();
+/*  arcade::Vector3d tmp(0, 0);
 
   tmp.setX(_snake.body[_snake.body.size() - 1].x);
   tmp.setY(_snake.body[_snake.body.size() - 1].y);
@@ -124,7 +125,7 @@ void 			arcade::Snake::gameTurn()
     (_checkMove[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
   if (_snake.body[S_SNAKE_HEAD].y >= _map_size.getY() || _snake.body[S_SNAKE_HEAD].x >= _map_size.getX())
     {
-      _map[_snake.body[S_SNAKE_HEAD].y % _map_size.getY()][_snake.body[S_SNAKE_HEAD].x % _map_size.getX()] = TileType::EVIL_DUDE;
+      _map[_snake.body[S_SNAKE_HEAD].y % S_HEIGHT][_snake.body[S_SNAKE_HEAD].x % S_WIDTH] = TileType::EVIL_DUDE;
       _refreshObjects();
       _win->refresh();
       sleep(1);
@@ -150,12 +151,12 @@ void 			arcade::Snake::createMap()
 	  v.setZ(0);
 	  if (y == 0 || y == S_HEIGHT - 1 || x == 0 || x == S_WIDTH - 1)
 	    {
-	      _createObject("ground" + std::to_string(y) + std::to_string(x), S_WALL_RESOURCES, v);
+	      _createObject("ground", S_WALL_RESOURCES, v, 0);
 	      _map[y][x] = arcade::TileType::BLOCK;
 	    }
 	  else
 	    {
-	      _createObject("wall" + std::to_string(y) + std::to_string(x), S_GROUND_RESOURCES, v);
+	      _createObject("wall", S_GROUND_RESOURCES, v, 0);
 	      _map[y][x] = arcade::TileType::EMPTY;
 	    }
 	  x += 1;
@@ -165,8 +166,8 @@ void 			arcade::Snake::createMap()
   std::cout << "y = " << _objects->size() << std::endl;
 /*  _initPowerUp();
   _initPowerUp();
-  _initPowerUp();
-  _initSnake();*/
+  _initPowerUp();*/
+  _initSnake();
 }
 
 void arcade::Snake::_initSnake()
@@ -174,11 +175,15 @@ void arcade::Snake::_initSnake()
   unsigned int i = 0;
   Position p;
 
-  p.x = _map_size.getX() / 2;
-  p.y = _map_size.getY() / 2;
+  p.x = S_WIDTH / 2;
+  p.y = S_HEIGHT / 2;
   while (i < S_DEFAULT_SNAKE_LENGTH)
     {
       _snake.body.push_back(p);
+      if (i == 0)
+	_createObject("snake", S_HEAD_RESOURCES, {(int32_t)p.x, (int32_t)p.y}, 0.25);
+      else
+	_createObject("snake", S_SNAKE_RESOURCES, {(int32_t)p.x, (int32_t)p.y}, 0.25);
       _map[p.y][p.x] = TileType::EVIL_DUDE;
       i += 1;
       p.x -= 1;
@@ -196,8 +201,7 @@ void arcade::Snake::getNotified(IEvenement const &event)
   try
     {
       if (event.getAction() == IEvenement::Action::KeyPressDown	 && kc != IEvenement::KeyCode::Key_Undefined
-	  && S_FORBIDEN_COMMAND.at(_snake.ct)!=
-	     S_BINDING.at(kc))
+	  && S_FORBIDEN_COMMAND.at(_snake.ct) != S_BINDING.at(kc))
 	{
 	  _snake.ct = S_BINDING.at(kc);
 	}
@@ -254,15 +258,15 @@ void arcade::Snake::_refreshObjects()
 
 void arcade::Snake::_dead()
 {
-  _map[_snake.body[S_SNAKE_HEAD].y % _map_size.getY()][_snake.body[S_SNAKE_HEAD].x % _map_size.getX()] = TileType::EVIL_DUDE;
-  _refreshObjects();
-  _lib->getWindows()->refresh();
+  //_map[_snake.body[S_SNAKE_HEAD].y % S_HEIGHT][_snake.body[S_SNAKE_HEAD].x % S_WIDTH] = TileType::EVIL_DUDE;
+  _win->refresh();
   sleep(1);
   throw std::runtime_error("Game Over !");
 }
 
 void arcade::Snake::_move()
 {
+  std::cout << "move" << std::endl;
   _map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x] = TileType::EVIL_DUDE;
 }
 
@@ -283,7 +287,7 @@ void arcade::Snake::_powerUp()
 }
 
 std::shared_ptr<arcade::IObject> arcade::Snake::_createObject(const std::string &name, const std::string &filename,
-							      const arcade::Vector3d &pos)
+							      const arcade::Vector3d &pos, float speed)
 {
   std::shared_ptr<arcade::IObject> obj;
 
@@ -292,8 +296,78 @@ std::shared_ptr<arcade::IObject> arcade::Snake::_createObject(const std::string 
     {
       obj = _lib->initObject(name, filename);
       obj->setPosition(pos);
-      obj->setSpeed(pos.getZ());
+      obj->setSpeed(speed);
       _win->addObject(obj, pos);
+      if (name == "snake")
+	_snake.objs.push_back(obj);
     }
   return (obj);
+}
+
+void arcade::Snake::_goUp()
+{
+  if (!_snake.objs[0]->isMoving())
+    {
+      _followHead();
+      _snake.body[S_SNAKE_HEAD].y -= 1;
+      _win->moveObject(_snake.objs[0], {_snake.body[S_SNAKE_HEAD].x , _snake.body[S_SNAKE_HEAD].y});
+      (_checkMove[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
+      _map[_snake.body[0].y][_snake.body[0].x] = TileType::EVIL_DUDE;
+    }
+}
+
+void arcade::Snake::_goDown()
+{
+  if (!_snake.objs[0]->isMoving())
+    {
+      _followHead();
+      _snake.body[S_SNAKE_HEAD].y += 1;
+      _win->moveObject(_snake.objs[0], {_snake.body[S_SNAKE_HEAD].x , _snake.body[S_SNAKE_HEAD].y});
+      (_checkMove[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
+      _map[_snake.body[0].y][_snake.body[0].x] = TileType::EVIL_DUDE;
+    }
+}
+
+void arcade::Snake::_goLeft()
+{
+  if (!_snake.objs[0]->isMoving())
+    {
+      _followHead();
+      _snake.body[S_SNAKE_HEAD].x -= 1;
+      _win->moveObject(_snake.objs[0], {_snake.body[S_SNAKE_HEAD].x , _snake.body[S_SNAKE_HEAD].y});
+      (_checkMove[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
+      _map[_snake.body[0].y][_snake.body[0].x] = TileType::EVIL_DUDE;
+    }
+}
+
+void arcade::Snake::_goRight()
+{
+  if (!_snake.objs[0]->isMoving())
+    {
+      _followHead();
+      _snake.body[S_SNAKE_HEAD].x += 1;
+      _win->moveObject(_snake.objs[0], {_snake.body[S_SNAKE_HEAD].x , _snake.body[S_SNAKE_HEAD].y});
+      (_checkMove[_map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x]])();
+      _map[_snake.body[0].y][_snake.body[0].x] = TileType::EVIL_DUDE;
+    }
+}
+
+
+void arcade::Snake::_followHead()
+{
+  arcade::Vector3d tmp(0, 0);
+
+  tmp.setX(_snake.body[_snake.body.size() - 1].x);
+  tmp.setY(_snake.body[_snake.body.size() - 1].y);
+  if (_snake.ct != CommandType::PLAY)
+    {
+      for (unsigned int i = _snake.body.size() - 1; i != 0; i--)
+	{
+	  _snake.objs[i]->setPosition({_snake.body[i - 1].x, _snake.body[i - 1].y});
+	  _snake.body[i].x = _snake.body[i - 1].x;
+	  _snake.body[i].y = _snake.body[i - 1].y;
+	  _map[_snake.body[i].y][_snake.body[i].x] = TileType::EVIL_DUDE;
+	}
+      _map[tmp.getY()][tmp.getX()] = TileType::EMPTY;
+    }
 }
