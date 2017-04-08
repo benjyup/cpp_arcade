@@ -33,7 +33,6 @@ namespace arcade
     void                Object::setScale(float scale) {_scale = scale;}
     void                Object::setTextureFile(std::string const &file) {_filename = file;}
 
-  
   const arcade::Vector3d 	&Object::getDirection() const { return (_direction);}
   const std::string 		&Object::getName() const {return (_name);}
   const arcade::Vector3d 	&Object::getPosition() const {return (_position);}

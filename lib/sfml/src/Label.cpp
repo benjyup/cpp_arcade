@@ -53,10 +53,9 @@ namespace arcade
 
     void 				    Label::setPosition(const Vector3d &position)
     {
+        setTextPosition(_position);
         _position = position;
-        _text.setPosition(_position.getX(), _position.getY());
     }
-
 
     bool                    Label::isMoving(void) const { return (false); }
 
