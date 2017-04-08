@@ -92,7 +92,13 @@ namespace arcade
     void 							_powerUp(void);
     std::shared_ptr<arcade::IObject>				_createObject(const std::string &name,
 										  const std::string &filename,
-										  const arcade::Vector3d &pos);
+										  const arcade::Vector3d &pos,
+										  float speed);
+    void							_goUp(void);
+    void							_goDown(void);
+    void							_goLeft(void);
+    void							_goRight(void);
+    void							_followHead(void);
   };
 }
 
