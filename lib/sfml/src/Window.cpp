@@ -19,7 +19,7 @@
 #include "Evenement.hpp"
 
 uint32_t                        arcade::Window::MAPSIZE = 40;
-float                           arcade::Window::TILESIZE = 1000 / 40;
+float                           arcade::Window::SIZECELL = 1000 / 40;
 
 namespace arcade
 {
@@ -57,7 +57,7 @@ namespace arcade
 	void arcade::Window::setMapSize(uint32_t size)
 	{
         Window::MAPSIZE = size;
-        Window::TILESIZE = Window::WINSIZE / Window::MAPSIZE;
+        Window::SIZECELL = Window::WINSIZE / Window::MAPSIZE;
 	}
 
     bool arcade::Window::event()

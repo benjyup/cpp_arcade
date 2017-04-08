@@ -32,8 +32,8 @@ namespace arcade
 
     void                    Label::setTextPosition(int32_t x, int32_t y)
     {
-        this->_text.setPosition(x * Window::TILESIZE,
-                                y * Window::TILESIZE);
+        this->_text.setPosition(x * Window::SIZECELL,
+                                y * Window::SIZECELL);
     }
 
     void                    Label::setTextPosition(arcade::Vector3d const & pos)
@@ -54,7 +54,7 @@ namespace arcade
 
     void                    Label::updateVisual(uint32_t)
     {
-        this->_text.setCharacterSize((unsigned int) ((Window::TILESIZE) * this->getScale()));
+        this->_text.setCharacterSize((unsigned int) ((Window::SIZECELL) * this->getScale()));
     }
 
 }
