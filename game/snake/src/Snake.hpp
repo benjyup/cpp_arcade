@@ -10,6 +10,9 @@
 #include <ArcadeProtocol.hpp>
 #include "IGameLib.hpp"
 
+# define S_WIDTH 15
+# define S_HEIGHT 15
+
 namespace arcade
 {
   class Snake : public IGameLib
@@ -20,11 +23,17 @@ namespace arcade
     {
       CommandType                                     		ct;
       std::vector<arcade::Position>				body;
+      std::vector<std::shared_ptr<arcade::IObject>>		objs;
     };
 
     static const std::string					S_MAP_PATH;
     static const std::string					S_HEAD_RESOURCES;
     static const std::string					S_TAIL_RESOURCES;
+    static const std::string					S_WALL_RESOURCES;
+    static const std::string					S_GROUND_RESOURCES;
+    static const std::string					S_SNAKE_RESOURCES;
+    static const std::string					S_POWERUP_RESOURCES;
+
     static const std::map<arcade::TileType,
 	    std::string>					S_TILE_RESOURCES;
     static const std::map<char, arcade::TileType>		S_STRING_TO_TILE;
@@ -58,7 +67,7 @@ namespace arcade
     std::shared_ptr<std::vector<std::shared_ptr<IObject>>> 	_objects;
     arcade::IGraphicalLib					*_lib;
     arcade::IWindows						*_win;
-    std::vector<std::vector<arcade::TileType>>			_map;
+    std::array<std::array<arcade::TileType ,S_WIDTH>, S_HEIGHT>	_map;
     uint64_t 							_score;
     t_snake                                                 	_snake;
     arcade::Vector3d                                        	_map_size;
@@ -81,7 +90,9 @@ namespace arcade
     void 							_dead(void);
     void 							_move(void);
     void 							_powerUp(void);
-
+    std::shared_ptr<arcade::IObject>				_createObject(const std::string &name,
+										  const std::string &filename,
+										  const arcade::Vector3d &pos);
   };
 }
 
