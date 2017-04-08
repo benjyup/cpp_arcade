@@ -16,7 +16,6 @@ const std::string						arcade::Snake::S_POWERUP_RESOURCES = "./gfx/snake/apple";
 const std::string						arcade::Snake::S_SNAKE_RESOURCES = "./gfx/snake/eggs";
 const unsigned int						arcade::Snake::S_POWERUP_NBR_DEFAULT = 3;
 
-
 const std::map<arcade::TileType,
 	std::string>			    			arcade::Snake::S_TILE_RESOURCES = {
 	{arcade::TileType::EMPTY, S_GROUND_RESOURCES},
