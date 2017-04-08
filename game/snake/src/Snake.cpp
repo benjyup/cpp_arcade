@@ -90,13 +90,9 @@ void arcade::Snake::initGame(arcade::IGraphicalLib *lib, arcade::IObserver *,
 			     std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > > &objects) {
 /*    if (lib == NULL)
         throw std::runtime_error("Not able to init the game with a null graphical library.");*/
-    _lib = lib;
-    if (_lib) {
-        if (!(_win = _lib->getWindows().get()))
-            throw std::runtime_error("Not able to init the game until the window is not.");
-    }
-    _objects = objects;
-    createMap();
+  initGraphicalLib(lib);
+  _objects = objects;
+  createMap();
 }
 
 uint64_t 		arcade::Snake::getScore() const
@@ -140,7 +136,7 @@ void 			arcade::Snake::createMap()
     }
   std::cout << "y = " << _objects->size() << std::endl;
   for (unsigned int i = 0 ; i < S_POWERUP_NBR_DEFAULT ; i += 1)
-      _initPowerUp();
+    _initPowerUp();
   _initSnake();
 }
 
@@ -164,9 +160,14 @@ void arcade::Snake::_initSnake()
     }
 }
 
-void arcade::Snake::initGraphicalLib(arcade::IGraphicalLib *)
+void arcade::Snake::initGraphicalLib(arcade::IGraphicalLib *lib)
 {
-
+  _lib = lib;
+  if (_lib) {
+      if (!(_win = _lib->getWindows().get()))
+	throw std::runtime_error("Not able to init the game until the window is not.");
+    }
+  _win->setMapSize(S_HEIGHT);
 }
 
 void arcade::Snake::getNotified(IEvenement const &event)
@@ -330,21 +331,21 @@ void arcade::Snake::_goRight()
 }
 
 void             arcade::Snake::where_Am_I(void){
-    struct WhereAmI         wai;
-    Position *p = new Position[_snake.objs.size()];
-    int                         count = 0;
+  struct WhereAmI         wai;
+  Position *p = new Position[_snake.objs.size()];
+  int                         count = 0;
 
-    wai.type = arcade::CommandType::WHERE_AM_I;
-    wai.lenght = (uint16_t )_snake.objs.size();
-    for (auto i : _snake.objs)
+  wai.type = arcade::CommandType::WHERE_AM_I;
+  wai.lenght = (uint16_t )_snake.objs.size();
+  for (auto i : _snake.objs)
     {
-        p[count].x = (uint16_t) i->getPosition().getX();
-        p[count].y = (uint16_t) i->getPosition().getY();
-        count++;
+      p[count].x = (uint16_t) i->getPosition().getX();
+      p[count].y = (uint16_t) i->getPosition().getY();
+      count++;
     }
-    write(1, &wai, sizeof(wai));
-    write(1, wai.position, sizeof(arcade::Position) * _snake.objs.size());
-    delete p;
+  write(1, &wai, sizeof(wai));
+  write(1, wai.position, sizeof(arcade::Position) * _snake.objs.size());
+  delete p;
 }
 
 void            arcade::Snake::get_map(void) {
@@ -363,7 +364,7 @@ void            arcade::Snake::get_map(void) {
 
 void                          arcade::Snake::setDirection(arcade::Vector3d const &dir)
 {
-    (this->_snake.objs[0])->setDirection(dir);
+  (this->_snake.objs[0])->setDirection(dir);
 }
 
 void arcade::Snake::_followHead()
@@ -389,41 +390,41 @@ void arcade::Snake::_followHead()
 extern "C"
 {
 void Play(void) {
-    arcade::CommandType cmd;
-    std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> objs(
-            new std::vector<std::shared_ptr<arcade::IObject>>);
-    arcade::Snake jeu(NULL);
-    char b[2];
-    std::ifstream f("/dev/stdin");
+  arcade::CommandType cmd;
+  std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> objs(
+	  new std::vector<std::shared_ptr<arcade::IObject>>);
+  arcade::Snake jeu(NULL);
+  char b[2];
+  std::ifstream f("/dev/stdin");
 
-    jeu.initGame(NULL, NULL, objs);
-    while (f.read((char *)b, sizeof(b))) {
-        cmd = (arcade::CommandType) std::atoi((char *)b);
-        switch (cmd){
-            case arcade::CommandType::WHERE_AM_I :
-                jeu.where_Am_I();
-                break ;
-            case arcade::CommandType::GET_MAP :
-                jeu.get_map();
-                break ;
-            case arcade::CommandType::GO_UP :
-                jeu.setDirection({0, -1, 0});
-                break ;
-            case arcade::CommandType::GO_DOWN :
-                jeu.setDirection({0, 1, 0});
-                break ;
-            case arcade::CommandType::GO_LEFT:
-                jeu.setDirection({-1, 0, 0});
-                break ;
-            case arcade::CommandType::GO_RIGHT :
-                jeu.setDirection({1, 0, 0});
-                break ;
-            case arcade::CommandType::PLAY :
-                jeu.setDirection({0, -1, 0});
-                break ;
-            default :
-                break ;
-        }
+  jeu.initGame(NULL, NULL, objs);
+  while (f.read((char *)b, sizeof(b))) {
+      cmd = (arcade::CommandType) std::atoi((char *)b);
+      switch (cmd){
+	  case arcade::CommandType::WHERE_AM_I :
+	    jeu.where_Am_I();
+	  break ;
+	  case arcade::CommandType::GET_MAP :
+	    jeu.get_map();
+	  break ;
+	  case arcade::CommandType::GO_UP :
+	    jeu.setDirection({0, -1, 0});
+	  break ;
+	  case arcade::CommandType::GO_DOWN :
+	    jeu.setDirection({0, 1, 0});
+	  break ;
+	  case arcade::CommandType::GO_LEFT:
+	    jeu.setDirection({-1, 0, 0});
+	  break ;
+	  case arcade::CommandType::GO_RIGHT :
+	    jeu.setDirection({1, 0, 0});
+	  break ;
+	  case arcade::CommandType::PLAY :
+	    jeu.setDirection({0, -1, 0});
+	  break ;
+	  default :
+	    break ;
+	}
     }
 
 }
