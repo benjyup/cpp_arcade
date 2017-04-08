@@ -44,6 +44,7 @@ namespace arcade
 
     /* virtual functions of IGameLib */
     virtual void 						initGame(arcade::IGraphicalLib *,
+									 arcade::IObserver *,
 									 std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > >&);
     virtual uint64_t 						getScore(void) const;
     virtual void 						gameTurn(void);

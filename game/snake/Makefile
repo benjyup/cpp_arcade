@@ -5,10 +5,10 @@
 ## Login   <vincent.mesquita@epitech.net>
 ##
 ## Started on  Sun Mar 19 14:10:03 2017 Vincent Mesquita
-## Last update Sat Apr  1 11:51:02 2017 vincent.mesquita@epitech.eu
+## Last update Fri Apr  7 18:13:59 2017 vincent.mesquita@epitech.eu
 ##
 
-NAME		=	../lib_arcade_snake.so
+NAME		=	../lib_arcade_nibbler.so
 
 SRC			=	src
 
@@ -23,7 +23,7 @@ CPPFLAGS	+=	-fPIC -std=c++14 -W -Wall -Werror -Wextra -I$(INTERFACES)/ -I./src -
 LDFLAGS		=	-shared
 
 SRCS		=	$(SRC)/Snake.cpp\
-                	$(INTERFACES)/Vector3d.cpp
+		 	$(INTERFACES)/Vector3d.cpp
 
 OBJS		=	$(SRCS:.cpp=.o)
 

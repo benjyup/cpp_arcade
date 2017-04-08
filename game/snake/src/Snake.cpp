@@ -80,8 +80,8 @@ void arcade::Snake::freeSharedData()
   _objects.reset();
 }
 
-void 			arcade::Snake::initGame(arcade::IGraphicalLib *lib,
-						    std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> & objects)
+void arcade::Snake::initGame(arcade::IGraphicalLib *lib, arcade::IObserver *,
+			     std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > > &objects)
 {
 /*    if (lib == NULL)
         throw std::runtime_error("Not able to init the game with a null graphical library.");*/
@@ -173,6 +173,7 @@ void 			arcade::Snake::createMap()
 	      v.setX(x);
 	      v.setY(y);
 	      obj->setPosition(v);
+	      obj->setSpeed(0.25);
 	      _win->addObject(obj);
 //	      _objects->push_back(obj);
 	      _map[_map.size() - 1].push_back(tt);
@@ -264,21 +265,17 @@ void arcade::Snake::_refreshObjects()
       if (v.getX() == _snake.body[S_SNAKE_HEAD].x && v.getY() == _snake.body[S_SNAKE_HEAD].y)
 	{
 	  _lib->setVisual(it, S_HEAD_RESOURCES);
-	  it->setVisual(S_HEAD_RESOURCES);
 	  it->setName("snake_head");
 	}
       else if(v.getX() == _snake.body[_snake.body.size() - 1].x && v.getY() == _snake.body[_snake.body.size() - 1].y)
 	  {
 	    _lib->setVisual(it, S_TAIL_RESOURCES);
-	    it->setVisual(S_TAIL_RESOURCES);
 	    it->setName("snake_tail");
 	  }
 	else
 	  {
-	    it->setVisual(S_TILE_RESOURCES.at(_map[v.getY()][v.getX()]));
 	    _lib->setVisual(it, S_TILE_RESOURCES.at(_map[v.getY()][v.getX()]));
 	  }
-      it->setSpeed(1);
     }
 }
 
