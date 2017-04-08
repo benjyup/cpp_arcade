@@ -45,8 +45,7 @@ namespace arcade {
         return (_win);
     }
 
-    void OpenGlLib::setVisual(std::shared_ptr<arcade::IObject> &obj, std::string const & filename)
-    {
+    void OpenGlLib::setVisual(std::shared_ptr<arcade::IObject> &obj, std::string const & filename) {
         obj->setTextureFile(filename);
     }
 
@@ -94,7 +93,10 @@ namespace arcade {
     }
 
     std::shared_ptr<IEvenement> OpenGlLib::getEvent() //demander a timot
-        {return (std::shared_ptr<IEvenement>());}
+    {
+        if (this->_win)
+            return (this->_win->getEvent());
+        return (std::shared_ptr<arcade::IEvenement>(NULL));     }
 
     void OpenGlLib::notify(const IEvenement &evenement)
     {

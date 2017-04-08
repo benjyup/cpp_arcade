@@ -16,7 +16,7 @@ namespace arcade {
     Object::Object(const Object &other) :
             _name(other._name), _filename(other._filename), _string(other._string),
             _position(other._position), _direction(other._direction), _speed(other._speed),
-            _color(other._color), _background(other._background), _character(other._character) {
+            _color(other._color), _character(other._character) {
     }
 
     Object::~Object() {
@@ -43,8 +43,6 @@ namespace arcade {
     float Object::getSpeed() const { return (_speed); }
 
     const std::string &Object::getString() const { return (_string); }
-
-    //Object::ObjectType Object::getType() const { return (ObjectType::Object); }
 
     std::string const &Object::getTextureFile(void) const { return (_filename); }
 }
