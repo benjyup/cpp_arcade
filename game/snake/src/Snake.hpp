@@ -7,8 +7,9 @@
 
 #include <map>
 #include <vector>
-#include <ArcadeProtocol.hpp>
+#include <Protocol.hpp>
 #include <fstream>
+#include "IObserve.hpp"
 #include "IGameLib.hpp"
 
 # define S_WIDTH 20
@@ -68,7 +69,7 @@ namespace arcade
 
     void             where_Am_I(void);
     void             get_map(void);
-    void                              setDirection(arcade::Vector3d const &);
+    void                              setCt(arcade::CommandType );
 
    private:
     std::shared_ptr<std::vector<std::shared_ptr<IObject>>> 	_objects;
