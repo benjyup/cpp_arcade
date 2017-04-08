@@ -84,19 +84,7 @@ namespace arcade
 
   void NcursesLib::removeObserver(arcade::IObserver *observer)
   {
-    if (observer == NULL)
-      return ;
-    auto it = _observers.begin();
-
-    while (it != _observers.end())
-      {
-	if (*it == observer)
-	  {
-	    _observers.erase(it);
-	    return ;
-	  }
-	++it;
-      }
+    _win->removeObserver(observer);
   }
 
   /* !(virtual functions of IObserved) */
