@@ -53,7 +53,7 @@ namespace arcade
 
         static uint32_t const                               WINSIZE = 1000;
         static uint32_t                                     MAPSIZE;
-        static float                                        TILESIZE;
+        static float                                        SIZECELL;
     protected:
         Vector3d								                            _size;
         bool								                                _isopen;

@@ -20,8 +20,8 @@ namespace arcade
 
     void    Sprite::setSpritePosition(int32_t x, int32_t y)
     {
-        _sprite.setPosition(x * Window::TILESIZE,
-                            y *  Window::TILESIZE);
+        _sprite.setPosition(x * Window::SIZECELL,
+                            y *  Window::SIZECELL);
     }
 
     void    Sprite::setSpritePosition(arcade::Vector3d const & pos)
@@ -60,24 +60,24 @@ namespace arcade
 
     bool arcade::Sprite::isMoving(void) const
     {
-        return (!(_sprite.getPosition().x == (getPosition().getX() * Window::TILESIZE) &&
-                  _sprite.getPosition().y == (getPosition().getY() * Window::TILESIZE)));
+        return (!(_sprite.getPosition().x == (getPosition().getX() * Window::SIZECELL) &&
+                  _sprite.getPosition().y == (getPosition().getY() * Window::SIZECELL)));
     }
 
     void                                Sprite::moveSprite(void)
     {
         float                         ret;
-        float                         x = (_position.getX() * Window::TILESIZE) - _sprite.getPosition().x;
-        float                         y = (_position.getY() * Window::TILESIZE) - _sprite.getPosition().y;
+        float                         x = (_position.getX() * Window::SIZECELL) - _sprite.getPosition().x;
+        float                         y = (_position.getY() * Window::SIZECELL) - _sprite.getPosition().y;
 
 
         if (x == 0 && y == 0)
             return;
         if (x != 0)
         {
-            ret = _speed * (((x < 0) ? (-1) : (1)) * Window::TILESIZE / 60);
+            ret = _speed * (((x < 0) ? (-1) : (1)) * Window::SIZECELL / 60);
             if (((ret < 0) ? (-1) : (1)) * ret > ((y < 0) ? (-1) : (1)) * x)
-                x = _position.getX() * Window::TILESIZE;
+                x = _position.getX() * Window::SIZECELL;
             else
                 x = _sprite.getPosition().x + ret;
         }
@@ -85,9 +85,9 @@ namespace arcade
             x = _sprite.getPosition().x;
         if (y != 0)
         {
-            ret = _speed * (((y < 0) ? (-1) : (1))  * Window::TILESIZE / 60);
+            ret = _speed * (((y < 0) ? (-1) : (1))  * Window::SIZECELL / 60);
             if (((ret < 0) ? (-1) : (1)) * ret > ((y < 0) ? (-1) : (1)) * y)
-                y = _position.getY() * Window::TILESIZE;
+                y = _position.getY() * Window::SIZECELL;
             else
                 y = _sprite.getPosition().y + ret;
         }
@@ -96,7 +96,7 @@ namespace arcade
         _sprite.setPosition(x, y);
     }
 
-    void                    Sprite::updateVisual(uint32_t state)
+    void                    Sprite::updateVisual(uint32_t mood)
     {
         uint32_t orientation = 0;
 
@@ -109,9 +109,9 @@ namespace arcade
             orientation = 0;
         else if (getDirection().getY() > 0)
             orientation = 1;
-        state = (state % (_texture->getSize().x / 100));
-        _sprite.setTextureRect(sf::IntRect(state * 100, orientation * 100, 100, 100));
-        _sprite.setScale(static_cast<float>(Window::TILESIZE / 100.0 * getScale()),
-                               static_cast<float>(Window::TILESIZE / 100.0 * getScale()));
+        mood = (mood % (_texture->getSize().x / 100));
+        _sprite.setTextureRect(sf::IntRect(mood * 100, orientation * 100, 100, 100));
+        _sprite.setScale(static_cast<float>(Window::SIZECELL / 100.0 * getScale()),
+                               static_cast<float>(Window::SIZECELL / 100.0 * getScale()));
     }
 }
