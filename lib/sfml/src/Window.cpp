@@ -25,7 +25,7 @@ namespace arcade
 {
     arcade::Window::Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &objects,
 						   uint64_t height,
-                           uint64_t width) : _size(height, width), _isopen(true), _window(sf::VideoMode(1024, 1024),
+                           uint64_t width) : _size(height, width), _isopen(true), _window(sf::VideoMode(1000, 1000),
                                                                                         "Arcade - LibSFML",
                                                                                         sf::Style::Close |
                                                                                         sf::Style::Titlebar),
