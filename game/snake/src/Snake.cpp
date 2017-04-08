@@ -278,7 +278,7 @@ void arcade::Snake::_refreshObjects()
 	    it->setVisual(S_TILE_RESOURCES.at(_map[v.getY()][v.getX()]));
 	    _lib->setVisual(it, S_TILE_RESOURCES.at(_map[v.getY()][v.getX()]));
 	  }
-      it->setSpeed(500);
+      it->setSpeed(1);
     }
 }
 

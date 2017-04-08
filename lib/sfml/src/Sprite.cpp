@@ -11,7 +11,7 @@ namespace arcade
 {
     Sprite::Sprite(std::string const &name, std::shared_ptr<sf::Texture> &texture) : Object(name)
     {
-        this->setVisual(texture);
+        setVisual(texture);
     }
 
     Sprite::~Sprite()
@@ -38,8 +38,8 @@ namespace arcade
     void    Sprite::setVisual(std::shared_ptr<sf::Texture> const &texture)
     {
         _texture = texture;
-        _sprite = sf::Sprite(*this->_texture);
-        setSpritePosition(this->getPosition());
+        _sprite = sf::Sprite(*_texture);
+        setSpritePosition(getPosition());
         updateVisual(0);
     }
 
@@ -66,55 +66,52 @@ namespace arcade
 
     void                                Sprite::moveSprite(void)
     {
-        float                         x = (this->_position.getX() * Window::TILESIZE) - this->_sprite.getPosition().x;
-        float                         y = (this->_position.getY() * Window::TILESIZE) - this->_sprite.getPosition().y;
-        float                         add;
+        float                         ret;
+        float                         x = (_position.getX() * Window::TILESIZE) - _sprite.getPosition().x;
+        float                         y = (_position.getY() * Window::TILESIZE) - _sprite.getPosition().y;
+
 
         if (x == 0 && y == 0)
             return;
         if (x != 0)
         {
-            add = this->_speed * (NEG_OR(x) * Window::TILESIZE / 60);
-            if (NEG_OR(add) * add > NEG_OR(x) * x)
-                x = this->_position.getX() * Window::TILESIZE;
+            ret = _speed * (((x < 0) ? (-1) : (1)) * Window::TILESIZE / 60);
+            if (((ret < 0) ? (-1) : (1)) * ret > ((y < 0) ? (-1) : (1)) * x)
+                x = _position.getX() * Window::TILESIZE;
             else
-                x = this->_sprite.getPosition().x + add;
+                x = _sprite.getPosition().x + ret;
         }
         else
-            x = this->_sprite.getPosition().x;
+            x = _sprite.getPosition().x;
         if (y != 0)
         {
-            add = this->_speed * (NEG_OR(y) * Window::TILESIZE / 60);
-            if (NEG_OR(add) * add > NEG_OR(y) * y)
-                y = this->_position.getY() * Window::TILESIZE;
+            ret = _speed * (((y < 0) ? (-1) : (1))  * Window::TILESIZE / 60);
+            if (((ret < 0) ? (-1) : (1)) * ret > ((y < 0) ? (-1) : (1)) * y)
+                y = _position.getY() * Window::TILESIZE;
             else
-                y = this->_sprite.getPosition().y + add;
+                y = _sprite.getPosition().y + ret;
         }
         else
-            y = this->_sprite.getPosition().y;
-        this->_sprite.setPosition(x, y);
+            y = _sprite.getPosition().y;
+        _sprite.setPosition(x, y);
     }
 
     void                    Sprite::updateVisual(uint32_t state)
     {
         uint32_t orientation = 0;
 
-        this->moveSprite();
-        if (this->getDirection().getX() > 0)
+        moveSprite();
+        if (getDirection().getX() > 0)
             orientation = 3;
-        else
-        if (this->getDirection().getX() < 0)
+        else if (getDirection().getX() < 0)
             orientation = 2;
-        else
-        if (this->getDirection().getY() < 0)
+        else if (getDirection().getY() < 0)
             orientation = 0;
-        else
-        if (this->getDirection().getY() > 0)
+        else if (getDirection().getY() > 0)
             orientation = 1;
-
-        state = (state % (this->_texture->getSize().x / 100));
-        this->_sprite.setTextureRect(sf::IntRect(state * 100, orientation * 100, 100, 100));
-        this->_sprite.setScale(static_cast<float>(Window::TILESIZE / 100.0 * this->getScale()),
-                               static_cast<float>(Window::TILESIZE / 100.0 * this->getScale()));
+        state = (state % (_texture->getSize().x / 100));
+        _sprite.setTextureRect(sf::IntRect(state * 100, orientation * 100, 100, 100));
+        _sprite.setScale(static_cast<float>(Window::TILESIZE / 100.0 * getScale()),
+                               static_cast<float>(Window::TILESIZE / 100.0 * getScale()));
     }
 }

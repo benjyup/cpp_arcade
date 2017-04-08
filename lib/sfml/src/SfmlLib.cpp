@@ -20,16 +20,16 @@ namespace arcade
 
     void                                    SfmlLib::reloadObject(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > > & objs)
     {
-        std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > >      newObjs(new std::vector<std::shared_ptr<arcade::IObject> >);
         std::shared_ptr<arcade::IObject>      tmp;
+        std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>>      newObjs(new std::vector<std::shared_ptr<arcade::IObject> >);
 
         for (auto & obj : (*objs))
         {
             if (obj->getString() == "")
-                tmp = this->initObject(obj->getName(), obj->getTextureFile());
+                tmp = initObject(obj->getName(), obj->getTextureFile());
             else
             {
-                tmp = this->initLabel(obj->getName(), obj->getTextureFile());
+                tmp = initLabel(obj->getName(), obj->getTextureFile());
                 tmp->setString(obj->getString());
             }
             tmp->setDirection(obj->getDirection());
@@ -48,7 +48,7 @@ namespace arcade
         if (objs->size() > 0 && !std::dynamic_pointer_cast<arcade::Object>((*objs)[0]))
             reloadObject(objs);
         _win = std::make_shared<arcade::Window>(objs);
-        return (this->_win);
+        return (_win);
     }
 
     std::shared_ptr<IObject> SfmlLib::initObject(const std::string &name, const std::string &filename)
@@ -60,7 +60,7 @@ namespace arcade
 
     std::shared_ptr<arcade::IObject> SfmlLib::initLabel(const std::string &name, const std::string &filename)
     {
-        std::shared_ptr<Label>    tmp(new Label(name, this->getFont(filename)));
+        std::shared_ptr<Label>    tmp(new Label(name, getFont(filename)));
         tmp->setTextureFile(filename);
         return (tmp);
     }
@@ -76,7 +76,7 @@ namespace arcade
 
         if (sprite)
         {
-            sprite->setVisual(this->getTexture(filename));
+            sprite->setVisual(getTexture(filename));
             sprite->setTextureFile(filename);
         }
         else
@@ -84,7 +84,7 @@ namespace arcade
             std::shared_ptr<Label> label = std::dynamic_pointer_cast<Label>(obj);
             if (label)
             {
-                label->setVisual(this->getFont(filename));
+                label->setVisual(getFont(filename));
                 label->setTextureFile(filename);
             }
         }
@@ -106,14 +106,14 @@ namespace arcade
 
     void SfmlLib::registerObserver(arcade::IObserver *observer)
     {
-        if (this->_win)
-            this->_win->registerObserver(observer);
+        if (_win)
+            _win->registerObserver(observer);
     }
 
     void SfmlLib::removeObserver(arcade::IObserver *observer)
     {
-        if (this->_win)
-            this->_win->removeObserver(observer);
+        if (_win)
+            _win->removeObserver(observer);
     }
 
     /* !(virtual functions of IObserved) */
@@ -133,27 +133,29 @@ namespace arcade
 
     std::shared_ptr<sf::Texture>            &SfmlLib::getTexture(std::string const &fileName)
     {
-        if (this->_textureDump.find(fileName) == this->_textureDump.end())
+        auto tmp = std::make_shared<sf::Texture>();
+
+        if (_textureDump.find(fileName) == _textureDump.end())
         {
-            auto tmp = std::make_shared<sf::Texture>();
-            this->_textureDump.emplace(fileName, tmp);
-            this->_textureDump[fileName]->setSmooth(true);
-            if (!(this->_textureDump[fileName]->loadFromFile(fileName + ".png")))
+            _textureDump.emplace(fileName, tmp);
+            _textureDump[fileName]->setSmooth(true);
+            if (!(_textureDump[fileName]->loadFromFile(fileName + ".png")))
                 throw std::string("Failed to load a texture");
         }
-        return (this->_textureDump[fileName]);
+        return (_textureDump[fileName]);
     }
 
     std::shared_ptr<sf::Font>               &SfmlLib::getFont(std::string const &fileName)
     {
-        if (this->_fontDump.find(fileName) == this->_fontDump.end())
+        auto tmp = std::make_shared<sf::Font>();
+
+        if (_fontDump.find(fileName) == _fontDump.end())
         {
-            auto tmp = std::make_shared<sf::Font>();
-            this->_fontDump.emplace(fileName, tmp);
-            if (!(this->_fontDump[fileName]->loadFromFile(fileName + ".ttf")))
+            _fontDump.emplace(fileName, tmp);
+            if (!(_fontDump[fileName]->loadFromFile(fileName + ".ttf")))
                 throw std::string("Failed to load a font");
         }
-        return (this->_fontDump[fileName]);
+        return (_fontDump[fileName]);
     }
 
     ILibrairy *getNewLib(void *handle)
