@@ -7,7 +7,7 @@
 
 #include <map>
 #include <vector>
-#include <ArcadeProtocol.hpp>
+#include <Protocol.hpp>
 #include <fstream>
 #include "IObserve.hpp"
 #include "IGameLib.hpp"
