@@ -5,7 +5,7 @@
 // Login   <peixot_b>
 // 
 // Started on  Sat Apr  8 17:36:34 2017 Benjamin
-// Last update Sun Apr  9 13:27:44 2017 Benjamin
+// Last update Sun Apr  9 14:18:02 2017 vincen_s
 //
 
 #include "Menu.hpp"
@@ -19,6 +19,7 @@ arcade::Menu::Menu(IGraphicalLib *graphicalLib, const std::vector<std::string> &
 	:_graphLib(graphicalLib), _gameLibNames(gameLibNames), _objects(objects), _pos(0, 0), _cursor()
 {
   _cursor = _graphLib->initObject("cursor", M_CURSOR_GFX);
+  _cursor->setPosition(_pos);
   _cursor->setPosition(_pos);
   _graphLib->getWindows()->addObject(_cursor);
   _graphLib->registerObserver(this);
@@ -35,7 +36,7 @@ arcade::Menu::~Menu()
 void arcade::Menu::_printAllNames()
 {
   std::shared_ptr<arcade::IObject> 	label = _graphLib->initLabel("graphlib", M_FONT);
-  arcade::Vector3d			v(5, 0);
+  arcade::Vector3d			v(15, 0);
   unsigned int				i = 0;
 
   for (const auto &it : _gameLibNames)
@@ -43,7 +44,8 @@ void arcade::Menu::_printAllNames()
       label.reset();
       label = _graphLib->initLabel("graphlib", M_FONT);
       label->setPosition(v);
-      label->setString(it);
+      label->setPosition(v);
+      label->setString(it.substr(it.find_last_of("_") + 1));
       _graphLib->getWindows()->addObject(label);
       v.setY(v.getY() + M_SCALE);
       i += 1;
@@ -69,11 +71,13 @@ void arcade::Menu::_moveDown(void)
 {
   _pos.setY((_pos.getY() + M_SCALE) % (_gameLibNames.size() * M_SCALE));
   _cursor->setPosition(_pos);
+  _cursor->setPosition(_pos);
 }
 
 void arcade::Menu::_moveUp(void)
 {
   _pos.setY(((_pos.getY() - M_SCALE) + _gameLibNames.size()) % (_gameLibNames.size() * M_SCALE));
+  _cursor->setPosition(_pos);
   _cursor->setPosition(_pos);
 }
 
