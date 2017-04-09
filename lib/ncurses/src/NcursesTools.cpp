@@ -69,11 +69,19 @@ void 				arcade::NcursesTools::_initKeys(void)
   _Keys.push_back(std::make_pair(tigetstr("kcub1"), arcade::IEvenement::KeyCode::Key_LEFT));
   _Keys.push_back(std::make_pair(tigetstr("kcuf1"), arcade::IEvenement::KeyCode::Key_RIGHT));
   _Keys.push_back(std::make_pair(tigetstr("kcud1"), arcade::IEvenement::KeyCode::Key_DOWN));
+  _Keys.push_back(std::make_pair(tigetstr("kent"), arcade::IEvenement::KeyCode::Key_DOWN));
   _Keys.push_back(std::make_pair("a", arcade::IEvenement::KeyCode::Key_A));
   _Keys.push_back(std::make_pair("d", arcade::IEvenement::KeyCode::Key_D));
   _Keys.push_back(std::make_pair("q", arcade::IEvenement::KeyCode::Key_Q));
   _Keys.push_back(std::make_pair("s", arcade::IEvenement::KeyCode::Key_S));
   _Keys.push_back(std::make_pair("z", arcade::IEvenement::KeyCode::Key_Z));
+  _Keys.push_back(std::make_pair("1", arcade::IEvenement::KeyCode::Key_1));
+  _Keys.push_back(std::make_pair("2", arcade::IEvenement::KeyCode::Key_2));
+  _Keys.push_back(std::make_pair("3", arcade::IEvenement::KeyCode::Key_3));
+  _Keys.push_back(std::make_pair("4", arcade::IEvenement::KeyCode::Key_4));
+  _Keys.push_back(std::make_pair("5", arcade::IEvenement::KeyCode::Key_5));
+  _Keys.push_back(std::make_pair("6", arcade::IEvenement::KeyCode::Key_6));
+  _Keys.push_back(std::make_pair("7", arcade::IEvenement::KeyCode::Key_7));
   for (auto it : _Keys)
     if (it.first == (char *)0 || it.first == (char *)-1)
       throw std::runtime_error("Not able to init the keypad.");
@@ -121,12 +129,12 @@ bool arcade::NcursesTools::_initTerm(const int i)
   return (true);
 }
 
-void arcade::NcursesTools::resetTerm(WINDOW *window)
+void arcade::NcursesTools::resetTerm(WINDOW *)
 {
   _initTerm(0);
   curs_set(1);
   clear();
-  delwin(window);
+  //delwin(window);
   endwin();
 }
 

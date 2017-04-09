@@ -65,10 +65,7 @@ namespace arcade
 
     NcursesTools    	_ncursesTools;
     std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> _objects;
-    std::vector<arcade::IObserver*> _observers;
-
-    std::shared_ptr<arcade::IObject> _obj; // à supprimer
-
+    std::vector<arcade::IObserver*> 	_observers;
 
     virtual void	notify(IEvenement const &);
   };

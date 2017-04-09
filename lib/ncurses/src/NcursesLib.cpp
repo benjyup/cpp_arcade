@@ -24,6 +24,8 @@ namespace arcade
   {
     try
       {
+	if (objs && objs->size() != 0)
+	  _reloadObject(objs);
 	_objects = objs;
 //	_win = std::shared_ptr<IWindows>(new Window(objs, height, width));
 	_win = std::make_shared<Window>(objs, height, width);
@@ -79,7 +81,7 @@ namespace arcade
   {
     if (_win != NULL)
       _win->registerObserver(observer);
-    _observers.push_back(observer);
+    //_observers.push_back(observer);
   }
 
   void NcursesLib::removeObserver(arcade::IObserver *observer)
@@ -114,4 +116,29 @@ namespace arcade
     return (new NcursesLib(handle));
   }
 
+  void NcursesLib::_reloadObject(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>> >&objs)
+  {
+    std::vector<std::shared_ptr<arcade::IObject>>	obj_tmp;
+    int i = 0;
+
+    for (const auto &it : *objs)
+      {
+	if (it->getString().empty())
+	  obj_tmp.push_back(initObject(it->getName(), it->getTextureFile()));
+	else
+	  obj_tmp.push_back(initLabel(it->getName(), it->getTextureFile()));
+	obj_tmp.back()->setScale(it->getScale());
+	obj_tmp.back()->setPosition(it->getPosition());
+	obj_tmp.back()->setSpeed(it->getSpeed());
+	obj_tmp.back()->setDirection(it->getDirection());
+	obj_tmp.back()->setString(it->getString());
+	i += 1;
+      }
+    objs->clear();
+    for (const auto &it : obj_tmp)
+      {
+	objs->push_back(it);
+      }
+    //throw std::runtime_error("je passe ici" + std::to_string(i));
+  }
 }
