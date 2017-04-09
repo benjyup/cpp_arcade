@@ -5,7 +5,7 @@
 ## Login   <vincent@epitech.net>
 ## 
 ## Started on  Tue Apr  4 21:40:11 2017 vincent.mesquita@epitech.eu
-## Last update Sun Apr  9 19:19:48 2017 vincen_s
+## Last update Sun Apr  9 23:03:25 2017 vincen_s
 ##
 
 NAME		=	arcade
@@ -19,6 +19,8 @@ CPP 		= 	g++
 RM 		= 	rm -rf
 
 NIBBLER		=	./games/snake/
+
+SOLAR		=	./games/SolarFox/
 
 CPPFLAGS	+=	-fpic -std=c++14 -W -Wall -Werror -Wextra -I$(INTERFACES)/ -g3
 
@@ -36,14 +38,17 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	$(CPP) -o $(NAME) $(OBJS) $(LDFLAGS)
 	make -C $(NIBBLER)
+	make -C $(SOLAR)
 
 clean:
 	$(RM) $(OBJS)
 	make clean -C $(NIBBLER)
+	make clean -C $(SOLAR)
 
 fclean: clean
 	$(RM) $(NAME)
 	make fclean -C $(NIBBLER)
+	make fclean -C $(SOLAR)
 
 
 re: fclean all
