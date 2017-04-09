@@ -9,6 +9,7 @@
 
 const std::string			            arcade::Solar_Fox::S_MAP_PATH 	= "./resc/Solar_Fox/map";
 const std::string						arcade::Solar_Fox::S_HEAD_RESOURCES = "./gfx/Solar_Fox/vaisseau";
+const std::string					    arcade::Solar_Fox::S_TAIL_RESOURCES = "./gfx/snake/eggs";
 const std::string						arcade::Solar_Fox::S_WALL_RESOURCES = "./gfx/Solar_Fox/wall";
 const std::string						arcade::Solar_Fox::S_GROUND_RESOURCES = "./gfx/Solar_Fox/space";
 const std::string						arcade::Solar_Fox::S_POWERUP_RESOURCES = "./gfx/Solar_Fox/fuel";
