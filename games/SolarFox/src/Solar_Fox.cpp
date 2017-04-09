@@ -215,28 +215,46 @@ void arcade::Solar_Fox::_move() {
 void arcade::Solar_Fox::_powerUp() {
     arcade::Position p;
 
-    p.x = _Solar_Fox.body[S_Solar_Fox_HEAD].x;
-    p.y = _Solar_Fox.body[S_Solar_Fox_HEAD].y;
-    _move();
-    for (auto &it : _Solar_Fox.objsPowerUp)
-        if (it->getPosition().getX() == p.x && it->getPosition().getY() == p.y) {
-            _win->destroyObject(it);
-            _score += 100;
-            score->setString("Score :" + std::to_string(_score));
+    p.x = _last_pos.x;
+    p.y = _last_pos.y;
+    for (auto &it : _Solar_Fox.objsPowerUp) {
+        if (_dir == 1) {
+            if ((it->getPosition().getX() == p.x || it->getPosition().getX() == p.x - 1 ||
+                 it->getPosition().getX() == p.x - 2) &&
+                (it->getPosition().getY() == p.y)) {
+                _win->destroyObject(it);
+                _score += 100;
+                score->setString("Score :" + std::to_string(_score));
+            }
         }
-    p.x = _Solar_Fox.body[_Solar_Fox.body.size() - 1].x;
-    p.y = _Solar_Fox.body[_Solar_Fox.body.size() - 1].y;
-
-    //if (p.x - 1 >= 0 && _map[p.y][p.x - 1] == arcade::TileType::EMPTY) {
-        //_Solar_Fox.body.push_back({static_cast<uint16_t >(p.x - 1), p.y});
-    //_createObject("Solar_Fox", S_Solar_Fox_RESOURCES, {static_cast<uint16_t >(p.x - 1), p.y}, 0.25);
-    //} else if (p.y - 1 >= 0 && _map[p.y - 1][p.x] == arcade::TileType::EMPTY) {
-     //   _Solar_Fox.body.push_back({p.x, static_cast<uint16_t >(p.y - 1)});
-     //   _createObject("Solar_Fox", S_Solar_Fox_RESOURCES, {static_cast<uint16_t >(p.x - 1), p.y}, 0.25);
-    //} else if (p.y + 1 < _map_size.getY() && _map[p.y + 1][p.x] == arcade::TileType::EMPTY) {
-    //    _Solar_Fox.body.push_back({p.x, static_cast<uint16_t >(p.y + 1)});
-     //   _createObject("Solar_Fox", S_Solar_Fox_RESOURCES, {static_cast<uint16_t >(p.x - 1), p.y}, 0.25);
-    //}
+        else if (_dir == 2) {
+            if ((it->getPosition().getX() == p.x || it->getPosition().getX() == p.x + 1 ||
+                 it->getPosition().getX() == p.x + 2) &&
+                (it->getPosition().getY() == p.y)) {
+                _win->destroyObject(it);
+                _score += 100;
+                score->setString("Score :" + std::to_string(_score));
+            }
+        }
+        else if (_dir == 3) {
+            if ((it->getPosition().getX() == p.x) &&
+                (it->getPosition().getY() == p.y ||
+                 it->getPosition().getY() == p.y - 1 || it->getPosition().getY() == p.y - 2)) {
+                _win->destroyObject(it);
+                _score += 100;
+                score->setString("Score :" + std::to_string(_score));
+            }
+        }
+        else if (_dir == 4) {
+            if ((it->getPosition().getX() == p.x) &&
+                (it->getPosition().getY() == p.y ||
+                        it->getPosition().getY() == p.y + 1 || it->getPosition().getY() == p.y + 2 )) {
+                _win->destroyObject(it);
+                _score += 100;
+                score->setString("Score :" + std::to_string(_score));
+            }
+        }
+    }
 }
 
 std::shared_ptr<arcade::IObject> arcade::Solar_Fox::_createObject(const std::string &name, const std::string &filename,
@@ -284,18 +302,25 @@ void arcade::Solar_Fox::_goUp() {
 
     p.x = _Solar_Fox.body[S_Solar_Fox_HEAD].x;
     p.y = _Solar_Fox.body[S_Solar_Fox_HEAD].y;
-    if (_shot == true) {
-        _createObject("shoot", S_Solar_Fox_RESOURCES2, {static_cast<uint16_t >(p.x), (p.y - 1)}, 1);
-        _shot = false;
-
+    _tmp++;
+    if (_tmp == 10) {
         for (auto &it : _Solar_Fox.objsShoot)
-            if (it->getPosition().getX() == p.x && it->getPosition().getY() == p.y - 1) {
-                _win->moveObject(it, {_Solar_Fox.body[S_Solar_Fox_HEAD].x, _Solar_Fox.body[S_Solar_Fox_HEAD].y - 2});
-            }
-        for (auto &it : _Solar_Fox.objsShoot)
-            if (it->getPosition().getX() == p.x && it->getPosition().getY() == p.y - 1) {
+            if (it->getPosition().getX() == _last_pos.x && it->getPosition().getY() == _last_pos.y) {
                 _win->destroyObject(it);
             }
+        if (_shot == true) {
+            _createObject("shoot", S_Solar_Fox_RESOURCES2, {static_cast<uint16_t >(p.x), p.y}, 1);
+            _shot = false;
+            for (auto &it : _Solar_Fox.objsShoot)
+                if (it->getPosition().getX() == p.x && it->getPosition().getY() == p.y) {
+                    _win->moveObject(it,
+                                     {_Solar_Fox.body[S_Solar_Fox_HEAD].x, _Solar_Fox.body[S_Solar_Fox_HEAD].y - 2});
+                    _last_pos.x = p.x;
+                    _last_pos.y = p.y - 2;
+                }
+            _dir = 4;
+        }
+        _tmp = 0;
     }
     if (_lib) {
         if (!_Solar_Fox.objs[0]->isMoving()) {
@@ -319,18 +344,25 @@ void arcade::Solar_Fox::_goDown()
 
     p.x = _Solar_Fox.body[S_Solar_Fox_HEAD].x;
     p.y = _Solar_Fox.body[S_Solar_Fox_HEAD].y;
-    if (_shot == true) {
-        _createObject("shoot", S_Solar_Fox_RESOURCES2, {static_cast<uint16_t >(p.x), (p.y + 1)}, 1);
-        _shot = false;
-
+    _tmp++;
+    if (_tmp == 10) {
         for (auto &it : _Solar_Fox.objsShoot)
-            if (it->getPosition().getX() == p.x && it->getPosition().getY() == p.y + 1) {
-                _win->moveObject(it, {_Solar_Fox.body[S_Solar_Fox_HEAD].x, _Solar_Fox.body[S_Solar_Fox_HEAD].y + 2});
-            }
-        for (auto &it : _Solar_Fox.objsShoot)
-            if (it->getPosition().getX() == p.x && it->getPosition().getY() == p.y + 1) {
+            if (it->getPosition().getX() == _last_pos.x && it->getPosition().getY() == _last_pos.y) {
                 _win->destroyObject(it);
             }
+        if (_shot == true) {
+            _createObject("shoot", S_Solar_Fox_RESOURCES2, {static_cast<uint16_t >(p.x), p.y}, 1);
+            _shot = false;
+            for (auto &it : _Solar_Fox.objsShoot)
+                if (it->getPosition().getX() == p.x && it->getPosition().getY() == p.y) {
+                    _win->moveObject(it,
+                                     {_Solar_Fox.body[S_Solar_Fox_HEAD].x, _Solar_Fox.body[S_Solar_Fox_HEAD].y + 2});
+                    _last_pos.x = p.x;
+                    _last_pos.y = p.y + 2;
+                }
+            _dir = 3;
+        }
+        _tmp = 0;
     }
     if (_lib) {
         if (!_Solar_Fox.objs[0]->isMoving()) {
@@ -353,19 +385,25 @@ void arcade::Solar_Fox::_goLeft() {
 
     p.x = _Solar_Fox.body[S_Solar_Fox_HEAD].x;
     p.y = _Solar_Fox.body[S_Solar_Fox_HEAD].y;
-    if (_shot == true)
-    {
-        _createObject("shoot", S_Solar_Fox_RESOURCES2, {static_cast<uint16_t >(p.x - 1), p.y}, 1);
-        _shot = false;
-
+    _tmp++;
+    if (_tmp == 10) {
         for (auto &it : _Solar_Fox.objsShoot)
-            if (it->getPosition().getX() == p.x - 1 && it->getPosition().getY() == p.y) {
-                _win->moveObject(it, {_Solar_Fox.body[S_Solar_Fox_HEAD].x - 2, _Solar_Fox.body[S_Solar_Fox_HEAD].y});
-            }
-        for (auto &it : _Solar_Fox.objsShoot)
-            if (it->getPosition().getX() == p.x - 1 && it->getPosition().getY() == p.y) {
+            if (it->getPosition().getX() == _last_pos.x && it->getPosition().getY() == _last_pos.y) {
                 _win->destroyObject(it);
             }
+        if (_shot == true) {
+            _createObject("shoot", S_Solar_Fox_RESOURCES2, {static_cast<uint16_t >(p.x), p.y}, 1);
+            _shot = false;
+            for (auto &it : _Solar_Fox.objsShoot)
+                if (it->getPosition().getX() == p.x && it->getPosition().getY() == p.y) {
+                    _win->moveObject(it,
+                                     {_Solar_Fox.body[S_Solar_Fox_HEAD].x - 2, _Solar_Fox.body[S_Solar_Fox_HEAD].y});
+                    _last_pos.x = p.x - 2;
+                    _last_pos.y = p.y;
+                }
+            _dir = 2;
+        }
+        _tmp = 0;
     }
     if (_lib) {
         if (!_Solar_Fox.objs[0]->isMoving()) {
@@ -388,18 +426,25 @@ void arcade::Solar_Fox::_goRight() {
 
     p.x = _Solar_Fox.body[S_Solar_Fox_HEAD].x;
     p.y = _Solar_Fox.body[S_Solar_Fox_HEAD].y;
-    if (_shot == true)
-    {
-        _createObject("shoot", S_Solar_Fox_RESOURCES2, {static_cast<uint16_t >(p.x + 1), p.y}, 1);
-        _shot = false;
+    _tmp++;
+    if (_tmp == 10) {
         for (auto &it : _Solar_Fox.objsShoot)
-            if (it->getPosition().getX() == p.x + 1 && it->getPosition().getY() == p.y) {
-                _win->moveObject(it, {_Solar_Fox.body[S_Solar_Fox_HEAD].x + 2, _Solar_Fox.body[S_Solar_Fox_HEAD].y});
-            }
-        for (auto &it : _Solar_Fox.objsShoot)
-            if (it->getPosition().getX() == p.x + 1 && it->getPosition().getY() == p.y) {
+            if (it->getPosition().getX() == _last_pos.x && it->getPosition().getY() == _last_pos.y) {
                 _win->destroyObject(it);
             }
+        if (_shot == true) {
+            _createObject("shoot", S_Solar_Fox_RESOURCES2, {static_cast<uint16_t >(p.x), p.y}, 1);
+            _shot = false;
+            for (auto &it : _Solar_Fox.objsShoot)
+                if (it->getPosition().getX() == p.x && it->getPosition().getY() == p.y) {
+                    _win->moveObject(it,
+                                     {_Solar_Fox.body[S_Solar_Fox_HEAD].x + 2, _Solar_Fox.body[S_Solar_Fox_HEAD].y});
+                    _last_pos.x = p.x + 2;
+                    _last_pos.y = p.y;
+                }
+            _dir = 1;
+        }
+        _tmp = 0;
     }
     if (_lib) {
         if (!_Solar_Fox.objs[0]->isMoving()) {

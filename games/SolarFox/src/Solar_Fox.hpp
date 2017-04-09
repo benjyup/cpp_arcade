@@ -11,6 +11,7 @@
 #include <fstream>
 #include "IObserve.hpp"
 #include "IGameLib.hpp"
+#include "../../../lib/interfaces/Protocol.hpp"
 
 # define S_WIDTH 20
 # define S_HEIGHT 20
@@ -81,9 +82,12 @@ namespace arcade
         arcade::IWindows						                    *_win;
         std::array<std::array<arcade::TileType ,S_WIDTH>, S_HEIGHT>	_map;
         uint64_t 							                        _score;
+        uint64_t                                                    _tmp;
+        uint64_t                                                    _dir;
         t_Solar_Fox                                                 _Solar_Fox;
         arcade::Vector3d                                        	_map_size;
         void                                                    	*_handle;
+        arcade::Position                                            _last_pos;
         std::string                                             	_lib_name;
         std::mt19937 						                        _gen;
         std::uniform_int_distribution<int> 				            _dis_width;
