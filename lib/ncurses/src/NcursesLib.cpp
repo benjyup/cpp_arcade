@@ -81,7 +81,7 @@ namespace arcade
   {
     if (_win != NULL)
       _win->registerObserver(observer);
-    //_observers.push_back(observer);
+    _observers.push_back(observer);
   }
 
   void NcursesLib::removeObserver(arcade::IObserver *observer)
