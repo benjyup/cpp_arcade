@@ -7,7 +7,7 @@
 #include "Object.hpp"
 #include "Label.hpp"
 
-void arcade::Window::_close_window(int)
+void 			arcade::Window::_close_window(int)
 {
   throw std::runtime_error("CTRL + C");
 }
@@ -22,8 +22,6 @@ arcade::Window::Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObje
 	  evenement(IEvenement::KeyCode::Key_Undefined),
 	  _ncursesTools(), _objects(objects)
 {
-  // std::cout << std::to_string(_min_size.getY()) + " / " + std::to_string(_min_size.getX()) << std::endl;
-  // exit(0);
   if (!(_wmain = _ncursesTools.routine()))
     return;
   signal(SIGINT, _close_window);
@@ -32,9 +30,6 @@ arcade::Window::Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObje
   checkWindowSize(true);
   bzero(_pressed_key, 10);
   keypad(_wmain, true);
-/*  printw(std::to_string(_width).c_str());
-  move(1, 0);
-  printw(std::to_string(_height).c_str());*/
   _isopen = true;
 }
 
@@ -45,24 +40,14 @@ arcade::Window::~Window()
   _objects.reset();
   if (_objects)
       _objects->clear();
-  std::cout << "Window supprimée" << std::endl;
 }
 
 /* virtual functions of IWindows */
 
-bool 			arcade::Window::isOpen() const
-{ return (_isopen); }
-
-int32_t 		arcade::Window::getHeight() const
-{ return (getmaxy(_wmain)); }
-
-int32_t 		arcade::Window::getLenght() const
-{ return (getmaxx(_wmain)); }
-
-const arcade::Vector3d 	&arcade::Window::getSize() const
-{
-  return (_size);
-}
+bool 			arcade::Window::isOpen() const { return (_isopen); }
+int32_t 		arcade::Window::getHeight() const { return (getmaxy(_wmain)); }
+int32_t 		arcade::Window::getLenght() const { return (getmaxx(_wmain)); }
+const arcade::Vector3d 	&arcade::Window::getSize() const { return (_size); }
 
 bool 			arcade::Window::event(void)
 {
@@ -101,7 +86,7 @@ void 			arcade::Window::addObject(std::shared_ptr <arcade::IObject> &obj, const 
   addObject(obj);
 }
 
-	void 			arcade::Window::moveObject(std::shared_ptr <arcade::IObject> &obj, const Vector3d &pos)
+void 			arcade::Window::moveObject(std::shared_ptr <arcade::IObject> &obj, const Vector3d &pos)
 {
   obj->setPosition(pos);
 }
@@ -118,7 +103,7 @@ void 			arcade::Window::moveObject(std::string name, const Vector3d &pos) // pou
 
 void 			arcade::Window::destroyObject(std::shared_ptr <arcade::IObject> &obj)
 {
-  auto it = _objects->begin();
+  auto 			it = _objects->begin();
 
   while (it != _objects->end())
     {
@@ -146,9 +131,9 @@ std::shared_ptr <arcade::IEvenement> arcade::Window::getEvent()
   return (std::shared_ptr<arcade::IEvenement>(NULL));
 }
 
-void 			arcade::Window::removeObserver(arcade::IObserver *observer) // pq pas de const
+void 			arcade::Window::removeObserver(arcade::IObserver *observer)
 {
-    auto it = _observers.begin();
+    auto 		it = _observers.begin();
 
     while (it != _observers.end())
     {
@@ -161,7 +146,7 @@ void 			arcade::Window::removeObserver(arcade::IObserver *observer) // pq pas de
     }
 }
 
-void 			arcade::Window::registerObserver(arcade::IObserver *observer) //pq pas de const
+void 			arcade::Window::registerObserver(arcade::IObserver *observer)
 {
   _observers.push_back(observer);
 }
@@ -179,7 +164,7 @@ bool 			arcade::Window::checkWindowSize(const bool flag)
   return false;
 }
 
-void arcade::Window::setMapSize(uint32_t size)
+void 			arcade::Window::setMapSize(uint32_t size)
 {
   _min_size.setX(size);
   _min_size.setY(size);

@@ -9,12 +9,10 @@
 
 namespace arcade
 {
-  const std::string		Object::directory_name = "./resources/";
   const std::string		Object::file_extension = ".ncurses";
-  int				Object::_color_int = 16;
 
   Object::Object() : _name(""), _filename(""), _string(""),
-  _position(Vector3d(0, 0)), _direction(Vector3d(0, 0)), _speed(0), _isMoving(true)
+		     _position(Vector3d(0, 0)), _direction(Vector3d(0, 0)), _speed(0), _isMoving(true)
   {}
 
   Object::Object(const std::string &name, const std::string &filename) :
@@ -71,16 +69,16 @@ namespace arcade
     fs.open(filename);
     if (!fs.is_open())
       throw std::runtime_error(filename + " doesn't exist.");
-	while (!fs.eof() && i < properties.size())
-	  {
-	    getline(fs, str);
-	    if (i == 0 && str.length() != 1)
-	      throw std::runtime_error("The configuration file of " + str + " is invalid.");
-	    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
-	    if (!str.empty() && str != NcursesTools::NT_NONE)
-	      properties[i] = str;
-	    i += 1;
-	  }
+    while (!fs.eof() && i < properties.size())
+      {
+	getline(fs, str);
+	if (i == 0 && str.length() != 1)
+	  throw std::runtime_error("The configuration file of " + str + " is invalid.");
+	std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+	if (!str.empty() && str != NcursesTools::NT_NONE)
+	  properties[i] = str;
+	i += 1;
+      }
     (void)fs.close();
     _string = properties[0];
     _color = properties[1];
@@ -130,20 +128,20 @@ namespace arcade
     return (*this);
   }
 
-  bool Object::isMoving(void) const
+  bool 				Object::isMoving(void) const
   {return (false);}
 
-  std::string const& Object::getTextureFile() const
+  std::string const		&Object::getTextureFile() const
   {
     return (_filename);
   }
 
-  void Object::setTextureFile(std::string const &filename)
+  void 				Object::setTextureFile(std::string const &filename)
   {
     setProperties(filename);
   }
 
-  void Object::setVisual(std::string const &filename)
+  void 				Object::setVisual(std::string const &filename)
   {
     setProperties(filename);
   }

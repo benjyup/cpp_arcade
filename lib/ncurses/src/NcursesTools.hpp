@@ -36,25 +36,24 @@ namespace arcade
     static const std::string					NT_NONE;
 
     NcursesTools(void);
-
     ~NcursesTools(void);
 
 
     /* Ncurses functions */
-    int 			Refresh(void) const;
-    //void 			Wresize(WINDOW	*, int height, int width);
+    int 							Refresh(void) const;
     /* !Ncurses functions */
 
-    WINDOW 			*routine(void);
-    void 			resetTerm(WINDOW *);
-    arcade::IEvenement::KeyCode getKey(const char *key) const;
-    void 			drawObject(const std::shared_ptr<IObject> obj) const;
+    WINDOW 							*routine(void);
+    void 							resetTerm(WINDOW *);
+    arcade::IEvenement::KeyCode 				getKey(const char *key) const;
+    void 							drawObject(const std::shared_ptr<IObject> obj) const;
 
    private:
-    std::string                 _term_name;
-    std::vector<std::pair<const char *, arcade::IEvenement::KeyCode>> _Keys;
-    struct termios		_old_ioctl;
-    struct termios		_new_ioctl;
+    std::string                 				_term_name;
+    std::vector<std::pair<const char *,
+	    arcade::IEvenement::KeyCode>> 			_Keys;
+    struct termios						_old_ioctl;
+    struct termios						_new_ioctl;
 
 
     bool                        _initTermKeys(void);
