@@ -9,7 +9,7 @@
 #include <vector>
 #include <Protocol.hpp>
 #include <fstream>
-#include "../EvenementGame.hpp"
+#include "../../EvenementGame.hpp"
 #include "IObserve.hpp"
 #include "IGameLib.hpp"
 
