@@ -14,6 +14,7 @@ CPPFLAGS	+=	-fPIC -std=c++14 -W -Wall -Werror -Wextra -I$(INTERFACES)/ -I./src -
 LDFLAGS		=	-shared
 
 SRCS		=	$(SRC)/Solar_Fox.cpp\
+			../EvenementGame.cpp \
 		 	$(INTERFACES)/Vector3d.cpp
 
 OBJS		=	$(SRCS:.cpp=.o)
