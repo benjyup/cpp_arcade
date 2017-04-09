@@ -379,13 +379,11 @@ void arcade::Solar_Fox::_goUp() {
             _win->moveObject(_Solar_Fox.objs[0], {_Solar_Fox.body[S_Solar_Fox_HEAD].x, _Solar_Fox.body[S_Solar_Fox_HEAD].y});
             (_Solar_Fox.objs[0])->setDirection({0, 1, 0});
             (_checkMove[_map[_Solar_Fox.body[S_Solar_Fox_HEAD].y][_Solar_Fox.body[S_Solar_Fox_HEAD].x]])();
-            //_map[_Solar_Fox.body[0].y][_Solar_Fox.body[0].x] = TileType::EVIL_DUDE;
         }
     }
     else {
         _Solar_Fox.body[S_Solar_Fox_HEAD].y -= 1;
         (_checkMove[_map[_Solar_Fox.body[S_Solar_Fox_HEAD].y][_Solar_Fox.body[S_Solar_Fox_HEAD].x]])();
-        //_map[_Solar_Fox.body[0].y][_Solar_Fox.body[0].x] = TileType::EVIL_DUDE;
     }
   _lastKc = _Solar_Fox.ct;
 }
@@ -422,13 +420,11 @@ void arcade::Solar_Fox::_goDown()
             _win->moveObject(_Solar_Fox.objs[0], {_Solar_Fox.body[S_Solar_Fox_HEAD].x, _Solar_Fox.body[S_Solar_Fox_HEAD].y});
             (_Solar_Fox.objs[0])->setDirection({0, -1, 0});
             (_checkMove[_map[_Solar_Fox.body[S_Solar_Fox_HEAD].y][_Solar_Fox.body[S_Solar_Fox_HEAD].x]])();
-            //_map[_Solar_Fox.body[0].y][_Solar_Fox.body[0].x] = TileType::EVIL_DUDE;
         }
     }
     else {
         _Solar_Fox.body[S_Solar_Fox_HEAD].y += 1;
         (_checkMove[_map[_Solar_Fox.body[S_Solar_Fox_HEAD].y][_Solar_Fox.body[S_Solar_Fox_HEAD].x]])();
-        //_map[_Solar_Fox.body[0].y][_Solar_Fox.body[0].x] = TileType::EVIL_DUDE;
     }
   _lastKc = _Solar_Fox.ct;
 }
@@ -464,13 +460,11 @@ void arcade::Solar_Fox::_goLeft() {
             _win->moveObject(_Solar_Fox.objs[0], {_Solar_Fox.body[S_Solar_Fox_HEAD].x, _Solar_Fox.body[S_Solar_Fox_HEAD].y});
             (_Solar_Fox.objs[0])->setDirection({1, 0, 0});
             (_checkMove[_map[_Solar_Fox.body[S_Solar_Fox_HEAD].y][_Solar_Fox.body[S_Solar_Fox_HEAD].x]])();
-            //_map[_Solar_Fox.body[0].y][_Solar_Fox.body[0].x] = TileType::EVIL_DUDE;
         }
     }
     else {
         _Solar_Fox.body[S_Solar_Fox_HEAD].x -= 1;
         (_checkMove[_map[_Solar_Fox.body[S_Solar_Fox_HEAD].y][_Solar_Fox.body[S_Solar_Fox_HEAD].x]])();
-        //_map[_Solar_Fox.body[0].y][_Solar_Fox.body[0].x] = TileType::EVIL_DUDE;
     }
   _lastKc = _Solar_Fox.ct;
 }
@@ -488,7 +482,7 @@ void arcade::Solar_Fox::_goRight() {
             }
         if (_shot == true) {
             _createObject("shoot", S_Solar_Fox_RESOURCES2, {static_cast<uint16_t >(p.x), p.y}, 1);
-            _shot = false;
+	    _shot = false;
             for (auto &it : _Solar_Fox.objsShoot)
                 if (it->getPosition().getX() == p.x && it->getPosition().getY() == p.y) {
                     _win->moveObject(it,
@@ -506,15 +500,12 @@ void arcade::Solar_Fox::_goRight() {
             _win->moveObject(_Solar_Fox.objs[0], {_Solar_Fox.body[S_Solar_Fox_HEAD].x, _Solar_Fox.body[S_Solar_Fox_HEAD].y});
             (_Solar_Fox.objs[0])->setDirection({-1, 0, 0});
             (_checkMove[_map[_Solar_Fox.body[S_Solar_Fox_HEAD].y][_Solar_Fox.body[S_Solar_Fox_HEAD].x]])();
-            //_map[_Solar_Fox.body[0].y][_Solar_Fox.body[0].x] = TileType::EVIL_DUDE;
-
         }
     }
     else
     {
         _Solar_Fox.body[S_Solar_Fox_HEAD].x += 1;
         (_checkMove[_map[_Solar_Fox.body[S_Solar_Fox_HEAD].y][_Solar_Fox.body[S_Solar_Fox_HEAD].x]])();
-        //_map[_Solar_Fox.body[0].y][_Solar_Fox.body[0].x] = TileType::EVIL_DUDE;
     }
   _lastKc = _Solar_Fox.ct;
 }
