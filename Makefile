@@ -5,7 +5,7 @@
 ## Login   <vincent@epitech.net>
 ## 
 ## Started on  Tue Apr  4 21:40:11 2017 vincent.mesquita@epitech.eu
-## Last update Wed Apr  5 00:24:21 2017 vincent.mesquita@epitech.eu
+## Last update Sun Apr  9 00:54:51 2017 vincent.mesquita@epitech.eu
 ##
 
 NAME		=	arcade
@@ -24,6 +24,8 @@ LDFLAGS     =   -ldl
 
 SRCS		=	$(SRC)/main.cpp\
 			$(SRC)/LibraryManager.cpp\
+			$(SRC)/Menu.cpp\
+			$(INTERFACES)/Vector3d.cpp\
 
 OBJS		=	$(SRCS:.cpp=.o)
 

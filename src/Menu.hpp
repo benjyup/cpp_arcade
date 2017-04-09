@@ -21,54 +21,31 @@
 
 namespace arcade
 {
-  class Menu : public IGameLib, public IObserved
+  class Menu : public IObserver
   {
    public:
-    Menu(std::vector<arcade::IGameLib*>*);
+
+    static const unsigned int						M_SCALE;
+    static const std::string						M_FONT;
+    static const std::string						M_CURSOR_GFX;
+
+    Menu(IGraphicalLib *lib,
+	 const std::vector<std::string> &,
+	 std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &objects);
     virtual ~Menu(void);
-    
-    void						navigateMenu(int8_t move);
-    void						reloadAllObj(void);
-    virtual void					initGame(arcade::IGraphicalLib*,
-								 std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &);
-    virtual void *					getHandle(void) const;
-    virtual const std::string &				getName(void) const;
-    virtual void					gameTurn(void);
-    virtual uint64_t					getScore(void) const {return (0);};
-    virtual void					freeSharedData(void);
-    
-    virtual void					createMap(void) {};    
-    virtual void					getNotified(IEvenement const &evenement);
-    virtual void					notify(IEvenement const &evenement);
-    virtual std::shared_ptr<IEvenement>			getEvent(void);
-    virtual void					registerObserver(arcade::IObserver *);
-    virtual void					removeObserver(arcade::IObserver *);
-    
-    void						sortObjs(void);
-    void						initGraphicalLib(arcade::IGraphicalLib*);
-    void 						deleteListGame(void);
-    void 						printListGame(void);
-    void 						updateListGame(void);
-    std::shared_ptr<arcade::IObject>			createObject(std::string const &, std::string const &,
-								     arcade::Vector3d const &, uint32_t speed = 0);
-    std::shared_ptr<arcade::IObject>			createLabel(std::string const &, std::string const &,
-								    arcade::Vector3d const &,
-								    std::string const & text = "", float scale = 1);
-    std::vector<std::shared_ptr<arcade::IObject>>	createBox(std::string const & name,
-								  arcade::Vector3d const & start,
-								  arcade::Vector3d const & size,
-								  bool selected);
-    
-    protected:
-    std::string								_name;
-    void *								_handle;
-    arcade::IGraphicalLib*						_actualLib;
-    std::vector<arcade::IGameLib*>*					_games;
-    std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>>	_objects;
-    static std::string const						_font;
-    std::vector<std::shared_ptr<arcade::IObject> >			_menu;
-    int8_t 								_tab;
-    std::vector<arcade::IObserver*>					_observateur;   
+    virtual void getNotified(IEvenement const &);
+
+   private:
+    IGraphicalLib							*_graphLib;
+    std::vector<std::string>						_gameLibNames;
+    std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> 	_objects;
+    arcade::Vector3d							_pos;
+    std::shared_ptr<arcade::IObject>					_cursor;
+
+    void								_printAllNames(void);
+    void								_moveUp(void);
+    void								_moveDown(void);
+    std::string								_getGameLibName(void);
   };
 };
 

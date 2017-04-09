@@ -115,3 +115,21 @@ arcade::IGameLib *arcade::LibraryManager::getGameLib(const std::string &libName)
       throw std::runtime_error(libName + " doesn't exist.");
     }
 }
+
+std::vector<std::string> arcade::LibraryManager::getGraphicalLibNames() const
+{
+  std::vector<std::string> v;
+
+  for (const auto &it : _graphLibraries)
+    v.push_back(it.first);
+  return (v);
+}
+
+std::vector<std::string> arcade::LibraryManager::getGameLibNames() const
+{
+  std::vector<std::string> v;
+
+  for (const auto &it : _gameLibraries)
+    v.push_back(it.first);
+  return (v);
+}
