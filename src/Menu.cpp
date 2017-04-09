@@ -11,7 +11,7 @@
 #include "Menu.hpp"
 
 const unsigned int						arcade::Menu::M_SCALE = 1;
-const std::string						arcade::Menu::M_FONT = "./gfx/menu/arcade_3";
+const std::string						arcade::Menu::M_FONT = "./gfx/menu/font";
 const std::string						arcade::Menu::M_CURSOR_GFX = "./gfx/menu/cursor";
 
 arcade::Menu::Menu(IGraphicalLib *graphicalLib, const std::vector<std::string> &gameLibNames,
