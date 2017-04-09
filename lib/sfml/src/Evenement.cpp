@@ -26,6 +26,9 @@ namespace arcade {
                 break;
         }
         switch (event.key.code) {
+            case sf::Keyboard::A:
+                _keyCode = IEvenement::KeyCode::Key_A;
+                break;
             case sf::Keyboard::Q:
                 _keyCode = IEvenement::KeyCode::Key_Q;
                 break;
