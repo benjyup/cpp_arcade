@@ -28,6 +28,7 @@ namespace arcade
             std::vector<std::shared_ptr<arcade::IObject>>		objs;
             std::vector<std::shared_ptr<arcade::IObject>>		objsPowerUp;
             std::vector<std::shared_ptr<arcade::IObject>>		objsShoot;
+            std::vector<arcade::Position>                       last_pos;
         };
 
         static const unsigned int					S_POWERUP_NBR_DEFAULT;
