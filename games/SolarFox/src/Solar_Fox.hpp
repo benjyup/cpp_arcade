@@ -27,14 +27,17 @@ namespace arcade
             CommandType                                     	ct;
             std::vector<arcade::Position>			            body;
             std::vector<std::shared_ptr<arcade::IObject>>		objs;
+            std::vector<std::shared_ptr<arcade::IObject>>		Ennemy;
             std::vector<std::shared_ptr<arcade::IObject>>		objsPowerUp;
             std::vector<std::shared_ptr<arcade::IObject>>		objsShoot;
+            std::vector<std::shared_ptr<arcade::IObject>>		objsEvilShoot;
             std::vector<arcade::Position>                       last_pos;
         };
 
         static const unsigned int					S_POWERUP_NBR_DEFAULT;
         static const std::string					S_MAP_PATH;
         static const std::string					S_HEAD_RESOURCES;
+        static const std::string					S_ENNEMY_RESOURCES;
         static const std::string					S_TAIL_RESOURCES;
         static const std::string					S_WALL_RESOURCES;
         static const std::string					S_GROUND_RESOURCES;
@@ -92,9 +95,12 @@ namespace arcade
         std::mt19937 						                        _gen;
         std::uniform_int_distribution<int> 				            _dis_width;
         std::uniform_int_distribution<int> 				            _dis_height;
+        std::uniform_int_distribution<int> 				            _dis_shot;
         std::map<arcade::TileType, std::function<void(void)>> 	    _checkMove;
         std::map<arcade::CommandType , std::function<void(void)>> 	_actions;
         std::shared_ptr<arcade::IObject> score;
+        int                                                         _posFin;
+        int                                                         _time;
 
         /* virtual functions of IGameLib */
         virtual void 						createMap(void);
@@ -119,6 +125,8 @@ namespace arcade
         void							_goLeft(void);
         void							_goRight(void);
         void                            _shoot(void);
+        void                            _initEnnemy(void);
+
     };
 };
 

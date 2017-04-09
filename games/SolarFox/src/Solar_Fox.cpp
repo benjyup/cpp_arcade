@@ -12,6 +12,7 @@
 
 const std::string			            arcade::Solar_Fox::S_MAP_PATH 	= "./resc/Solar_Fox/map";
 const std::string						arcade::Solar_Fox::S_HEAD_RESOURCES = "./gfx/Solar_Fox/vaisseau";
+const std::string						arcade::Solar_Fox::S_ENNEMY_RESOURCES = "./gfx/Solar_Fox/ennemy";
 const std::string						arcade::Solar_Fox::S_WALL_RESOURCES = "./gfx/Solar_Fox/space";
 const std::string						arcade::Solar_Fox::S_GROUND_RESOURCES = "./gfx/Solar_Fox/space";
 const std::string						arcade::Solar_Fox::S_POWERUP_RESOURCES = "./gfx/Solar_Fox/fuel";
@@ -29,6 +30,7 @@ const std::map<arcade::TileType,
         {arcade::TileType::EMPTY, S_GROUND_RESOURCES},
         {arcade::TileType::BLOCK, S_WALL_RESOURCES},
         {arcade::TileType::POWERUP, S_POWERUP_RESOURCES},
+        {arcade::TileType::EVIL_DUDE, S_ENNEMY_RESOURCES},
         {arcade::TileType::EVIL_SHOOT, S_Solar_Fox_RESOURCES},
         {arcade::TileType::MY_SHOOT, S_Solar_Fox_RESOURCES2},
 };
@@ -57,7 +59,8 @@ const std::map<arcade::IEvenement::KeyCode , arcade::CommandType>			arcade::Sola
 
 arcade::Solar_Fox::Solar_Fox(void *handle)
         : _shot(false), _objects(), _lib(NULL), _win(NULL), _map(), _score(0), _Solar_Fox(), _map_size({0, 0}), _handle(handle),
-          _lib_name("lib_arcade_Solar_Fox"), _gen(getpid()), _dis_width(0, S_WIDTH - 1), _dis_height(0, S_HEIGHT - 1)
+          _lib_name("lib_arcade_Solar_Fox"), _gen(getpid()), _dis_width(0, S_WIDTH - 1), _dis_height(0, S_HEIGHT - 1), _dis_shot(2, 18),
+          _posFin(2), _time(0)
 {
     _Solar_Fox.ct = arcade::CommandType::GO_RIGHT;
     _checkMove = {
@@ -107,6 +110,23 @@ uint64_t 		arcade::Solar_Fox::getScore() const
 
 void 			arcade::Solar_Fox::gameTurn()
 {
+    std::shared_ptr<arcade::IObject> obj;
+
+    _time++;
+    if (_time == 1000)
+    {
+        for (auto &it : _Solar_Fox.objsEvilShoot) {
+            if (it->getPosition().getY() == 20) {
+                _win->destroyObject(it);
+            }
+        }
+        _time = 0;
+    }
+    else if (!_Solar_Fox.Ennemy[0]->isMoving()) {
+            obj = _createObject("evilshoot", S_Solar_Fox_RESOURCES, {_Solar_Fox.Ennemy[0]->getPosition().getX(), 1}, 0.35);
+            _win->moveObject(obj, {_Solar_Fox.Ennemy[0]->getPosition().getX(), 20});
+            _win->moveObject(_Solar_Fox.Ennemy[0], {_dis_shot(_gen), 0});
+        }
     (_actions[_Solar_Fox.ct])();
 }
 
@@ -144,6 +164,7 @@ void 			arcade::Solar_Fox::createMap()
     _initSolar_Fox();
     for (unsigned int i = 0 ; i < S_POWERUP_NBR_DEFAULT ; i += 1)
         _initPowerUp();
+    _initEnnemy();
 }
 
 void arcade::Solar_Fox::_initSolar_Fox()
@@ -154,6 +175,16 @@ void arcade::Solar_Fox::_initSolar_Fox()
     p.y = S_HEIGHT / 2;
     _Solar_Fox.body.push_back(p);
     _createObject("Solar_Fox", S_HEAD_RESOURCES, {(int32_t) p.x, (int32_t) p.y}, 0.25);
+}
+
+void    arcade::Solar_Fox::_initEnnemy()
+{
+    Position p;
+
+    p.x = 2;
+    p.y = 0;
+    _createObject("Ennemy", S_ENNEMY_RESOURCES, {(int32_t) p.x, (int32_t) p.y}, 0.15);
+    _win->moveObject(_Solar_Fox.Ennemy[0], {p.x + 15, p.y});
 }
 
 void arcade::Solar_Fox::initGraphicalLib(arcade::IGraphicalLib *lib)
@@ -223,7 +254,9 @@ void arcade::Solar_Fox::_powerUp() {
                  it->getPosition().getX() == p.x - 2) &&
                 (it->getPosition().getY() == p.y)) {
                 _win->destroyObject(it);
-                _score += 100;
+                if (_map[it->getPosition().getY()][it->getPosition().getX()] != TileType::EMPTY)
+                    _score += 100;
+                _map[it->getPosition().getY()][it->getPosition().getX()] = TileType::EMPTY;
                 score->setString("Score :" + std::to_string(_score));
             }
         }
@@ -232,7 +265,9 @@ void arcade::Solar_Fox::_powerUp() {
                  it->getPosition().getX() == p.x + 2) &&
                 (it->getPosition().getY() == p.y)) {
                 _win->destroyObject(it);
-                _score += 100;
+                if (_map[it->getPosition().getY()][it->getPosition().getX()] != TileType::EMPTY)
+                    _score += 100;
+                _map[it->getPosition().getY()][it->getPosition().getX()] = TileType::EMPTY;
                 score->setString("Score :" + std::to_string(_score));
             }
         }
@@ -241,16 +276,20 @@ void arcade::Solar_Fox::_powerUp() {
                 (it->getPosition().getY() == p.y ||
                  it->getPosition().getY() == p.y - 1 || it->getPosition().getY() == p.y - 2)) {
                 _win->destroyObject(it);
-                _score += 100;
+                if (_map[it->getPosition().getY()][it->getPosition().getX()] != TileType::EMPTY)
+                    _score += 100;
+                _map[it->getPosition().getY()][it->getPosition().getX()] = TileType::EMPTY;
                 score->setString("Score :" + std::to_string(_score));
             }
         }
         else if (_dir == 4) {
             if ((it->getPosition().getX() == p.x) &&
                 (it->getPosition().getY() == p.y ||
-                        it->getPosition().getY() == p.y + 1 || it->getPosition().getY() == p.y + 2 )) {
+                 it->getPosition().getY() == p.y + 1 || it->getPosition().getY() == p.y + 2 )) {
                 _win->destroyObject(it);
-                _score += 100;
+                if (_map[it->getPosition().getY()][it->getPosition().getX()] != TileType::EMPTY)
+                    _score += 100;
+                _map[it->getPosition().getY()][it->getPosition().getX()] = TileType::EMPTY;
                 score->setString("Score :" + std::to_string(_score));
             }
         }
@@ -276,6 +315,10 @@ std::shared_ptr<arcade::IObject> arcade::Solar_Fox::_createObject(const std::str
             _Solar_Fox.objsPowerUp.push_back(obj);
         else if (name == "shoot")
             _Solar_Fox.objsShoot.push_back(obj);
+        else if (name == "Ennemy")
+            _Solar_Fox.Ennemy.push_back(obj);
+        else if (name == "evilshoot")
+            _Solar_Fox.objsEvilShoot.push_back(obj);
     }
     return (obj);
 }
