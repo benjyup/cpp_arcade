@@ -13,7 +13,7 @@
 const std::string			            arcade::Solar_Fox::S_MAP_PATH 	= "./resc/Solar_Fox/map";
 const std::string						arcade::Solar_Fox::S_HEAD_RESOURCES = "./gfx/Solar_Fox/vaisseau";
 const std::string						arcade::Solar_Fox::S_ENNEMY_RESOURCES = "./gfx/Solar_Fox/ennemy";
-const std::string						arcade::Solar_Fox::S_WALL_RESOURCES = "./gfx/Solar_Fox/space";
+const std::string						arcade::Solar_Fox::S_WALL_RESOURCES = "./gfx/Solar_Fox/wall";
 const std::string						arcade::Solar_Fox::S_GROUND_RESOURCES = "./gfx/Solar_Fox/space";
 const std::string						arcade::Solar_Fox::S_POWERUP_RESOURCES = "./gfx/Solar_Fox/fuel";
 const std::string						arcade::Solar_Fox::S_Solar_Fox_RESOURCES = "./gfx/Solar_Fox/projectile";
@@ -152,7 +152,8 @@ void 			arcade::Solar_Fox::createMap()
             v.setX(x);
             v.setY(y);
             v.setZ(0);
-            if (y == 0 || y == S_HEIGHT - 1 || x == 0 || x == S_WIDTH - 1)
+            if (y == 0 || y == S_HEIGHT - 1 || x == 0 || x == S_WIDTH - 1 ||
+                y == 1 || y == S_HEIGHT - 2 || x == 1 || x == S_WIDTH - 2)
             {
                 _createObject("space", S_WALL_RESOURCES, v, 0);
                 _map[y][x] = arcade::TileType::BLOCK;
