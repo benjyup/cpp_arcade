@@ -22,9 +22,7 @@ namespace arcade
       Label = 1
     };
 
-    static const std::string		directory_name;
     static const std::string		file_extension;
-//    static const
 
 
     Object();
@@ -72,18 +70,16 @@ namespace arcade
     virtual bool 			setProperties(const std::string &pahtname);
 
    protected:
-    std::string		_name;
-    std::string		_filename;
-    std::string		_string;
-    Vector3d		_position;
-    Vector3d		_direction;
-    float		_speed;
-    std::string		_color;
-    std::string		_background;
-    std::string		_character;
-    bool 		_isMoving;
-
-    static int 	_color_int;
+    std::string				_name;
+    std::string				_filename;
+    std::string				_string;
+    Vector3d				_position;
+    Vector3d				_direction;
+    float				_speed;
+    std::string				_color;
+    std::string				_background;
+    std::string				_character;
+    bool 				_isMoving;
   };
 
   std::ostream &operator<<(std::ostream &os, const Object &object); //demander si on à le droit à friend

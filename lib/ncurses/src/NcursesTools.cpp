@@ -7,7 +7,7 @@
 #include "NcursesTools.hpp"
 #include "Object.hpp"
 
-const std::vector<std::string>	arcade::NcursesTools::NT_DEFAULT_PROPERTIES({"$", "black"});
+const std::vector<std::string>				arcade::NcursesTools::NT_DEFAULT_PROPERTIES({"$", "black"});
 
 const std::string					arcade::NcursesTools::NT_BLACK = "black";
 const std::string					arcade::NcursesTools::NT_RED = "red";
@@ -19,10 +19,14 @@ const std::string					arcade::NcursesTools::NT_CYAN = "cyan";
 const std::string					arcade::NcursesTools::NT_WHITE = "white";
 const std::string					arcade::NcursesTools::NT_NONE = "none";
 
-const std::map<std::string, std::pair<char, short>> arcade::NcursesTools::NT_COLORS({{NT_BLACK, {COLOR_BLACK, 1}}, {NT_RED, {COLOR_RED, 2}},
-										     {NT_GREEN, {COLOR_GREEN, 3}}, {NT_YELLOW, {COLOR_YELLOW,4}},
-										     {NT_BLUE, {COLOR_BLUE, 5}}, {NT_MAGENTA, {COLOR_MAGENTA, 6}},
-										     {NT_CYAN, {COLOR_CYAN, 7}}, {NT_WHITE, {COLOR_WHITE, 8}}});
+const std::map<std::string, std::pair<char, short>> 	arcade::NcursesTools::NT_COLORS({{NT_BLACK, {COLOR_BLACK, 1}},
+											    {NT_RED, {COLOR_RED, 2}},
+											    {NT_GREEN, {COLOR_GREEN, 3}},
+											    {NT_YELLOW, {COLOR_YELLOW,4}},
+											    {NT_BLUE, {COLOR_BLUE, 5}},
+											    {NT_MAGENTA, {COLOR_MAGENTA, 6}},
+											    {NT_CYAN, {COLOR_CYAN, 7}},
+											    {NT_WHITE, {COLOR_WHITE, 8}}});
 
 
 arcade::NcursesTools::NcursesTools()
@@ -32,14 +36,14 @@ arcade::NcursesTools::NcursesTools()
 
 arcade::NcursesTools::~NcursesTools() { }
 
-int arcade::NcursesTools::Refresh() const
+int 				arcade::NcursesTools::Refresh() const
 {
   return (refresh());
 }
 
-arcade::IEvenement::KeyCode arcade::NcursesTools::getKey(const char *keyCode) const
+arcade::IEvenement::KeyCode 	arcade::NcursesTools::getKey(const char *keyCode) const
 {
-  arcade::IEvenement::KeyCode key = arcade::IEvenement::KeyCode::Key_Undefined;
+  arcade::IEvenement::KeyCode 	key = arcade::IEvenement::KeyCode::Key_Undefined;
 
   if (!keyCode || !keyCode[0])
     return (key);
@@ -107,7 +111,7 @@ WINDOW 				*arcade::NcursesTools::routine()
   return (_window);
 }
 
-bool arcade::NcursesTools::_initTerm(const int i)
+bool 				arcade::NcursesTools::_initTerm(const int i)
 {
   if (i == 1)
     {
@@ -129,18 +133,17 @@ bool arcade::NcursesTools::_initTerm(const int i)
   return (true);
 }
 
-void arcade::NcursesTools::resetTerm(WINDOW *)
+void 				arcade::NcursesTools::resetTerm(WINDOW *)
 {
   _initTerm(0);
   curs_set(1);
   clear();
-  //delwin(window);
   endwin();
 }
 
-void arcade::NcursesTools::drawObject(const std::shared_ptr<arcade::IObject> obj) const
+void 				arcade::NcursesTools::drawObject(const std::shared_ptr<arcade::IObject> obj) const
 {
-  Object *o = static_cast<arcade::Object*>(obj.get());
+  Object 			*o = static_cast<arcade::Object*>(obj.get());
   try
     {
       if (o->getType() == Object::ObjectType::Label)
