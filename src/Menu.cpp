@@ -10,9 +10,9 @@
 
 #include "Menu.hpp"
 
-const unsigned int						arcade::Menu::M_SCALE = 1;
-const std::string						arcade::Menu::M_FONT = "./gfx/menu/font";
-const std::string						arcade::Menu::M_CURSOR_GFX = "./gfx/menu/cursor";
+const unsigned int			arcade::Menu::M_SCALE = 1;
+const std::string			arcade::Menu::M_FONT = "./gfx/menu/font";
+const std::string			arcade::Menu::M_CURSOR_GFX = "./gfx/menu/cursor";
 
 arcade::Menu::Menu(IGraphicalLib *graphicalLib, const std::vector<std::string> &gameLibNames,
 		   std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &objects)
@@ -33,7 +33,7 @@ arcade::Menu::~Menu()
   _objects.reset();
 }
 
-void arcade::Menu::_printAllNames()
+void 					arcade::Menu::_printAllNames()
 {
   std::shared_ptr<arcade::IObject> 	label = _graphLib->initLabel("graphlib", M_FONT);
   arcade::Vector3d			v(15, 0);
@@ -52,7 +52,7 @@ void arcade::Menu::_printAllNames()
     }
 }
 
-void arcade::Menu::getNotified(IEvenement const &event)
+void 					arcade::Menu::getNotified(IEvenement const &event)
 {
   if (event.getAction() == IEvenement::Action::KeyPressDown)
     {
@@ -65,21 +65,21 @@ void arcade::Menu::getNotified(IEvenement const &event)
     }
 }
 
-void arcade::Menu::_moveDown(void)
+void 					arcade::Menu::_moveDown(void)
 {
   _pos.setY((_pos.getY() + M_SCALE) % (_gameLibNames.size() * M_SCALE));
   _cursor->setPosition(_pos);
   _cursor->setPosition(_pos);
 }
 
-void arcade::Menu::_moveUp(void)
+void 					arcade::Menu::_moveUp(void)
 {
   _pos.setY(((_pos.getY() - M_SCALE) + _gameLibNames.size()) % (_gameLibNames.size() * M_SCALE));
   _cursor->setPosition(_pos);
   _cursor->setPosition(_pos);
 }
 
-std::string arcade::Menu::_getGameLibName(void)
+std::string 				arcade::Menu::_getGameLibName(void)
 {
   return (_gameLibNames[_pos.getY() / M_SCALE]);
 }
