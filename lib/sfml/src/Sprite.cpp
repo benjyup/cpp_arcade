@@ -9,7 +9,8 @@
 
 namespace arcade
 {
-    Sprite::Sprite(std::string const &name, std::shared_ptr<sf::Texture> &texture) : Object(name)
+    Sprite::Sprite(std::string const &name, std::string const &filename,
+                   std::shared_ptr<sf::Texture> &texture) : Object(name, filename)
     {
         setVisual(texture);
     }

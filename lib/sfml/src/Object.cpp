@@ -17,9 +17,9 @@ namespace arcade
 	const std::string		Object::directory_name = "./ressources/";
 	const std::string		Object::file_extension = ".sfml";
 
-    Object::Object(std::string const &name) :
+    Object::Object(const std::string &name, const std::string &filename) :
       _color(sf::Color(255, 0, 0)), _colorTurn(0),
-      _name(name), _str(""), _filename(""), _position({0, 0}), _direction({0, 0}), _speed(0), _scale(1)
+      _name(name), _str(""), _filename(filename), _position({0, 0}), _direction({0, 0}), _speed(0), _scale(1)
     {
     }
 

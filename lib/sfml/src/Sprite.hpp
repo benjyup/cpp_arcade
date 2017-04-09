@@ -17,7 +17,7 @@ namespace arcade
     class Sprite : public Object
     {
     public:
-        Sprite(std::string const &name, std::shared_ptr<sf::Texture> &);
+        Sprite(std::string const &name, std::string const &, std::shared_ptr<sf::Texture> &);
         ~Sprite();
 
         void                            setVisual(std::shared_ptr<sf::Texture> const &);

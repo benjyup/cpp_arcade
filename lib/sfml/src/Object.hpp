@@ -37,7 +37,6 @@ namespace arcade
 
         Object();
         Object(const std::string &name, const std::string &filename);
-        Object(const std::string &name);
         Object(const Object& other);
 
         bool operator==(const Object &rhs) const;

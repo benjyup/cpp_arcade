@@ -42,7 +42,7 @@ int 	        main(int ac, char **av)
       arcade::LibraryManager  libraryManager;
       arcade::IGraphicalLib   *graphicalLib = libraryManager.getGraphicalLib(av[1]);
       arcade::IWindows        *window = graphicalLib->initWindows(objects, 1024, 1024).get();
-      arcade::IGameLib        *gameLib = libraryManager.getGameLib(menu(graphicalLib, libraryManager.getGameLibNames(), objects));
+      arcade::IGameLib        *gameLib = libraryManager.getGameLib("lib_arcade_nibbler.so");//menu(graphicalLib, libraryManager.getGameLibNames(), objects));
       gameLib->initGame(graphicalLib, NULL, objects);
       graphicalLib->registerObserver(gameLib);
       while (window->event())

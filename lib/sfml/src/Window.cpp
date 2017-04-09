@@ -1,12 +1,3 @@
-//
-// Window.cpp for Project-Master in /home/peixot_b/Epitech/Tek2/CPP/Arcade/cpp_arcade/lib/sfml/src
-// 
-// Made by peixot_b
-// Login   <benjamin.peixoto@epitech.eu>
-// 
-// Started on  Wed Mar 22 17:34:04 2017 peixot_b
-// Last update Fri Apr  7 15:23:53 2017 Benjamin
-//
 
 #include <string>
 #include <iostream>
@@ -26,78 +17,77 @@ namespace arcade
     arcade::Window::Window(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &objects,
 						   uint64_t height,
                            uint64_t width) : _size(height, width), _isopen(true), _window(sf::VideoMode(1000, 1000),
-                                                                                        "Arcade - LibSFML",
+                                                                                        "Arcade",
                                                                                         sf::Style::Close |
                                                                                         sf::Style::Titlebar),
                                              _objects(objects), _height(height), _width(width), _min_size(0, 0, 0),
-                                             _calc(0)
-    {
-      _window.pollEvent(_event);
-      std::cout << "init" << std::endl;
+                                             _calc(0) {
+        _window.pollEvent(_event);
+        //_window.setFramerateLimit(60);
     }
 
     arcade::Window::~Window() {
-		std::cout << "Window supprimée" << std::endl;
+     //   std::cout << "Window supprimée" << std::endl;
         _objects.reset();
-        if(_window.isOpen())
+        if (_window.isOpen())
             _window.close();
-		_isopen = false;
-	}
+        _isopen = false;
+    }
 
-	bool arcade::Window::isOpen() const { return (_isopen); }
+	bool arcade::Window::isOpen() const {
+        return (_isopen);
+    }
 
-	int32_t arcade::Window::getHeight() const { return (_height); }
+	int32_t arcade::Window::getHeight() const {
+        return (_height);
+    }
 
-	int32_t arcade::Window::getLenght() const { return (_width); }
+	int32_t arcade::Window::getLenght() const {
+        return (_width);
+    }
 
-	const sf::RenderWindow &arcade::Window::get_Window() const { return (_window); }
+	const arcade::Vector3d &arcade::Window::getSize() const {
+        return (_size);
+    }
 
-	const arcade::Vector3d &arcade::Window::getSize() const { return (_size); }
-
-	void arcade::Window::setMapSize(uint32_t size)
-	{
+	void arcade::Window::setMapSize(uint32_t size) {
         Window::MAPSIZE = size;
         Window::SIZECELL = Window::WINSIZE / Window::MAPSIZE;
-	}
+    }
 
-    bool arcade::Window::event()
-    {
-        if (_window.pollEvent(_event))
-        {
+    bool arcade::Window::event() {
+        if (_window.pollEvent(_event)) {
             if ((_event.type == sf::Event::KeyPressed && _event.key.code == sf::Keyboard::Escape)
                 || _event.type == sf::Event::Closed)
                 return (false);
             notify(arcade::Evenement(_event));
         }
         return (true);
-	}
+    }
 
-	arcade::FrameType arcade::Window::refresh()
-    {
-        sf::Int32                       t;
-        arcade::FrameType               frame;
+	arcade::FrameType arcade::Window::refresh() {
+        arcade::FrameType frame;
         std::shared_ptr<arcade::Object> obj_s;
+        sf::Int32 t;
+
 
         t = _clock.getElapsedTime().asMilliseconds();
         frame = arcade::FrameType::UpdateFrame;
-        if (t >= 83 * 60)
-        {
+        if (t >= 83 * 60) {
             t = 0;
             _calc = t;
             _clock.restart();
         }
-        if (t >= _calc + 16)
-        {
+        if (t >= _calc + 16) {
             frame = arcade::FrameType::GameFrame;
             _calc = t;
         }
         _window.clear();
-        for(auto & obj : *_objects) {
+        for (auto &obj : *_objects) {
             try {
                 obj_s = std::dynamic_pointer_cast<arcade::Object>(obj);
-                if (obj_s->isTextureOk())
-                {
-                    obj_s->updateVisual((uint32_t)(_clock.getElapsedTime().asMilliseconds() / 100));
+                if (obj_s->isTextureOk()) {
+                    obj_s->updateVisual((uint32_t) (_clock.getElapsedTime().asMilliseconds() / 100));
                     _window.draw(obj_s->getDrawable());
                 }
             }
@@ -107,6 +97,10 @@ namespace arcade
         }
         _window.display();
         return (frame);
+    }
+
+    const sf::RenderWindow &arcade::Window::get_Window() const {
+        return (_window);
     }
 
 	void arcade::Window::addObject(std::shared_ptr<arcade::IObject> &obj) {

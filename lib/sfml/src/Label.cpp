@@ -9,7 +9,8 @@
 
 namespace arcade
 {
-    Label::Label(const std::string &name, std::shared_ptr<sf::Font> &font) : Object(name)
+    Label::Label(const std::string &name, const std::string &filename,
+                 std::shared_ptr<sf::Font> &font) : Object(name, filename)
     {
         setVisual(font);
         _isMoving = false;

@@ -18,24 +18,22 @@ namespace arcade
 
     /* virtual functions of IGraphicalLib */
 
-    void                                    SfmlLib::reloadObject(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > > & objs)
-    {
-        std::shared_ptr<arcade::IObject>      tmp;
-        std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>>      newObjs(new std::vector<std::shared_ptr<arcade::IObject> >);
+    void                                    SfmlLib::reloadObject(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > > & objs) {
+        std::shared_ptr<arcade::IObject> tmp;
+        std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> newObjs(
+                new std::vector<std::shared_ptr<arcade::IObject> >);
 
-        for (auto & obj : (*objs))
-        {
-            if (obj->getString() == "")
-                tmp = initObject(obj->getName(), obj->getTextureFile());
-            else
-            {
+        for (auto &obj : (*objs)) {
+            if (obj->getString() != "") {
                 tmp = initLabel(obj->getName(), obj->getTextureFile());
                 tmp->setString(obj->getString());
-            }
-            tmp->setDirection(obj->getDirection());
+
+            } else
+                tmp = initObject(obj->getName(), obj->getTextureFile());
+            tmp->setSpeed(obj->getSpeed());
             tmp->setPosition(obj->getPosition());
             tmp->setScale(obj->getScale());
-            tmp->setSpeed(obj->getSpeed());
+            tmp->setDirection(obj->getDirection());
             obj = tmp;
         }
     }
@@ -44,24 +42,22 @@ namespace arcade
                                                                uint64_t,
                                                                uint64_t)
     {
-        _win.reset();
         if (objs->size() > 0 && !std::dynamic_pointer_cast<arcade::Object>((*objs)[0]))
             reloadObject(objs);
+        _win.reset();
         _win = std::make_shared<arcade::Window>(objs);
         return (_win);
     }
 
     std::shared_ptr<IObject> SfmlLib::initObject(const std::string &name, const std::string &filename)
     {
-        std::shared_ptr<arcade::Sprite>   tmp(new arcade::Sprite(name, getTexture(filename)));
-        tmp->setTextureFile(filename);
+        std::shared_ptr<arcade::Sprite>   tmp(new arcade::Sprite(name, filename, getTexture(filename)));
         return (tmp);
     }
 
     std::shared_ptr<arcade::IObject>    SfmlLib::initLabel(const std::string &name, const std::string &filename)
     {
-        std::shared_ptr<Label>    tmp(new Label(name, getFont(filename)));
-        tmp->setTextureFile(filename);
+        std::shared_ptr<Label>    tmp(new Label(name, filename, getFont(filename)));
         return (tmp);
     }
 
@@ -70,48 +66,37 @@ namespace arcade
         return (_win);
     }
 
-    void                                SfmlLib::setVisual(std::shared_ptr<arcade::IObject> &obj, std::string const & filename)
-    {
+    void                                SfmlLib::setVisual(std::shared_ptr<arcade::IObject> &obj, std::string const & filename) {
         std::shared_ptr<Sprite> sprite = std::dynamic_pointer_cast<Sprite>(obj);
 
-        if (sprite)
-        {
-            sprite->setVisual(getTexture(filename));
-            sprite->setTextureFile(filename);
-        }
-        else
-        {
+        obj->setTextureFile(filename);
+        if (!sprite) {
             std::shared_ptr<Label> label = std::dynamic_pointer_cast<Label>(obj);
             if (label)
-            {
                 label->setVisual(getFont(filename));
-                label->setTextureFile(filename);
-            }
-        }
-
+        } else
+            sprite->setVisual(getTexture(filename));
     }
 
     /* !(virtual functions of IGraphicalLib) */
 
     /* virtual functions of IObserved */
 
-    std::shared_ptr<IEvenement> SfmlLib::getEvent()
-    {return(std::shared_ptr<IEvenement>());}
+    std::shared_ptr<IEvenement> SfmlLib::getEvent() {
+        return (std::shared_ptr<IEvenement>());
+    }
 
-    void SfmlLib::notify(const IEvenement &evenement)
-    {
+    void SfmlLib::notify(const IEvenement &evenement) {
         for (auto &it : _observers)
             it->getNotified(evenement);
     }
 
-    void SfmlLib::registerObserver(arcade::IObserver *observer)
-    {
+    void SfmlLib::registerObserver(arcade::IObserver *observer) {
         if (_win)
             _win->registerObserver(observer);
     }
 
-    void SfmlLib::removeObserver(arcade::IObserver *observer)
-    {
+    void SfmlLib::removeObserver(arcade::IObserver *observer) {
         if (_win)
             _win->removeObserver(observer);
     }
@@ -120,23 +105,25 @@ namespace arcade
 
     /* virtual functions of ILibrairy */
 
-    void* SfmlLib::getHandle() const { return ((void *) (_handle)); }
-
-    std::string const& SfmlLib::getName() const { return (_name); }
-
-    ILibrairy::LibType SfmlLib::getType() const {return (ILibrairy::LibType ::Graphical);}
-
-    void SfmlLib::freeSharedData(void)
-    {
-
+    void* SfmlLib::getHandle() const {
+        return ((void *) (_handle));
     }
 
-    std::shared_ptr<sf::Texture>            &SfmlLib::getTexture(std::string const &fileName)
-    {
+    std::string const& SfmlLib::getName() const {
+        return (_name);
+    }
+
+    ILibrairy::LibType SfmlLib::getType() const {
+        return (ILibrairy::LibType::Graphical);
+    }
+
+    void SfmlLib::freeSharedData(void) {
+    }
+
+    std::shared_ptr<sf::Texture>            &SfmlLib::getTexture(std::string const &fileName) {
         auto tmp = std::make_shared<sf::Texture>();
 
-        if (_textureDump.find(fileName) == _textureDump.end())
-        {
+        if (_textureDump.find(fileName) == _textureDump.end()) {
             _textureDump.emplace(fileName, tmp);
             _textureDump[fileName]->setSmooth(true);
             if (!(_textureDump[fileName]->loadFromFile(fileName + ".png")))
@@ -145,12 +132,10 @@ namespace arcade
         return (_textureDump[fileName]);
     }
 
-    std::shared_ptr<sf::Font>               &SfmlLib::getFont(std::string const &fileName)
-    {
+    std::shared_ptr<sf::Font>               &SfmlLib::getFont(std::string const &fileName) {
         auto tmp = std::make_shared<sf::Font>();
 
-        if (_fontDump.find(fileName) == _fontDump.end())
-        {
+        if (_fontDump.find(fileName) == _fontDump.end()) {
             _fontDump.emplace(fileName, tmp);
             if (!(_fontDump[fileName]->loadFromFile(fileName + ".ttf")))
                 throw std::string("Failed to load a font");
@@ -158,9 +143,7 @@ namespace arcade
         return (_fontDump[fileName]);
     }
 
-    ILibrairy *getNewLib(void *handle)
-    {
+    ILibrairy *getNewLib(void *handle) {
         return (new SfmlLib(handle));
     }
-
 }
