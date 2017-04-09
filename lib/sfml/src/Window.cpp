@@ -26,7 +26,6 @@ namespace arcade
     }
 
     arcade::Window::~Window() {
-     //   std::cout << "Window supprimée" << std::endl;
         if (_objects)
             _objects->clear();
         if (_window.isOpen())
@@ -136,7 +135,6 @@ namespace arcade
         {
             if (*it == obj)
             {
-                std::cerr << "destroy\n";
                 _objects->erase(it);
                 return;
             }

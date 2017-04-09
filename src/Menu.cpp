@@ -28,10 +28,7 @@ arcade::Menu::Menu(IGraphicalLib *graphicalLib, const std::vector<std::string> &
 
 arcade::Menu::~Menu()
 {
-  std::cerr << "destroy menu\n";
   _graphLib->removeObserver(this);
-  _objects->clear();
-  _objects.reset();
 }
 
 void 					arcade::Menu::_printAllNames()
