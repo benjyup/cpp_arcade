@@ -29,15 +29,15 @@ namespace arcade
       std::vector<std::shared_ptr<arcade::IObject>>		objsPowerUp;
     };
 
-    static const unsigned int						S_POWERUP_NBR_DEFAULT;
+    static const unsigned int					S_POWERUP_NBR_DEFAULT;
     static const std::string					S_MAP_PATH;
     static const std::string					S_HEAD_RESOURCES;
     static const std::string					S_TAIL_RESOURCES;
     static const std::string					S_WALL_RESOURCES;
     static const std::string					S_GROUND_RESOURCES;
     static const std::string					S_SNAKE_RESOURCES;
-      static const std::string					S_POWERUP_RESOURCES;
-      static const std::string					S_TTF_RESOURCES;
+    static const std::string					S_POWERUP_RESOURCES;
+    static const std::string					S_TTF_RESOURCES;
 
     static const std::map<arcade::TileType,
 	    std::string>					S_TILE_RESOURCES;
@@ -46,6 +46,7 @@ namespace arcade
     static const std::map<arcade::IEvenement::KeyCode, CommandType>	S_BINDING;
     static const unsigned long					S_SNAKE_HEAD;
     static const unsigned long					S_DEFAULT_SNAKE_LENGTH;
+    static const uint64_t					S_SCORE_INC;
 
     Snake(void *handle);
     virtual ~Snake(void);
@@ -68,9 +69,9 @@ namespace arcade
     virtual void 						getNotified(IEvenement const &);
     /* !virtual functions IObserver */
 
-    void             where_Am_I(void);
-    void             get_map(void);
-    void                              setCt(arcade::CommandType );
+    void             						where_Am_I(void);
+    void             						get_map(void);
+    void                              				setCt(arcade::CommandType );
 
    private:
     std::shared_ptr<std::vector<std::shared_ptr<IObject>>> 	_objects;
@@ -87,9 +88,9 @@ namespace arcade
     std::uniform_int_distribution<int> 				_dis_height;
     std::map<arcade::TileType, std::function<void(void)>> 	_checkMove;
     std::map<arcade::CommandType , std::function<void(void)>> 	_actions;
-      std::shared_ptr<arcade::IObject> score;
+    std::shared_ptr<arcade::IObject> score;
 
-      /* virtual functions of IGameLib */
+    /* virtual functions of IGameLib */
     virtual void 						createMap(void);
     virtual void						initGraphicalLib(arcade::IGraphicalLib*);
     /* !virtual functions of IGameLib */
@@ -100,13 +101,13 @@ namespace arcade
     void 							_dead(void);
     void 							_move(void);
     void 							_powerUp(void);
-      std::shared_ptr<arcade::IObject>				_createObject(const std::string &name,
+    std::shared_ptr<arcade::IObject>				_createObject(const std::string &name,
 										  const std::string &filename,
 										  const arcade::Vector3d &pos,
 										  float speed);
-      std::shared_ptr<arcade::IObject>				_createLabel(const std::string &name,
-                                                                    const std::string &filename,
-                                                                    const arcade::Vector3d &pos);
+    std::shared_ptr<arcade::IObject>				_createLabel(const std::string &name,
+										 const std::string &filename,
+										 const arcade::Vector3d &pos);
     void							_goUp(void);
     void							_goDown(void);
     void							_goLeft(void);
@@ -117,7 +118,7 @@ namespace arcade
 
 extern "C"
 {
-void		Play(void);
+void								Play(void);
 }
 
 #endif //CPP_ARCADE_SNAKE_HPP
