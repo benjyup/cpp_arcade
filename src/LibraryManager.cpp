@@ -66,7 +66,7 @@ int         arcade::LibraryManager::gameLoop(void) {
 void    arcade::LibraryManager::load_menu() {
     libgameinuse->freeSharedData();
     actuallib = -1;
-    window->setMapSize();
+    window->setMapSize(40);
     for (auto it : (*this->_objs)) {
         libgraphinuse->getWindows()->destroyObject(it);
         std::cerr << "Destroy here";
