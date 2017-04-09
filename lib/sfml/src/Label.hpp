@@ -13,7 +13,8 @@ namespace arcade
     class Label : public Object
     {
     public:
-        Label(const std::string &name, std::shared_ptr<sf::Font> &);
+        Label(const std::string &name, std::string const &,
+              std::shared_ptr<sf::Font> &);
         virtual ~Label();
         void        setVisual(std::shared_ptr<sf::Font>&);
 
