@@ -5,7 +5,7 @@
 #include "LibraryManager.hpp"
 
 const std::string	arcade::LibraryManager::LM_GRAPHICAL_LIB_DIRECTORY = "./lib/";
-const std::string	arcade::LibraryManager::LM_GAME_LIB_DIRECTORY = "./game/";
+const std::string	arcade::LibraryManager::LM_GAME_LIB_DIRECTORY = "./games/";
 const std::string	arcade::LibraryManager::LM_ARCADE_PREFIX = "lib_arcade_";
 
 arcade::LibraryManager::LibraryManager() : _graphLibraries(), _gameLibraries()

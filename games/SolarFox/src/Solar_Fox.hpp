@@ -36,31 +36,31 @@ namespace arcade
         static const std::string					S_WALL_RESOURCES;
         static const std::string					S_GROUND_RESOURCES;
         static const std::string					S_Solar_Fox_RESOURCES;
+        static const std::string					S_Solar_Fox_RESOURCES2;
         static const std::string					S_POWERUP_RESOURCES;
         static const std::string					S_TTF_RESOURCES;
 
-        static const std::map<arcade::TileType,
-                std::string>					S_TILE_RESOURCES;
-        static const std::map<char, arcade::TileType>		S_STRING_TO_TILE;
-        static const std::map<CommandType, CommandType>		S_FORBIDEN_COMMAND;
+        static const std::map<arcade::TileType, std::string>	        S_TILE_RESOURCES;
+        static const std::map<char, arcade::TileType>		            S_STRING_TO_TILE;
+        static const std::map<CommandType, CommandType>		            S_FORBIDEN_COMMAND;
         static const std::map<arcade::IEvenement::KeyCode, CommandType>	S_BINDING;
-        //static const unsigned long					S_Solar_Fox_HEAD;
-        static const unsigned long					S_DEFAULT_Solar_Fox_LENGTH;
+        static const unsigned long					                    S_Solar_Fox_HEAD;
+        static const uint64_t					                        S_SCORE_INC;
 
         Solar_Fox(void *handle);
         virtual ~Solar_Fox(void);
 
         /* virtual functions of ILibrary */
-        virtual void                                            	*getHandle(void) const;
-        virtual std::string const                               	&getName(void) const;
-        virtual void 		                                freeSharedData(void);
+        virtual void                     	*getHandle(void) const;
+        virtual std::string const         	&getName(void) const;
+        virtual void 		                freeSharedData(void);
         /* !virtual functions of ILibrary */
 
         /* virtual functions of IGameLib */
         virtual void 						initGame(arcade::IGraphicalLib *,
                                                      arcade::IObserver *,
                                                      std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > >&);
-        virtual uint64_t 						getScore(void) const;
+        virtual uint64_t 					getScore(void) const;
         virtual void 						gameTurn(void);
         /* !virtual functions of IGameLib */
 
@@ -68,24 +68,24 @@ namespace arcade
         virtual void 						getNotified(IEvenement const &);
         /* !virtual functions IObserver */
 
-        void             where_Am_I(void);
-        void             get_map(void);
-        void                              setCt(arcade::CommandType );
+        void                                where_Am_I(void);
+        void                                get_map(void);
+        void                                setCt(arcade::CommandType );
 
     private:
-        std::shared_ptr<std::vector<std::shared_ptr<IObject>>> 	_objects;
-        arcade::IGraphicalLib					*_lib;
-        arcade::IWindows						*_win;
+        std::shared_ptr<std::vector<std::shared_ptr<IObject>>> 	    _objects;
+        arcade::IGraphicalLib					                    *_lib;
+        arcade::IWindows						                    *_win;
         std::array<std::array<arcade::TileType ,S_WIDTH>, S_HEIGHT>	_map;
-        uint64_t 							_score;
-        t_Solar_Fox                                                 	_Solar_Fox;
+        uint64_t 							                        _score;
+        t_Solar_Fox                                                 _Solar_Fox;
         arcade::Vector3d                                        	_map_size;
         void                                                    	*_handle;
         std::string                                             	_lib_name;
-        std::mt19937 						_gen;
-        std::uniform_int_distribution<int> 				_dis_width;
-        std::uniform_int_distribution<int> 				_dis_height;
-        std::map<arcade::TileType, std::function<void(void)>> 	_checkMove;
+        std::mt19937 						                        _gen;
+        std::uniform_int_distribution<int> 				            _dis_width;
+        std::uniform_int_distribution<int> 				            _dis_height;
+        std::map<arcade::TileType, std::function<void(void)>> 	    _checkMove;
         std::map<arcade::CommandType , std::function<void(void)>> 	_actions;
         std::shared_ptr<arcade::IObject> score;
 
@@ -111,7 +111,7 @@ namespace arcade
         void							_goDown(void);
         void							_goLeft(void);
         void							_goRight(void);
-        void							_followHead(void);
+        void                            _shoot(void);
     };
 };
 
