@@ -90,14 +90,19 @@ std::string const& arcade::Solar_Fox::getName() const { return (_lib_name);}
 
 void arcade::Solar_Fox::freeSharedData()
 {
-    if (_objects)
-        _objects->clear();
     _objects.reset();
+    if (_lib)
+        _lib->removeObserver(this);
+    _Solar_Fox.objs.clear();
+    _Solar_Fox.objsPowerUp.clear();
+    _Solar_Fox.body.clear();
+    _Solar_Fox.ct = arcade::CommandType::GO_RIGHT;
 }
 
-void arcade::Solar_Fox::initGame(arcade::IGraphicalLib *lib, arcade::IObserver *,
+void arcade::Solar_Fox::initGame(arcade::IGraphicalLib *lib, arcade::IObserver *obs,
                              std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > > &objects) {
     initGraphicalLib(lib);
+    _obs = obs;
     _objects = objects;
     createMap();
     score = _createLabel("Score: 0", S_TTF_RESOURCES, {0, 0, 0});
@@ -232,11 +237,10 @@ void arcade::Solar_Fox::_initPowerUp()
     _createObject("powerup", S_POWERUP_RESOURCES, {p.x, p.y}, 0);
 }
 
-void arcade::Solar_Fox::_dead()
+void 			arcade::Solar_Fox::_dead()
 {
-    _win->refresh();
-    sleep(1);
-    throw std::runtime_error("Game Over !");
+    arcade::EvenementGame   event(arcade::IEvenement::Action::LoadGame);
+    _obs->getNotified(event);
 }
 
 void arcade::Solar_Fox::_move() {

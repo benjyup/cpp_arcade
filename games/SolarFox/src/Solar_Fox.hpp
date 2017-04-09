@@ -12,6 +12,7 @@
 #include "IObserve.hpp"
 #include "IGameLib.hpp"
 #include "../../../lib/interfaces/Protocol.hpp"
+#include "../../EvenementGame.hpp"
 
 # define S_WIDTH 20
 # define S_HEIGHT 20
@@ -102,6 +103,7 @@ namespace arcade
         int                                                         _posFin;
         int                                                         _time;
 	arcade::CommandType					_lastKc;
+        arcade::IObserver                                         *_obs;
 
         /* virtual functions of IGameLib */
         virtual void 						createMap(void);

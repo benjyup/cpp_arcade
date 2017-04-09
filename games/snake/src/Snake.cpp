@@ -97,8 +97,6 @@ void 		arcade::Snake::freeSharedData()
 void 			arcade::Snake::initGame(arcade::IGraphicalLib *lib, arcade::IObserver *obs,
 						    std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &objects)
 {
-/*    if (lib == NULL)
-        throw std::runtime_error("Not able to init the game with a null graphical library.");*/
   initGraphicalLib(lib);
     _obs = obs;
   _objects = objects;
