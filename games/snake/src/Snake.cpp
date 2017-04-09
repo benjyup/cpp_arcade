@@ -75,7 +75,8 @@ arcade::Snake::Snake(void *handle)
 
 arcade::Snake::~Snake()
 {
-  freeSharedData();
+    std::cerr << "Snake destroy \n";
+    freeSharedData();
 }
 
 void* 		arcade::Snake::getHandle() const { return (_handle);}
@@ -84,17 +85,20 @@ std::string const& arcade::Snake::getName() const { return (_lib_name);}
 
 void 		arcade::Snake::freeSharedData()
 {
+    if (_lib)
+        _lib->removeObserver(this);
   if (_objects)
     _objects->clear();
   _objects.reset();
 }
 
-void 			arcade::Snake::initGame(arcade::IGraphicalLib *lib, arcade::IObserver *,
+void 			arcade::Snake::initGame(arcade::IGraphicalLib *lib, arcade::IObserver *obs,
 						    std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &objects)
 {
 /*    if (lib == NULL)
         throw std::runtime_error("Not able to init the game with a null graphical library.");*/
   initGraphicalLib(lib);
+    _obs = obs;
   _objects = objects;
   createMap();
   score = _createLabel("Score: 0", S_TTF_RESOURCES, {0, 0, 0});
@@ -215,9 +219,8 @@ void 			arcade::Snake::_initPowerUp()
 
 void 			arcade::Snake::_dead()
 {
-  _win->refresh();
-  sleep(1);
-  throw std::runtime_error("Game Over !");
+    arcade::EvenementGame   event(arcade::IEvenement::Action::LoadGame);
+    _obs->getNotified(event);
 }
 
 void 			arcade::Snake::_move()

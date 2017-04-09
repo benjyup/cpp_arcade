@@ -9,6 +9,7 @@
 #include <vector>
 #include <Protocol.hpp>
 #include <fstream>
+#include "../EvenementGame.hpp"
 #include "IObserve.hpp"
 #include "IGameLib.hpp"
 
@@ -89,6 +90,7 @@ namespace arcade
     std::map<arcade::TileType, std::function<void(void)>> 	_checkMove;
     std::map<arcade::CommandType , std::function<void(void)>> 	_actions;
     std::shared_ptr<arcade::IObject> score;
+     arcade::IObserver                                         *_obs;
 
     /* virtual functions of IGameLib */
     virtual void 						createMap(void);

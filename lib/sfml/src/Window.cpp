@@ -137,7 +137,8 @@ namespace arcade
         {
             if (*it == obj)
             {
-		  _objects->erase(it);
+                std::cerr << "destroy\n";
+                _objects->erase(it);
                 return;
             }
         }

@@ -9,7 +9,7 @@ CPP 		= 	g++
 
 RM 		= 	rm -rf
 
-CPPFLAGS	+=	 -std=c++14 -W -Wall -Werror -Wextra -I$(INTERFACES)/ -fPIC
+CPPFLAGS	+=	 -std=c++14 -W -Wall -Werror -Wextra -I$(INTERFACES)/ -fPIC -g3
 
 LDFLAGS		=	-shared -lsfml-graphics -lsfml-window -lsfml-system
 
