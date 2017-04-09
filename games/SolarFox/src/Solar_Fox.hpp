@@ -101,6 +101,7 @@ namespace arcade
         std::shared_ptr<arcade::IObject> score;
         int                                                         _posFin;
         int                                                         _time;
+	arcade::CommandType					_lastKc;
 
         /* virtual functions of IGameLib */
         virtual void 						createMap(void);
