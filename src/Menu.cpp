@@ -50,12 +50,10 @@ void arcade::Menu::_printAllNames()
       v.setY(v.getY() + M_SCALE);
       i += 1;
     }
-  std::cerr << "i = " << i << std::endl;
 }
 
 void arcade::Menu::getNotified(IEvenement const &event)
 {
-  std::cerr << "notified" << std::endl;
   if (event.getAction() == IEvenement::Action::KeyPressDown)
     {
       if (event.getKeyCode() == IEvenement::KeyCode::Key_S)
