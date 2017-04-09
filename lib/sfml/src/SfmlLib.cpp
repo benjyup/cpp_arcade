@@ -13,13 +13,10 @@ namespace arcade
 
     SfmlLib::~SfmlLib()
     {
-<<<<<<< HEAD
         this->_win.reset();
         this->_textureMap.clear();
         this->_fontMap.clear();
-=======
         freeSharedData();
->>>>>>> cbbb07efa0336c2897c1cd30a43ee3c1c36088cd
     }
 
     /* virtual functions of IGraphicalLib */
@@ -131,8 +128,8 @@ namespace arcade
             _objects->clear();
         _objects.reset();
         _win.reset();
-        _textureDump.clear();
-        _fontDump.clear();
+        _textureMap.clear();
+        _fontMap.clear();
     }
 
     std::shared_ptr<sf::Texture>            &SfmlLib::getTexture(std::string const &fileName) {
@@ -142,7 +139,7 @@ namespace arcade
             _textureMap.emplace(fileName, tmp);
             _textureMap[fileName]->setSmooth(true);
             if (!(_textureMap[fileName]->loadFromFile(fileName + ".png")))
-                throw std::string("Failed to load a texture");
+                throw std::runtime_error("Failed to load a texture");
         }
         return (_textureMap[fileName]);
     }
@@ -153,7 +150,7 @@ namespace arcade
         if (_fontMap.find(fileName) == _fontMap.end()) {
             _fontMap.emplace(fileName, tmp);
             if (!(_fontMap[fileName]->loadFromFile(fileName + ".ttf")))
-                throw std::string("Failed to load a font");
+                throw std::runtime_error("Failed to load a font");
         }
         return (_fontMap[fileName]);
     }
