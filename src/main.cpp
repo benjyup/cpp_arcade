@@ -5,11 +5,30 @@
 #include <string>
 #include <iostream>
 #include "LibraryManager.hpp"
+#include "Menu.hpp"
 
 static int      usage(char *bin)
 {
   std::cerr << "Usage : " << bin << " GraphicalLibrary" << std::endl;
   return (1);
+}
+
+std::string 			menu(arcade::IGraphicalLib *graphicalLib,
+				 const std::vector<std::string> &gameLibNames,
+				 std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &objects)
+{
+  arcade::Menu 		m(graphicalLib, gameLibNames, objects);
+  arcade::IWindows      *window = graphicalLib->getWindows().get();
+
+  try {
+      while (window->event())
+	{
+	  window->refresh();
+	}
+    } catch(const std::string &e) {
+	return (e);
+    }
+  return ("");
 }
 
 int 	        main(int ac, char **av)
@@ -21,13 +40,11 @@ int 	        main(int ac, char **av)
 
   try {
       arcade::LibraryManager  libraryManager;
-      arcade::IGameLib        *gameLib = libraryManager.getGameLib("lib_arcade_nibbler.so");
       arcade::IGraphicalLib   *graphicalLib = libraryManager.getGraphicalLib(av[1]);
       arcade::IWindows        *window = graphicalLib->initWindows(objects, 1024, 1024).get();
-      std::cout << "ici = " << std::to_string(objects.use_count()) << std::endl;
+      arcade::IGameLib        *gameLib = libraryManager.getGameLib(menu(graphicalLib, libraryManager.getGameLibNames(), objects));
       gameLib->initGame(graphicalLib, NULL, objects);
       graphicalLib->registerObserver(gameLib);
-      std::cout << "ici = " << std::to_string(objects.use_count()) << std::endl;
       while (window->event())
 	{
 	  if (window->refresh() == arcade::FrameType::GameFrame)

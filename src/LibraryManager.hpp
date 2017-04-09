@@ -38,6 +38,8 @@ namespace arcade
 
     IGraphicalLib                               *getGraphicalLib(const std::string &) const;
     IGameLib                                    *getGameLib(const std::string &) const;
+    std::vector<std::string>			getGraphicalLibNames(void) const;
+    std::vector<std::string>			getGameLibNames(void) const;
 
    private:
     std::map<std::string, arcade::ILibrairy*> 	_graphLibraries;
