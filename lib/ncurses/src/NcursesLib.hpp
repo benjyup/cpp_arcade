@@ -55,9 +55,9 @@ namespace arcade
     std::string								_name;
     std::vector<arcade::IObserver*>					_observers;
     void								*_handle;
-    std::map<std::string, std::vector<std::string>>			_visual_save;
     std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>> > 	_objects;
 
+    void 				_reloadObject(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>> >&objs);
     virtual void notify(IEvenement const &); // virtual function of IObserved
   };
 }

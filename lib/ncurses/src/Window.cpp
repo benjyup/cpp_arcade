@@ -5,6 +5,7 @@
 #include <ncurses/curses.h>
 #include "Window.hpp"
 #include "Object.hpp"
+#include "Label.hpp"
 
 void arcade::Window::_close_window(int)
 {
@@ -100,7 +101,7 @@ void 			arcade::Window::addObject(std::shared_ptr <arcade::IObject> &obj, const 
   addObject(obj);
 }
 
-void 			arcade::Window::moveObject(std::shared_ptr <arcade::IObject> &obj, const Vector3d &pos)
+	void 			arcade::Window::moveObject(std::shared_ptr <arcade::IObject> &obj, const Vector3d &pos)
 {
   obj->setPosition(pos);
 }
