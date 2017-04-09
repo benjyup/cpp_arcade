@@ -9,11 +9,17 @@
 namespace arcade
 {
     SfmlLib::SfmlLib(void *handle) : _win(NULL), _name("SfmlLib"), _observers(),
-                                           _handle(handle) { }
+                                     _handle(handle) { }
 
     SfmlLib::~SfmlLib()
     {
+<<<<<<< HEAD
+        this->_win.reset();
+        this->_textureMap.clear();
+        this->_fontMap.clear();
+=======
         freeSharedData();
+>>>>>>> cbbb07efa0336c2897c1cd30a43ee3c1c36088cd
     }
 
     /* virtual functions of IGraphicalLib */
@@ -39,8 +45,8 @@ namespace arcade
     }
 
     std::shared_ptr<arcade::IWindows> &SfmlLib::initWindows(std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &objs,
-                                                               uint64_t,
-                                                               uint64_t)
+                                                            uint64_t,
+                                                            uint64_t)
     {
         if (objs->size() > 0 && !std::dynamic_pointer_cast<arcade::Object>((*objs)[0]))
             reloadObject(objs);
@@ -132,24 +138,24 @@ namespace arcade
     std::shared_ptr<sf::Texture>            &SfmlLib::getTexture(std::string const &fileName) {
         auto tmp = std::make_shared<sf::Texture>();
 
-        if (_textureDump.find(fileName) == _textureDump.end()) {
-            _textureDump.emplace(fileName, tmp);
-            _textureDump[fileName]->setSmooth(true);
-            if (!(_textureDump[fileName]->loadFromFile(fileName + ".png")))
-                throw std::runtime_error("Failed to load a texture");
+        if (_textureMap.find(fileName) == _textureMap.end()) {
+            _textureMap.emplace(fileName, tmp);
+            _textureMap[fileName]->setSmooth(true);
+            if (!(_textureMap[fileName]->loadFromFile(fileName + ".png")))
+                throw std::string("Failed to load a texture");
         }
-        return (_textureDump[fileName]);
+        return (_textureMap[fileName]);
     }
 
     std::shared_ptr<sf::Font>               &SfmlLib::getFont(std::string const &fileName) {
         auto tmp = std::make_shared<sf::Font>();
 
-        if (_fontDump.find(fileName) == _fontDump.end()) {
-            _fontDump.emplace(fileName, tmp);
-            if (!(_fontDump[fileName]->loadFromFile(fileName + ".ttf")))
-                throw std::runtime_error("Failed to load a font");
+        if (_fontMap.find(fileName) == _fontMap.end()) {
+            _fontMap.emplace(fileName, tmp);
+            if (!(_fontMap[fileName]->loadFromFile(fileName + ".ttf")))
+                throw std::string("Failed to load a font");
         }
-        return (_fontDump[fileName]);
+        return (_fontMap[fileName]);
     }
 
     ILibrairy *getNewLib(void *handle) {
