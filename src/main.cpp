@@ -37,14 +37,13 @@ std::string 			menu(arcade::IGraphicalLib *graphicalLib,
         if (ac != 2)
             return (usage(av[0]));
 
-  /*      try {
-  */          arcade::LibraryManager libraryManager(av[1]);
+        try {
+            arcade::LibraryManager libraryManager(av[1]);
             libraryManager.gameLoop();
-/*        }
+        }
 
         catch (std::exception &e) {
-            throw;
         }
-*/
+
         return (0);
     }
