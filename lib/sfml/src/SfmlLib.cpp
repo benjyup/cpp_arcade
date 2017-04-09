@@ -119,6 +119,11 @@ namespace arcade
 
     void SfmlLib::freeSharedData(void)
     {
+        for (auto *it : _observers)
+            removeObserver(it);
+        if (_objects)
+            _objects->clear();
+        _objects.reset();
         _win.reset();
         _textureDump.clear();
         _fontDump.clear();
