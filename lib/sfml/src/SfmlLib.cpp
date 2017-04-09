@@ -127,7 +127,7 @@ namespace arcade
             _textureDump.emplace(fileName, tmp);
             _textureDump[fileName]->setSmooth(true);
             if (!(_textureDump[fileName]->loadFromFile(fileName + ".png")))
-                throw std::string("Failed to load a texture");
+                throw std::runtime_error("Failed to load a texture");
         }
         return (_textureDump[fileName]);
     }
@@ -138,7 +138,7 @@ namespace arcade
         if (_fontDump.find(fileName) == _fontDump.end()) {
             _fontDump.emplace(fileName, tmp);
             if (!(_fontDump[fileName]->loadFromFile(fileName + ".ttf")))
-                throw std::string("Failed to load a font");
+                throw std::runtime_error("Failed to load a font");
         }
         return (_fontDump[fileName]);
     }
