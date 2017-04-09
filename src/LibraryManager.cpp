@@ -37,7 +37,7 @@ arcade::LibraryManager::LibraryManager(std::string const &first) : _graphLibrari
 
     std::cout << "------------------------\n" << std::endl;
     if ((libgraphinuse = getGraphicalLib(first)) == NULL) {
-        std::cerr << "fdp";//       throw
+	throw std::runtime_error("Invalid lib name");
     }
     window = libgraphinuse->initWindows(_objs, 1024, 1024).get();
     libgameinuse = getGameLib(this->menu(libgraphinuse, getGameLibNames(), _objs));
