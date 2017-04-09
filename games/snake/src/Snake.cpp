@@ -71,11 +71,11 @@ arcade::Snake::Snake(void *handle)
 	  {arcade::CommandType::GO_LEFT, [&]() -> void {_goLeft(); }},
 	  {arcade::CommandType::GO_RIGHT, [&]() -> void {_goRight(); }},
   };
+    sleep(1);
 }
 
 arcade::Snake::~Snake()
 {
-    std::cerr << "Snake destroy \n";
     freeSharedData();
 }
 
@@ -85,11 +85,13 @@ std::string const& arcade::Snake::getName() const { return (_lib_name);}
 
 void 		arcade::Snake::freeSharedData()
 {
+    _objects.reset();
     if (_lib)
         _lib->removeObserver(this);
-  if (_objects)
-    _objects->clear();
-  _objects.reset();
+    _snake.objs.clear();
+    _snake.objsPowerUp.clear();
+    _snake.body.clear();
+    _snake.ct = arcade::CommandType::GO_RIGHT;
 }
 
 void 			arcade::Snake::initGame(arcade::IGraphicalLib *lib, arcade::IObserver *obs,

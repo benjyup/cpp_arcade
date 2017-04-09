@@ -23,7 +23,6 @@ std::string 			arcade::LibraryManager::menu(arcade::IGraphicalLib *graphicalLib,
     }
     for (auto it : (*this->_objs)) {
         window->destroyObject(it);
-        std::cerr << "Destroy menu";
     }
     return (str);
 }
@@ -50,15 +49,15 @@ int         arcade::LibraryManager::gameLoop(void) {
 
     libgameinuse->initGame(libgraphinuse, this, _objs);
     while (window->event()) {
-        if (actuallib == -1){
+        if (actuallib == -1) {
             _objs->clear();
-            std::cerr << "there\n";
             libgameinuse = getGameLib(menu(libgraphinuse, getGameLibNames(), _objs));
+            libgraphinuse->registerObserver(libgameinuse);
             libgameinuse->initGame(libgraphinuse, this, _objs);
             actuallib = 1;
         }
         if (this->window->refresh() == arcade::FrameType::GameFrame)
-                this->libgameinuse->gameTurn();
+            this->libgameinuse->gameTurn();
     }
     return (1);
 }
@@ -69,7 +68,6 @@ void    arcade::LibraryManager::load_menu() {
     window->setMapSize(40);
     for (auto it : (*this->_objs)) {
         libgraphinuse->getWindows()->destroyObject(it);
-        std::cerr << "Destroy here";
     }
     _objs->clear();
 }
@@ -91,6 +89,9 @@ arcade::LibraryManager::~LibraryManager()
 	delete it.second;
 	dlclose(handle);
       }
+    _graphLibraries.clear();
+    _gameLibraries.clear();
+ //   window.reset();
 }
 
 std::map<std::string, arcade::ILibrairy*> arcade::LibraryManager::_findLibrary(const arcade::ILibrairy::LibType type) const
