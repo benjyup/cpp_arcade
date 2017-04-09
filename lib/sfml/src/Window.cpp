@@ -23,7 +23,6 @@ namespace arcade
                                              _objects(objects), _height(height), _width(width), _min_size(0, 0, 0),
                                              _calc(0) {
         _window.pollEvent(_event);
-        //_window.setFramerateLimit(60);
     }
 
     arcade::Window::~Window() {
