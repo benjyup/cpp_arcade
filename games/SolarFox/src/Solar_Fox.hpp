@@ -27,6 +27,7 @@ namespace arcade
             std::vector<arcade::Position>			            body;
             std::vector<std::shared_ptr<arcade::IObject>>		objs;
             std::vector<std::shared_ptr<arcade::IObject>>		objsPowerUp;
+            std::vector<std::shared_ptr<arcade::IObject>>		objsShoot;
         };
 
         static const unsigned int					S_POWERUP_NBR_DEFAULT;
@@ -73,6 +74,7 @@ namespace arcade
         void                                setCt(arcade::CommandType );
 
     private:
+        bool                                                        _shot;
         std::shared_ptr<std::vector<std::shared_ptr<IObject>>> 	    _objects;
         arcade::IGraphicalLib					                    *_lib;
         arcade::IWindows						                    *_win;

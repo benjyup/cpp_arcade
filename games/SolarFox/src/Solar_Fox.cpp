@@ -6,6 +6,9 @@
 #include <map>
 #include <unistd.h>
 #include "Solar_Fox.hpp"
+#include "../../../lib/interfaces/Protocol.hpp"
+#include "../../../lib/interfaces/IObserve.hpp"
+#include "../../../lib/interfaces/IGraphicalLib.hpp"
 
 const std::string			            arcade::Solar_Fox::S_MAP_PATH 	= "./resc/Solar_Fox/map";
 const std::string						arcade::Solar_Fox::S_HEAD_RESOURCES = "./gfx/Solar_Fox/vaisseau";
@@ -53,7 +56,7 @@ const std::map<arcade::IEvenement::KeyCode , arcade::CommandType>			arcade::Sola
 };
 
 arcade::Solar_Fox::Solar_Fox(void *handle)
-        : _objects(), _lib(NULL), _win(NULL), _map(), _score(0), _Solar_Fox(), _map_size({0, 0}), _handle(handle),
+        : _shot(false), _objects(), _lib(NULL), _win(NULL), _map(), _score(0), _Solar_Fox(), _map_size({0, 0}), _handle(handle),
           _lib_name("lib_arcade_Solar_Fox"), _gen(getpid()), _dis_width(0, S_WIDTH - 1), _dis_height(0, S_HEIGHT - 1)
 {
     _Solar_Fox.ct = arcade::CommandType::GO_RIGHT;
@@ -226,7 +229,7 @@ void arcade::Solar_Fox::_powerUp() {
 
     //if (p.x - 1 >= 0 && _map[p.y][p.x - 1] == arcade::TileType::EMPTY) {
         //_Solar_Fox.body.push_back({static_cast<uint16_t >(p.x - 1), p.y});
-        //_createObject("Solar_Fox", S_Solar_Fox_RESOURCES, {static_cast<uint16_t >(p.x - 1), p.y}, 0.25);
+    //_createObject("Solar_Fox", S_Solar_Fox_RESOURCES, {static_cast<uint16_t >(p.x - 1), p.y}, 0.25);
     //} else if (p.y - 1 >= 0 && _map[p.y - 1][p.x] == arcade::TileType::EMPTY) {
      //   _Solar_Fox.body.push_back({p.x, static_cast<uint16_t >(p.y - 1)});
      //   _createObject("Solar_Fox", S_Solar_Fox_RESOURCES, {static_cast<uint16_t >(p.x - 1), p.y}, 0.25);
@@ -253,6 +256,8 @@ std::shared_ptr<arcade::IObject> arcade::Solar_Fox::_createObject(const std::str
             _Solar_Fox.objs.push_back(obj);
         else if (name == "powerup")
             _Solar_Fox.objsPowerUp.push_back(obj);
+        else if (name == "shoot")
+            _Solar_Fox.objsShoot.push_back(obj);
     }
     return (obj);
 }
@@ -275,6 +280,23 @@ std::shared_ptr<arcade::IObject> arcade::Solar_Fox::_createLabel(const std::stri
 }
 
 void arcade::Solar_Fox::_goUp() {
+    arcade::Position p;
+
+    p.x = _Solar_Fox.body[S_Solar_Fox_HEAD].x;
+    p.y = _Solar_Fox.body[S_Solar_Fox_HEAD].y;
+    if (_shot == true) {
+        _createObject("shoot", S_Solar_Fox_RESOURCES2, {static_cast<uint16_t >(p.x), (p.y - 1)}, 1);
+        _shot = false;
+
+        for (auto &it : _Solar_Fox.objsShoot)
+            if (it->getPosition().getX() == p.x && it->getPosition().getY() == p.y - 1) {
+                _win->moveObject(it, {_Solar_Fox.body[S_Solar_Fox_HEAD].x, _Solar_Fox.body[S_Solar_Fox_HEAD].y - 2});
+            }
+        for (auto &it : _Solar_Fox.objsShoot)
+            if (it->getPosition().getX() == p.x && it->getPosition().getY() == p.y - 1) {
+                _win->destroyObject(it);
+            }
+    }
     if (_lib) {
         if (!_Solar_Fox.objs[0]->isMoving()) {
             _Solar_Fox.body[S_Solar_Fox_HEAD].y -= 1;
@@ -291,7 +313,25 @@ void arcade::Solar_Fox::_goUp() {
     }
 }
 
-void arcade::Solar_Fox::_goDown() {
+void arcade::Solar_Fox::_goDown()
+{
+    arcade::Position p;
+
+    p.x = _Solar_Fox.body[S_Solar_Fox_HEAD].x;
+    p.y = _Solar_Fox.body[S_Solar_Fox_HEAD].y;
+    if (_shot == true) {
+        _createObject("shoot", S_Solar_Fox_RESOURCES2, {static_cast<uint16_t >(p.x), (p.y + 1)}, 1);
+        _shot = false;
+
+        for (auto &it : _Solar_Fox.objsShoot)
+            if (it->getPosition().getX() == p.x && it->getPosition().getY() == p.y + 1) {
+                _win->moveObject(it, {_Solar_Fox.body[S_Solar_Fox_HEAD].x, _Solar_Fox.body[S_Solar_Fox_HEAD].y + 2});
+            }
+        for (auto &it : _Solar_Fox.objsShoot)
+            if (it->getPosition().getX() == p.x && it->getPosition().getY() == p.y + 1) {
+                _win->destroyObject(it);
+            }
+    }
     if (_lib) {
         if (!_Solar_Fox.objs[0]->isMoving()) {
             _Solar_Fox.body[S_Solar_Fox_HEAD].y += 1;
@@ -309,6 +349,24 @@ void arcade::Solar_Fox::_goDown() {
 }
 
 void arcade::Solar_Fox::_goLeft() {
+    arcade::Position p;
+
+    p.x = _Solar_Fox.body[S_Solar_Fox_HEAD].x;
+    p.y = _Solar_Fox.body[S_Solar_Fox_HEAD].y;
+    if (_shot == true)
+    {
+        _createObject("shoot", S_Solar_Fox_RESOURCES2, {static_cast<uint16_t >(p.x - 1), p.y}, 1);
+        _shot = false;
+
+        for (auto &it : _Solar_Fox.objsShoot)
+            if (it->getPosition().getX() == p.x - 1 && it->getPosition().getY() == p.y) {
+                _win->moveObject(it, {_Solar_Fox.body[S_Solar_Fox_HEAD].x - 2, _Solar_Fox.body[S_Solar_Fox_HEAD].y});
+            }
+        for (auto &it : _Solar_Fox.objsShoot)
+            if (it->getPosition().getX() == p.x - 1 && it->getPosition().getY() == p.y) {
+                _win->destroyObject(it);
+            }
+    }
     if (_lib) {
         if (!_Solar_Fox.objs[0]->isMoving()) {
             _Solar_Fox.body[S_Solar_Fox_HEAD].x -= 1;
@@ -326,6 +384,23 @@ void arcade::Solar_Fox::_goLeft() {
 }
 
 void arcade::Solar_Fox::_goRight() {
+    arcade::Position p;
+
+    p.x = _Solar_Fox.body[S_Solar_Fox_HEAD].x;
+    p.y = _Solar_Fox.body[S_Solar_Fox_HEAD].y;
+    if (_shot == true)
+    {
+        _createObject("shoot", S_Solar_Fox_RESOURCES2, {static_cast<uint16_t >(p.x + 1), p.y}, 1);
+        _shot = false;
+        for (auto &it : _Solar_Fox.objsShoot)
+            if (it->getPosition().getX() == p.x + 1 && it->getPosition().getY() == p.y) {
+                _win->moveObject(it, {_Solar_Fox.body[S_Solar_Fox_HEAD].x + 2, _Solar_Fox.body[S_Solar_Fox_HEAD].y});
+            }
+        for (auto &it : _Solar_Fox.objsShoot)
+            if (it->getPosition().getX() == p.x + 1 && it->getPosition().getY() == p.y) {
+                _win->destroyObject(it);
+            }
+    }
     if (_lib) {
         if (!_Solar_Fox.objs[0]->isMoving()) {
             _Solar_Fox.body[S_Solar_Fox_HEAD].x += 1;
@@ -346,7 +421,7 @@ void arcade::Solar_Fox::_goRight() {
 
 void    arcade::Solar_Fox::_shoot()
 {
-    std::cout << "coucuo fils de pute" << std::endl;
+    _shot = true;
 }
 
 void             arcade::Solar_Fox::where_Am_I(void){
