@@ -8,12 +8,69 @@ const std::string	arcade::LibraryManager::LM_GRAPHICAL_LIB_DIRECTORY = "./lib/";
 const std::string	arcade::LibraryManager::LM_GAME_LIB_DIRECTORY = "./games/";
 const std::string	arcade::LibraryManager::LM_ARCADE_PREFIX = "lib_arcade_";
 
-arcade::LibraryManager::LibraryManager() : _graphLibraries(), _gameLibraries()
+std::string 			arcade::LibraryManager::menu(arcade::IGraphicalLib *graphicalLib,
+                            const std::vector<std::string> &gameLibNames,
+                            std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>> &objects) {
+    arcade::Menu m(graphicalLib, gameLibNames, objects);
+    arcade::IWindows *window = graphicalLib->getWindows().get();
+    std::string str;
+
+    try {
+        while (window->event())
+            window->refresh();
+    } catch (const std::string &e) {
+        str = e;
+    }
+    for (auto it : (*this->_objs)) {
+        window->destroyObject(it);
+        std::cerr << "Destroy menu";
+    }
+    return (str);
+}
+
+arcade::LibraryManager::LibraryManager(std::string const &first) : _graphLibraries(), _gameLibraries(),
+                                                                   _objs(new std::vector<std::shared_ptr<arcade::IObject> >)
+                                                                    , actuallib(0)
 {
   _graphLibraries = _findLibrary(arcade::ILibrairy::LibType::Graphical);
   _gameLibraries = _findLibrary(arcade::ILibrairy::LibType::Game);
   _displayFoundLibraries();
-  std::cout << "------------------------\n" << std::endl;
+
+    std::cout << "------------------------\n" << std::endl;
+    if ((libgraphinuse = getGraphicalLib(first)) == NULL) {
+        std::cerr << "fdp";//       throw
+    }
+    window = libgraphinuse->initWindows(_objs, 1024, 1024);
+    libgameinuse = getGameLib(this->menu(libgraphinuse, getGameLibNames(), _objs));
+    libgraphinuse->registerObserver(libgameinuse);
+    libgraphinuse->registerObserver(this);
+}
+
+int         arcade::LibraryManager::gameLoop(void) {
+
+    libgameinuse->initGame(libgraphinuse, this, _objs);
+    while (window->event()) {
+        if (actuallib == -1){
+            _objs->clear();
+            std::cerr << "there\n";
+            libgameinuse = getGameLib(menu(libgraphinuse, getGameLibNames(), _objs));
+            libgameinuse->initGame(libgraphinuse, this, _objs);
+            actuallib = 1;
+        }
+        if (this->window->refresh() == arcade::FrameType::GameFrame)
+                this->libgameinuse->gameTurn();
+    }
+    return (1);
+}
+
+void    arcade::LibraryManager::load_menu() {
+    libgameinuse->freeSharedData();
+    actuallib = -1;
+    for (auto it : (*this->_objs)) {
+        libgraphinuse->getWindows()->destroyObject(it);
+        std::cerr << "Destroy here";
+    }
+    _objs->clear();
 }
 
 arcade::LibraryManager::~LibraryManager()
@@ -132,4 +189,9 @@ std::vector<std::string> arcade::LibraryManager::getGameLibNames() const
   for (const auto &it : _gameLibraries)
     v.push_back(it.first);
   return (v);
+}
+
+void arcade::LibraryManager::getNotified(arcade::IEvenement const &event){
+  if (event.getAction() == arcade::IEvenement::Action::LoadGame)
+    load_menu();
 }
