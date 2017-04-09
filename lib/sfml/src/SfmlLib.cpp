@@ -13,7 +13,7 @@ namespace arcade
 
     SfmlLib::~SfmlLib()
     {
-        //_objects.reset();
+        freeSharedData();
     }
 
     /* virtual functions of IGraphicalLib */
@@ -117,7 +117,11 @@ namespace arcade
         return (ILibrairy::LibType::Graphical);
     }
 
-    void SfmlLib::freeSharedData(void) {
+    void SfmlLib::freeSharedData(void)
+    {
+        _win.reset();
+        _textureDump.clear();
+        _fontDump.clear();
     }
 
     std::shared_ptr<sf::Texture>            &SfmlLib::getTexture(std::string const &fileName) {
