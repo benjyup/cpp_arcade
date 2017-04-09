@@ -36,7 +36,8 @@ namespace arcade
     static const std::string					S_WALL_RESOURCES;
     static const std::string					S_GROUND_RESOURCES;
     static const std::string					S_SNAKE_RESOURCES;
-    static const std::string					S_POWERUP_RESOURCES;
+      static const std::string					S_POWERUP_RESOURCES;
+      static const std::string					S_TTF_RESOURCES;
 
     static const std::map<arcade::TileType,
 	    std::string>					S_TILE_RESOURCES;
@@ -86,8 +87,9 @@ namespace arcade
     std::uniform_int_distribution<int> 				_dis_height;
     std::map<arcade::TileType, std::function<void(void)>> 	_checkMove;
     std::map<arcade::CommandType , std::function<void(void)>> 	_actions;
+      std::shared_ptr<arcade::IObject> score;
 
-    /* virtual functions of IGameLib */
+      /* virtual functions of IGameLib */
     virtual void 						createMap(void);
     virtual void						initGraphicalLib(arcade::IGraphicalLib*);
     /* !virtual functions of IGameLib */
@@ -98,10 +100,13 @@ namespace arcade
     void 							_dead(void);
     void 							_move(void);
     void 							_powerUp(void);
-    std::shared_ptr<arcade::IObject>				_createObject(const std::string &name,
+      std::shared_ptr<arcade::IObject>				_createObject(const std::string &name,
 										  const std::string &filename,
 										  const arcade::Vector3d &pos,
 										  float speed);
+      std::shared_ptr<arcade::IObject>				_createLabel(const std::string &name,
+                                                                    const std::string &filename,
+                                                                    const arcade::Vector3d &pos);
     void							_goUp(void);
     void							_goDown(void);
     void							_goLeft(void);

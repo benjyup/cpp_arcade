@@ -14,6 +14,7 @@ const std::string						arcade::Snake::S_WALL_RESOURCES = "./gfx/snake/wall";
 const std::string						arcade::Snake::S_GROUND_RESOURCES = "./gfx/snake/ground";
 const std::string						arcade::Snake::S_POWERUP_RESOURCES = "./gfx/snake/apple";
 const std::string						arcade::Snake::S_SNAKE_RESOURCES = "./gfx/snake/eggs";
+const std::string						arcade::Snake::S_TTF_RESOURCES = "./gfx/snake/Roboto-Regular";
 const unsigned int						arcade::Snake::S_POWERUP_NBR_DEFAULT = 3;
 
 const std::map<arcade::TileType,
@@ -89,9 +90,10 @@ void arcade::Snake::initGame(arcade::IGraphicalLib *lib, arcade::IObserver *,
 			     std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject> > > &objects) {
 /*    if (lib == NULL)
         throw std::runtime_error("Not able to init the game with a null graphical library.");*/
-  initGraphicalLib(lib);
-  _objects = objects;
-  createMap();
+    initGraphicalLib(lib);
+    _objects = objects;
+    createMap();
+    score = _createLabel("Score: 0", S_TTF_RESOURCES, {0, 0, 0});
 }
 
 uint64_t 		arcade::Snake::getScore() const
@@ -219,62 +221,69 @@ void arcade::Snake::_move()
   _map[_snake.body[S_SNAKE_HEAD].y][_snake.body[S_SNAKE_HEAD].x] = TileType::EVIL_DUDE;
 }
 
-void arcade::Snake::_powerUp()
-{
-  arcade::Position p;
+void arcade::Snake::_powerUp() {
+    arcade::Position p;
 
-  p.x = _snake.body[S_SNAKE_HEAD].x;
-  p.y = _snake.body[S_SNAKE_HEAD].y;
-   _move();
-//  std::cout << "x = " << p.x << " y = " << p.y << std::endl;
-  for (auto &it : _snake.objsPowerUp)
-    if (it->getPosition().getX() == p.x && it->getPosition().getY() == p.y)
-      {
-	_win->destroyObject(it);
-//	std::cout << "Destroy" << std::endl;
-      }
-    //else
-  //    std::cout << "pas Destroy -> x = " << it->getPosition().getX() << " y = "<< it->getPosition().getY() << std::endl;
-
-  p.x = _snake.body[_snake.body.size() - 1].x;
-  p.y = _snake.body[_snake.body.size() - 1].y;
-  if (p.x - 1 >= 0 && _map[p.y][p.x - 1] == arcade::TileType::EMPTY)
-    {
-      _snake.body.push_back({static_cast<uint16_t >(p.x - 1), p.y});
-      _createObject("snake", S_SNAKE_RESOURCES, {static_cast<uint16_t >(p.x - 1), p.y}, 0.25);
+    p.x = _snake.body[S_SNAKE_HEAD].x;
+    p.y = _snake.body[S_SNAKE_HEAD].y;
+    _move();
+    for (auto &it : _snake.objsPowerUp)
+        if (it->getPosition().getX() == p.x && it->getPosition().getY() == p.y) {
+            _win->destroyObject(it);
+            _score += 100;
+            score->setString("Score :" + std::to_string(_score));
+        }
+    p.x = _snake.body[_snake.body.size() - 1].x;
+    p.y = _snake.body[_snake.body.size() - 1].y;
+    if (p.x - 1 >= 0 && _map[p.y][p.x - 1] == arcade::TileType::EMPTY) {
+        _snake.body.push_back({static_cast<uint16_t >(p.x - 1), p.y});
+        _createObject("snake", S_SNAKE_RESOURCES, {static_cast<uint16_t >(p.x - 1), p.y}, 0.25);
+    } else if (p.y - 1 >= 0 && _map[p.y - 1][p.x] == arcade::TileType::EMPTY) {
+        _snake.body.push_back({p.x, static_cast<uint16_t >(p.y - 1)});
+        _createObject("snake", S_SNAKE_RESOURCES, {static_cast<uint16_t >(p.x - 1), p.y}, 0.25);
+    } else if (p.y + 1 < _map_size.getY() && _map[p.y + 1][p.x] == arcade::TileType::EMPTY) {
+        _snake.body.push_back({p.x, static_cast<uint16_t >(p.y + 1)});
+        _createObject("snake", S_SNAKE_RESOURCES, {static_cast<uint16_t >(p.x - 1), p.y}, 0.25);
     }
-  else if (p.y - 1 >= 0 && _map[p.y - 1][p.x] == arcade::TileType::EMPTY)
-      {
-	_snake.body.push_back({p.x, static_cast<uint16_t >(p.y - 1)});
-	_createObject("snake", S_SNAKE_RESOURCES, {static_cast<uint16_t >(p.x - 1), p.y}, 0.25);
-      }
-    else if (p.y + 1 < _map_size.getY() && _map[p.y + 1][p.x] == arcade::TileType::EMPTY)
-	{
-	  _snake.body.push_back({p.x, static_cast<uint16_t >(p.y + 1)});
-	  _createObject("snake", S_SNAKE_RESOURCES, {static_cast<uint16_t >(p.x - 1), p.y}, 0.25);
-	}
-  _initPowerUp();
+    _initPowerUp();
 }
 
 std::shared_ptr<arcade::IObject> arcade::Snake::_createObject(const std::string &name, const std::string &filename,
-							      const arcade::Vector3d &pos, float speed)
+                                                              const arcade::Vector3d &pos, float speed)
 {
-  std::shared_ptr<arcade::IObject> obj;
+    std::shared_ptr<arcade::IObject> obj;
 
-  obj.reset();
-  if (_lib)
+    obj.reset();
+    if (_lib)
     {
-      obj = _lib->initObject(name, filename);
-      obj->setScale(1);
-      obj->setPosition(pos);
-      obj->setSpeed(speed);
-      _win->addObject(obj, pos);
-      if (name == "snake")
-	_snake.objs.push_back(obj);
-      else if (name == "powerup")
-	  _snake.objsPowerUp.push_back(obj);
+        obj = _lib->initObject(name, filename);
+        obj->setScale(1);
+        obj->setPosition(pos);
+        obj->setSpeed(speed);
+        _win->addObject(obj, pos);
+        if (name == "snake")
+            _snake.objs.push_back(obj);
+        else if (name == "powerup")
+            _snake.objsPowerUp.push_back(obj);
     }
-  return (obj);
+    return (obj);
+}
+
+std::shared_ptr<arcade::IObject> arcade::Snake::_createLabel(const std::string &name, const std::string &filename,
+                                                              const arcade::Vector3d &pos)
+{
+    std::shared_ptr<arcade::IObject> obj;
+
+    obj.reset();
+    if (_lib)
+    {
+        obj = _lib->initLabel(name, filename);
+        obj->setScale(1);
+        obj->setPosition(pos);
+        obj->setString(name);
+        _win->addObject(obj, pos);
+    }
+    return (obj);
 }
 
 void arcade::Snake::_goUp() {
