@@ -39,7 +39,7 @@ arcade::LibraryManager::LibraryManager(std::string const &first) : _graphLibrari
     if ((libgraphinuse = getGraphicalLib(first)) == NULL) {
         std::cerr << "fdp";//       throw
     }
-    window = libgraphinuse->initWindows(_objs, 1024, 1024);
+    window = libgraphinuse->initWindows(_objs, 1024, 1024).get();
     libgameinuse = getGameLib(this->menu(libgraphinuse, getGameLibNames(), _objs));
     libgraphinuse->registerObserver(libgameinuse);
     libgraphinuse->registerObserver(this);

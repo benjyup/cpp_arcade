@@ -54,7 +54,7 @@ namespace arcade
     std::map<std::string, arcade::ILibrairy*> 	_graphLibraries;
     std::map<std::string, arcade::ILibrairy*> 	_gameLibraries;
       std::shared_ptr<std::vector<std::shared_ptr<arcade::IObject>>>    _objs;
-      std::shared_ptr<arcade::IWindows>        	window;
+      IWindows        				*window;
       int                                       actuallib;
 
     std::map<std::string, arcade::ILibrairy*> _findLibrary(const arcade::ILibrairy::LibType type) const;
