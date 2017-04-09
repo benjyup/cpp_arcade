@@ -5,13 +5,13 @@
 // Login   <peixot_b>
 // 
 // Started on  Sat Apr  8 17:36:34 2017 Benjamin
-// Last update Sat Apr  8 17:36:36 2017 Benjamin
+// Last update Sun Apr  9 13:27:44 2017 Benjamin
 //
 
 #include "Menu.hpp"
 
 const unsigned int						arcade::Menu::M_SCALE = 1;
-const std::string						arcade::Menu::M_FONT = "AA";
+const std::string						arcade::Menu::M_FONT = "./gfx/menu/arcade_3";
 const std::string						arcade::Menu::M_CURSOR_GFX = "./gfx/menu/cursor";
 
 arcade::Menu::Menu(IGraphicalLib *graphicalLib, const std::vector<std::string> &gameLibNames,
